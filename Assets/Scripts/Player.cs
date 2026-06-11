@@ -2,17 +2,25 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D playerRigidBody;
-    [SerializeField] private float orbitTransitionDuration = 1f;
+    [SerializeField]
+    private float launchSpeed = 3f;
 
-    [SerializeField] private float radiusCorrectionSpeed = 5f;
+    [SerializeField]
+    private float orbitTransitionDuration = 1f;
+
+    [SerializeField]
+    private float radiusCorrectionSpeed = 5f;
+
+    [SerializeField] private Rigidbody2D playerRigidBody;
+
+    private float transitionElapsed;
+    private float orbitDirection;
+
+    private bool isTransitioning;
 
     private Planet currentPlanet;
-    private bool isTransitioning;
-    private float transitionElapsed;
     private Vector2 velocityAtEntry;
 
-    private float orbitDirection;
 
     private void Update()
     {
@@ -27,6 +35,8 @@ public class Player : MonoBehaviour
 
         currentPlanet = null;
         isTransitioning = false;
+
+        playerRigidBody.AddForce(playerRigidBody.linearVelocity.normalized * launchSpeed, ForceMode2D.Impulse);
     }
 
     private void FixedUpdate()
