@@ -3,13 +3,16 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D playerRigidBody;
-    [SerializeField] private float orbitTransitionDuration = 0.4f;
+    [SerializeField] private float orbitTransitionDuration = 1f;
+
+    [SerializeField] private float radiusCorrectionSpeed = 5f;
 
     private Planet currentPlanet;
-
     private bool isTransitioning;
     private float transitionElapsed;
     private Vector2 velocityAtEntry;
+
+    private float orbitDirection;
 
     private void Update()
     {
@@ -31,9 +34,12 @@ public class Player : MonoBehaviour
         if (currentPlanet == null)
             return;
 
-        Vector2 directionToPlanet = currentPlanet.transform.position - transform.position;
-        Vector2 normalizedDirection = directionToPlanet.normalized;
-        playerRigidBody.AddForce(normalizedDirection * currentPlanet.GravityStrength, ForceMode2D.Force);
+        Vector2 toPlanet = currentPlanet.transform.position - transform.position;
+        float distanceToPlanet = toPlanet.magnitude;
+        Vector2 directionToPlanet = toPlanet / distanceToPlanet;
+
+        Vector2 tangent = new Vector2(-directionToPlanet.y, directionToPlanet.x) * orbitDirection;
+        Vector2 targetVelocity = tangent * currentPlanet.OrbitSpeed;
 
         if (isTransitioning)
         {
@@ -42,13 +48,17 @@ public class Player : MonoBehaviour
             float t = Mathf.Clamp01(transitionElapsed / orbitTransitionDuration);
             float smoothT = 1f - Mathf.Pow(1f - t, 1.5f);
 
-            Vector2 tangent = new Vector2(-normalizedDirection.y, normalizedDirection.x);
-            Vector2 targetVelocity = tangent * currentPlanet.OrbitSpeed;
-
             playerRigidBody.linearVelocity = Vector2.Lerp(velocityAtEntry, targetVelocity, smoothT);
 
             if (t >= 1f)
                 isTransitioning = false;
+        }
+        else
+        {
+            float radiusError = distanceToPlanet - currentPlanet.OrbitRadius;
+            Vector2 correctionVelocity = directionToPlanet * (radiusError * radiusCorrectionSpeed);
+
+            playerRigidBody.linearVelocity = targetVelocity + correctionVelocity;
         }
     }
 
@@ -56,11 +66,16 @@ public class Player : MonoBehaviour
     {
         if (collision.TryGetComponent(out Planet planet))
         {
-            currentPlanet = planet;
+            if (currentPlanet != null) return;
 
+            currentPlanet = planet;
             velocityAtEntry = playerRigidBody.linearVelocity;
             transitionElapsed = 0f;
             isTransitioning = true;
+
+            Vector2 toPlanet = currentPlanet.transform.position - transform.position;
+            float crossZ = velocityAtEntry.x * toPlanet.y - velocityAtEntry.y * toPlanet.x;
+            orbitDirection = crossZ > 0 ? -1f : 1f;
         }
     }
 }

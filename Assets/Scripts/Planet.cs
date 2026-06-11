@@ -4,7 +4,7 @@ public class Planet : MonoBehaviour
 {
     public float GravityStrength => gravityStrength;
     public float OrbitSpeed => orbitSpeed;
-    public float OrbitRadius => planetCollider.radius;
+    public float OrbitRadius => planetCollider.radius * transform.lossyScale.x;
 
     [SerializeField]
     private float gravityStrength = 10f;
