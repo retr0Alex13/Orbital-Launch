@@ -11,7 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float radiusCorrectionSpeed = 5f;
 
-    [SerializeField] private Rigidbody2D playerRigidBody;
+    [SerializeField]
+    private Rigidbody2D playerRigidBody;
 
     private float transitionElapsed;
     private float orbitDirection;
@@ -20,7 +21,6 @@ public class Player : MonoBehaviour
 
     private Planet currentPlanet;
     private Vector2 velocityAtEntry;
-
 
     private void Update()
     {
@@ -51,6 +51,10 @@ public class Player : MonoBehaviour
         Vector2 tangent = new Vector2(-directionToPlanet.y, directionToPlanet.x) * orbitDirection;
         Vector2 targetVelocity = tangent * currentPlanet.OrbitSpeed;
 
+        float radiusError = distanceToPlanet - currentPlanet.OrbitRadius;
+        Vector2 correctionVelocity = directionToPlanet * (radiusError * radiusCorrectionSpeed);
+        Vector2 totalTargetVelocity = targetVelocity + correctionVelocity;
+
         if (isTransitioning)
         {
             transitionElapsed += Time.fixedDeltaTime;
@@ -58,17 +62,14 @@ public class Player : MonoBehaviour
             float t = Mathf.Clamp01(transitionElapsed / orbitTransitionDuration);
             float smoothT = 1f - Mathf.Pow(1f - t, 1.5f);
 
-            playerRigidBody.linearVelocity = Vector2.Lerp(velocityAtEntry, targetVelocity, smoothT);
+            playerRigidBody.linearVelocity = Vector2.Lerp(velocityAtEntry, totalTargetVelocity, smoothT);
 
             if (t >= 1f)
                 isTransitioning = false;
         }
         else
         {
-            float radiusError = distanceToPlanet - currentPlanet.OrbitRadius;
-            Vector2 correctionVelocity = directionToPlanet * (radiusError * radiusCorrectionSpeed);
-
-            playerRigidBody.linearVelocity = targetVelocity + correctionVelocity;
+            playerRigidBody.linearVelocity = totalTargetVelocity;
         }
     }
 
@@ -86,6 +87,18 @@ public class Player : MonoBehaviour
             Vector2 toPlanet = currentPlanet.transform.position - transform.position;
             float crossZ = velocityAtEntry.x * toPlanet.y - velocityAtEntry.y * toPlanet.x;
             orbitDirection = crossZ > 0 ? -1f : 1f;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (currentPlanet != null && collision.gameObject == currentPlanet.gameObject)
+        {
+            if (isTransitioning)
+            {
+                currentPlanet = null;
+                isTransitioning = false;
+            }
         }
     }
 }
