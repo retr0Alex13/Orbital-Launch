@@ -44,33 +44,44 @@ public class Player : MonoBehaviour
         if (currentPlanet == null)
             return;
 
+        Vector2 targetVelocity = CalculateOrbitVelocity();
+
+        if (isTransitioning)
+        {
+            ApplyTransition(targetVelocity);
+        }
+        else
+        {
+            playerRigidBody.linearVelocity = targetVelocity;
+        }
+    }
+
+    private Vector2 CalculateOrbitVelocity()
+    {
         Vector2 toPlanet = currentPlanet.transform.position - transform.position;
         float distanceToPlanet = toPlanet.magnitude;
         Vector2 directionToPlanet = toPlanet / distanceToPlanet;
 
         Vector2 tangent = new Vector2(-directionToPlanet.y, directionToPlanet.x) * orbitDirection;
-        Vector2 targetVelocity = tangent * currentPlanet.OrbitSpeed;
+        Vector2 tangentVelocity = tangent * currentPlanet.OrbitSpeed;
 
         float radiusError = distanceToPlanet - currentPlanet.OrbitRadius;
-        Vector2 correctionVelocity = directionToPlanet * (radiusError * radiusCorrectionSpeed);
-        Vector2 totalTargetVelocity = targetVelocity + correctionVelocity;
+        Vector2 radialCorrection = directionToPlanet * (radiusError * radiusCorrectionSpeed);
 
-        if (isTransitioning)
-        {
-            transitionElapsed += Time.fixedDeltaTime;
+        return tangentVelocity + radialCorrection;
+    }
 
-            float t = Mathf.Clamp01(transitionElapsed / orbitTransitionDuration);
-            float smoothT = 1f - Mathf.Pow(1f - t, 1.5f);
+    private void ApplyTransition(Vector2 targetVelocity)
+    {
+        transitionElapsed += Time.fixedDeltaTime;
 
-            playerRigidBody.linearVelocity = Vector2.Lerp(velocityAtEntry, totalTargetVelocity, smoothT);
+        float t = Mathf.Clamp01(transitionElapsed / orbitTransitionDuration);
+        float smoothT = 1f - Mathf.Pow(1f - t, 1.5f);
 
-            if (t >= 1f)
-                isTransitioning = false;
-        }
-        else
-        {
-            playerRigidBody.linearVelocity = totalTargetVelocity;
-        }
+        playerRigidBody.linearVelocity = Vector2.Lerp(velocityAtEntry, targetVelocity, smoothT);
+
+        if (t >= 1f)
+            isTransitioning = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
