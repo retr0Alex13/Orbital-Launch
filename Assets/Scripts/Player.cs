@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public event Action OnPlayerLaunched;
+
     [SerializeField]
     private float launchSpeed = 3f;
 
@@ -25,7 +28,9 @@ public class Player : MonoBehaviour
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
+        {
             LaunchFromOrbit();
+        }
     }
 
     private void LaunchFromOrbit()
@@ -37,6 +42,8 @@ public class Player : MonoBehaviour
         isTransitioning = false;
 
         playerRigidBody.AddForce(playerRigidBody.linearVelocity.normalized * launchSpeed, ForceMode2D.Impulse);
+
+        OnPlayerLaunched?.Invoke();
     }
 
     private void FixedUpdate()

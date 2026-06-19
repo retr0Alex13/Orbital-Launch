@@ -14,6 +14,4 @@ public class Planet : MonoBehaviour
 
     [SerializeField]
     private CircleCollider2D orbitCollider;
-
-    public void SetOrbitSpeed(float speed) => orbitSpeed = speed;
 }
