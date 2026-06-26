@@ -177,6 +177,8 @@ MonoBehaviour:
   gravityStrength: 5
   orbitSpeed: 3
   orbitCollider: {fileID: 8280061508371363544}
+  planetSprite: {fileID: 1292532132765204841}
+  planetSpriteRenderer: {fileID: 6697189935250800820}
 --- !u!1 &8829762453693668692
 GameObject:
   m_ObjectHideFlags: 0
