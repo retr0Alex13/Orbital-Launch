@@ -15,5 +15,5 @@ MonoBehaviour:
   goodThreshold: 0.9
   nearMissThreshold: 0.6
   goodPoints: 100
-  perfectPoints: 200
-  nearMissPoints: 150
+  perfectPoints: 150
+  nearMissPoints: 200
