@@ -29,3 +29,5 @@ MonoBehaviour:
   speedOscillationFrequency: 0.005
   difficultyRampDistance: 1500
   maxPlanetsToSpawn: 25
+  minAsteroidScale: 0.5
+  maxAsteroidScale: 0.8

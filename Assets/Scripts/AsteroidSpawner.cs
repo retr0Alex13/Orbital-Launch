@@ -16,10 +16,9 @@ public class AsteroidSpawner : MonoBehaviour
         {
             Asteroid a = Instantiate(asteroidPrefab, planet.transform);
 
-            float actualOrbitRadius = planet.OrbitRadius * Random.Range(0.95f, 1.05f);
-
+            float actualOrbitRadius = planet.OrbitRadius * Random.Range(0.7f, 1.0f);
             float degsPerSec = (planet.OrbitSpeed / actualOrbitRadius) * Mathf.Rad2Deg;
-            float speed = degsPerSec * Random.Range(0.8f, 1.2f);
+            float speed = degsPerSec;
             float scale = Random.Range(config.minAsteroidScale, config.maxAsteroidScale);
 
             a.Configure(planet, baseAngle + angleStep * i, speed, scale, actualOrbitRadius);

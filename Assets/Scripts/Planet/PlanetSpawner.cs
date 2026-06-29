@@ -17,11 +17,9 @@ public class PlanetSpawner : MonoBehaviour
 
     private float traveledDistance;
 
-    public Planet NextPlanet => mainPath.Count > 1 ? mainPath[1] : null;
-
     private void Start()
     {
-        player.OnPlayerLaunched += AdvanceMainPath;
+        player.OnPlayerCaptured += AdvanceMainPathTo;
 
         pool = new Planet[config.maxPlanetsToSpawn];
         for (int i = 0; i < pool.Length; i++)
@@ -38,13 +36,17 @@ public class PlanetSpawner : MonoBehaviour
 
     private void OnDisable()
     {
-        player.OnPlayerLaunched -= AdvanceMainPath;
+        player.OnPlayerCaptured -= AdvanceMainPathTo;
     }
 
-    private void AdvanceMainPath()
+    private void AdvanceMainPathTo(Planet landedPlanet)
     {
-        if (mainPath.Count > 0)
-            mainPath.RemoveAt(0);
+        int index = mainPath.IndexOf(landedPlanet);
+
+        if (index > 0)
+        {
+            mainPath.RemoveRange(0, index);
+        }
 
         SpawnAheadOnMainPath();
     }
@@ -138,6 +140,27 @@ public class PlanetSpawner : MonoBehaviour
         asteroidSpawner.SpawnForPlanet(planet, difficulty);
 
         return planet;
+    }
+
+    public Planet GetNextPlanetAfter(Planet current)
+    {
+        int index = mainPath.IndexOf(current);
+        if (index >= 0 && index + 1 < mainPath.Count)
+            return mainPath[index + 1];
+
+        Vector2 playerPos = current != null ? (Vector2)current.transform.position : Vector2.zero;
+        Planet best = null;
+        float bestDist = float.MaxValue;
+        foreach (Planet p in mainPath)
+        {
+            float d = Vector2.Distance(playerPos, p.transform.position);
+            if (d > 0.1f && d < bestDist)
+            {
+                bestDist = d;
+                best = p;
+            }
+        }
+        return best;
     }
 
     private float GetDifficulty() =>

@@ -24,11 +24,10 @@ public class OrbitEntryScorer : MonoBehaviour
         player.OnPlayerCaptured -= HandleOrbitCapture;
     }
 
-    private void HandleOrbitCapture()
+    private void HandleOrbitCapture(Planet planet)
     {
-        Planet planet = player.CurrentPlanet;
-
-        if (planet == null) return;
+        if (planet == null)
+            return;
 
         orbitEntryInfo = new OrbitEntryInfo(rb.linearVelocity, transform.position, planet.transform.position);
         ScoreManager.Instance?.AwardOrbitEntry(orbitEntryInfo);
