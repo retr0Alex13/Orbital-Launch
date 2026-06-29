@@ -4,7 +4,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public event Action OnPlayerLaunched;
-    public event Action OnPlayerCaptured;
+    public event Action<Planet> OnPlayerCaptured;
+
     public Planet CurrentPlanet => currentPlanet;
 
     [SerializeField]
@@ -108,7 +109,7 @@ public class Player : MonoBehaviour
             float crossZ = velocityAtEntry.x * toPlanet.y - velocityAtEntry.y * toPlanet.x;
             orbitDirection = crossZ > 0 ? -1f : 1f;
 
-            OnPlayerCaptured?.Invoke();
+            OnPlayerCaptured?.Invoke(planet);
         }
     }
 
