@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d618af7b73645542b8ba0651b8fdb07, type: 3}
   m_Name: PlanetSpawnerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlanetSpawnerConfig
-  minSpawnDistance: 12
-  maxSpawnDistance: 18
+  minSpawnDistance: 6
+  maxSpawnDistance: 9
   minDistanceBetween: 6
   maxDistanceBetween: 12
   maxAngle: 35

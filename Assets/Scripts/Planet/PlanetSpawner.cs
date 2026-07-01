@@ -5,7 +5,7 @@ public class PlanetSpawner : MonoBehaviour
 {
     [SerializeField] private Planet planetPrefab;
     [SerializeField] private PlanetSpawnerConfig config;
-    [SerializeField] private AsteroidSpawner asteroidSpawner;
+    [SerializeField] private AsteroidRingSpawner asteroidSpawner;
 
     [SerializeField] private Player player;
 
@@ -56,21 +56,25 @@ public class PlanetSpawner : MonoBehaviour
         Planet tail = mainPath[^1];
         float difficulty = GetDifficulty();
 
-        float distance = RandomBiasedHigh(config.minSpawnDistance, config.maxSpawnDistance, difficulty);
+        float newOrbitRadius = RandomBiasedLow(config.minOrbitRadius, config.maxOrbitRadius, difficulty);
+
+        float gap = RandomBiasedHigh(config.minSpawnDistance, config.maxSpawnDistance, difficulty);
+        float distance = tail.OrbitRadius + newOrbitRadius + gap;
+
         float angle = RandomSignedBiasedHigh(config.maxAngle, difficulty);
         Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.right;
         Vector2 position = (Vector2)tail.transform.position + direction * distance;
 
-        Planet planet = TrySpawnPlanet(position, difficulty);
+        Planet planet = TrySpawnPlanet(position, difficulty, newOrbitRadius);
         if (planet == null) return;
 
         mainPath.Add(planet);
         traveledDistance += distance;
 
-        SpawnExtraPlanets(planet.transform.position, direction, difficulty);
+        SpawnExtraPlanets(planet, direction, difficulty);
     }
 
-    private void SpawnExtraPlanets(Vector2 center, Vector2 forward, float difficulty)
+    private void SpawnExtraPlanets(Planet center, Vector2 forward, float difficulty)
     {
         int count = 0;
         if (difficulty > 0.3f && Random.value < 0.35f) count++;
@@ -78,19 +82,25 @@ public class PlanetSpawner : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            float offset = RandomBiasedHigh(config.minDistanceBetween, config.maxDistanceBetween, difficulty);
+            float extraOrbitRadius = RandomBiasedLow(config.minOrbitRadius, config.maxOrbitRadius, difficulty);
+            float gap = RandomBiasedHigh(config.minDistanceBetween, config.maxDistanceBetween, difficulty);
+            float offset = center.OrbitRadius + extraOrbitRadius + gap;
+
             float angle = Random.value < 0.5f ? Random.Range(-90f, -40f) : Random.Range(40f, 90f);
             Vector2 direction = Quaternion.Euler(0, 0, angle) * forward;
 
-            TrySpawnPlanet(center + direction * offset, difficulty);
+            Vector2 position = (Vector2)center.transform.position + direction * offset;
+            TrySpawnPlanet(position, difficulty, extraOrbitRadius);
         }
     }
 
-    private Planet TrySpawnPlanet(Vector2 desiredPosition, float difficulty)
+    private Planet TrySpawnPlanet(Vector2 desiredPosition, float difficulty, float orbitRadius = -1f)
     {
+        if (orbitRadius < 0f)
+            orbitRadius = RandomBiasedLow(config.minOrbitRadius, config.maxOrbitRadius, difficulty);
+
         for (int attempt = 0; attempt < 10; attempt++)
         {
-            float orbitRadius = RandomBiasedLow(config.minOrbitRadius, config.maxOrbitRadius, difficulty);
             Vector2 candidate = desiredPosition + Random.insideUnitCircle * attempt * 2f;
 
             if (IsPositionSafe(candidate, orbitRadius))
@@ -116,6 +126,8 @@ public class PlanetSpawner : MonoBehaviour
     {
         Planet planet = pool[poolIndex];
         poolIndex = (poolIndex + 1) % pool.Length;
+
+        asteroidSpawner.DespawnForPlanet(planet);
 
         if (planet.gameObject.activeSelf)
             activePlanets.Remove(planet);

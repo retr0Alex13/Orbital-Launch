@@ -408,7 +408,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   player: {fileID: 857721169}
   planetSpawner: {fileID: 1525050947}
-  followSpeed: 8
+  positionSmoothTime: 0.2
+  sizeSmoothTime: 0.3
   framingPadding: 2
   minOrthographicSize: 5
   maxOrthographicSize: 10
@@ -1019,7 +1020,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AsteroidSpawner
   asteroidPrefab: {fileID: 153731668303680917, guid: 53743be0065c2d041830c1a022029638, type: 3}
-  config: {fileID: 11400000, guid: bb80182a6946c2f4db42b2b2ade5e2da, type: 2}
+  gapIndicatorPrefab: {fileID: 4085087359713249091, guid: 6f001e56e1274ed42a7169a5d2730bc3, type: 3}
+  config: {fileID: 11400000, guid: b0904264a1072dd41af70646ffacd4c0, type: 2}
 --- !u!1 &2025766157
 GameObject:
   m_ObjectHideFlags: 0
