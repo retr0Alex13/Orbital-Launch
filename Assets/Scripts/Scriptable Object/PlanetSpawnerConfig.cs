@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "PlanetSpawnerConfig", menuName = "Config/Planet Spawner Config")]
 public class PlanetSpawnerConfig : ScriptableObject
@@ -39,4 +40,7 @@ public class PlanetSpawnerConfig : ScriptableObject
     [Header("Asteroids")]
     public float minAsteroidScale = 0.2f;
     public float maxAsteroidScale = 0.6f;
+
+    [Header("Planet Sprites")]
+    public Sprite[] planets;
 }

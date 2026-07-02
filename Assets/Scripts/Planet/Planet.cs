@@ -39,6 +39,11 @@ public class Planet : MonoBehaviour
         orbitSpeed = newOrbitSpeed;
     }
 
+    public void SetPlanetSprite(Sprite sprite)
+    {
+        planetSpriteRenderer.sprite = sprite;
+    }
+
     public void SetDifficultyTint(float difficulty)
     {
         planetSpriteRenderer.color = Color.Lerp(baseColor, Color.red, difficulty);
