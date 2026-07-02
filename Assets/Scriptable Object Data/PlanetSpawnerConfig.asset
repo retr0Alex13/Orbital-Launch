@@ -18,8 +18,8 @@ MonoBehaviour:
   maxDistanceBetween: 12
   maxAngle: 35
   lookaheadPlanets: 3
-  minPlanetScale: 0.8
-  maxPlanetScale: 1.5
+  minPlanetScale: 0.1
+  maxPlanetScale: 0.2
   minOrbitRadius: 3
   maxOrbitRadius: 6
   minOrbitSpeed: 2.5
@@ -31,3 +31,14 @@ MonoBehaviour:
   maxPlanetsToSpawn: 25
   minAsteroidScale: 0.5
   maxAsteroidScale: 0.8
+  planets:
+  - {fileID: -1838984001962695065, guid: 1c5bee170b0ab6d47b8de1145b103414, type: 3}
+  - {fileID: -269140416421959863, guid: 9843f74d7acc22f42b1097763356e095, type: 3}
+  - {fileID: -1829539950349180878, guid: bf46a72321ee5e74983a48ec47f7c443, type: 3}
+  - {fileID: -7382262175430794712, guid: 5a54a4b17c64f654c9570d81984ada56, type: 3}
+  - {fileID: 2396250748795188391, guid: cbbad47339e520b43a234461c799ae92, type: 3}
+  - {fileID: -1555378249586793724, guid: c7f0daa28824dff4197e97da8c3d99df, type: 3}
+  - {fileID: 3432126016212381721, guid: 13b6a6e3267f04b42b5ee23ee3d6419b, type: 3}
+  - {fileID: 1628991321501386694, guid: 9f22a1bd009691848808a685f8ce7790, type: 3}
+  - {fileID: -8963534596690228247, guid: 06c54c483b7ea544b840fe578ff1fdb4, type: 3}
+  - {fileID: 951679504244899334, guid: 437a1036e2b047d4d92117c6fb3caedb, type: 3}
