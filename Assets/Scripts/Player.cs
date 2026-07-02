@@ -64,6 +64,8 @@ public class Player : MonoBehaviour
         {
             playerRigidBody.linearVelocity = targetVelocity;
         }
+
+        transform.up = playerRigidBody.linearVelocity.normalized;
     }
 
     private Vector2 CalculateOrbitVelocity()
