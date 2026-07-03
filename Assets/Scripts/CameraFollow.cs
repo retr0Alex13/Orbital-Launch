@@ -15,7 +15,6 @@ public class CameraFollow : MonoBehaviour
     private Vector3 positionVelocity;
     private float sizeVelocity;
 
-    // Remembered so we don't snap when next planet is temporarily missing
     private Vector3 lastFramedPosition;
     private float lastFramedSize;
 
@@ -61,15 +60,27 @@ public class CameraFollow : MonoBehaviour
 
         if (next != null)
         {
-            Vector3 a = current.transform.position;
-            Vector3 b = next.transform.position;
-            Vector3 midpoint = (a + b) * 0.5f;
+            Vector2 a = current.transform.position;
+            Vector2 b = next.transform.position;
+            float rA = current.OrbitRadius;
+            float rB = next.OrbitRadius;
 
-            targetPosition = new Vector3(midpoint.x, midpoint.y, transform.position.z);
+            float minX = Mathf.Min(a.x - rA, b.x - rB);
+            float maxX = Mathf.Max(a.x + rA, b.x + rB);
+            float minY = Mathf.Min(a.y - rA, b.y - rB);
+            float maxY = Mathf.Max(a.y + rA, b.y + rB);
 
-            float distance = Vector2.Distance(a, b);
+            Vector3 midpoint = new Vector3((minX + maxX) * 0.5f, (minY + maxY) * 0.5f, transform.position.z);
+            targetPosition = midpoint;
+
+            float halfWidth = (maxX - minX) * 0.5f;
+            float halfHeight = (maxY - minY) * 0.5f;
+
+            float sizeForHeight = halfHeight;
+            float sizeForWidth = cam.aspect > 0f ? halfWidth / cam.aspect : halfWidth;
+
             targetSize = Mathf.Clamp(
-                distance * 0.5f + framingPadding,
+                Mathf.Max(sizeForHeight, sizeForWidth) + framingPadding,
                 minOrthographicSize,
                 maxOrthographicSize);
 
