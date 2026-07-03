@@ -20,8 +20,8 @@ public sealed class AsteroidRingConfig : ScriptableObject
     [Range(45f, 180f)] public float maxGapDegrees = 90f;
 
     [Header("Asteroid Size")]
-    [Range(0.1f, 1.5f)] public float minAsteroidScale = 0.25f;
-    [Range(0.2f, 2.0f)] public float maxAsteroidScale = 0.70f;
+    public float minAsteroidScale = 0.25f;
+    public float maxAsteroidScale = 0.70f;
     [Tooltip("Effective degrees each asteroid blocks including a collision buffer. " +
              "Tune to match your sprite diameter at the expected orbit radius.")]
     public float asteroidAngularFootprintDeg = 14f;
@@ -51,4 +51,7 @@ public sealed class AsteroidRingConfig : ScriptableObject
 
     [Header("Object Pools")]
     public int poolSize = 64;
+
+    [SerializeField]
+    public Sprite[] asteroidSprites;
 }

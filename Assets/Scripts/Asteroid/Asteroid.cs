@@ -1,48 +1,67 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(CircleCollider2D))]
 public sealed class Asteroid : MonoBehaviour
 {
     public bool IsActive { get; private set; }
 
-    private CircleCollider2D hazardCollider;
+    [SerializeField]
+    private CircleCollider2D asteroidCollider;
+
+    [SerializeField]
+    private SpriteRenderer spriteRenderer;
+
+    [SerializeField, Range(0.5f, 1f)]
+    private float colliderFitMultiplier = 1f;
+
     private Transform planetTransform;
     private float angleDeg;
     private float orbitRadius;
     private float angularSpeedDeg;
-
-    private void Awake()
-    {
-        hazardCollider = GetComponent<CircleCollider2D>();
-        hazardCollider.isTrigger = true;
-    }
+    private float targetWorldDiameter;
 
     public void Activate(
         Transform target,
         float startAngleDeg,
         float angularSpeedDeg,
-        float scale,
+        float worldDiameter,
         float radius)
     {
         planetTransform = target;
         angleDeg = startAngleDeg;
         this.angularSpeedDeg = angularSpeedDeg;
         orbitRadius = radius;
-        transform.localScale = Vector3.one * scale;
+        targetWorldDiameter = worldDiameter;
 
         gameObject.SetActive(true);
         IsActive = true;
-        hazardCollider.enabled = true;
+        asteroidCollider.enabled = true;
         UpdatePosition();
     }
 
     public void Deactivate()
     {
         planetTransform = null;
-        hazardCollider.enabled = false;
+        asteroidCollider.enabled = false;
         gameObject.SetActive(false);
         IsActive = false;
+    }
+
+    public void SetAsteroidSprite(Sprite sprite)
+    {
+        spriteRenderer.sprite = sprite;
+
+        float visualRadius = Mathf.Max(sprite.bounds.extents.x, sprite.bounds.extents.y);
+        asteroidCollider.radius = visualRadius * colliderFitMultiplier;
+
+        ApplyTargetWorldScale(sprite);
+    }
+
+    private void ApplyTargetWorldScale(Sprite sprite)
+    {
+        float nativeDiameter = Mathf.Max(sprite.bounds.size.x, sprite.bounds.size.y);
+
+        float scaleFactor = targetWorldDiameter / nativeDiameter;
+        transform.localScale = Vector3.one * scaleFactor;
     }
 
     private void Update()

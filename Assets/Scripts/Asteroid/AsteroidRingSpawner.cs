@@ -99,9 +99,12 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
             float scale = Random.Range(config.minAsteroidScale, config.maxAsteroidScale);
             float radius = ringRadius * Random.Range(1f - config.radiusJitter, 1f + config.radiusJitter);
 
-            Asteroid a = pool.Get();
-            a.Activate(planet.transform, angle, p.SpeedDeg, scale, radius);
-            asteroids.Add(a);
+            int randomIndex = Random.Range(0, config.asteroidSprites.Length);
+
+            Asteroid asteroid = pool.Get();
+            asteroid.Activate(planet.transform, angle, p.SpeedDeg, scale, radius);
+            asteroid.SetAsteroidSprite(config.asteroidSprites[randomIndex]);
+            asteroids.Add(asteroid);
         }
         return asteroids;
     }
