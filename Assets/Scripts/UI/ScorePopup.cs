@@ -32,7 +32,7 @@ public class ScorePopup : MonoBehaviour
         popupTransform.anchoredPosition = startPosition;
         canvasGroup.alpha = 1;
 
-        skillText.text = ScoreManager.Instance.GetLabel(entryType);
+        skillText.text = ScoreManager.Instance.GetLabel(entryType) + "!";
         scoreText.text = $"+{ScoreManager.Instance.GetPoints(entryType, orbitEntryConfig)}";
         AnimateAndHide();
     }
