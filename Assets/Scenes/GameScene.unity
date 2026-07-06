@@ -408,11 +408,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   player: {fileID: 857721169}
   planetSpawner: {fileID: 1525050947}
-  positionSmoothTime: 0.2
-  sizeSmoothTime: 0.3
+  positionSmoothTime: 0.3
+  sizeSmoothTime: 0.35
   framingPadding: 1
   minOrthographicSize: 3
   maxOrthographicSize: 12
+  velocityLeadTime: 0
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

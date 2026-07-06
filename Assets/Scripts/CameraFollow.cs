@@ -18,15 +18,24 @@ public class CameraFollow : MonoBehaviour
     private Vector3 lastFramedPosition;
     private float lastFramedSize;
 
+    private Vector3 lastPlayerPosition;
+    private Vector3 playerVelocityEstimate;
+
     private void Awake()
     {
         cam = GetComponent<Camera>();
         lastFramedPosition = transform.position;
         lastFramedSize = minOrthographicSize;
+        lastPlayerPosition = player.transform.position;
     }
 
     private void LateUpdate()
     {
+        Vector3 currentPlayerPos = player.transform.position;
+        if (Time.deltaTime > 0f)
+            playerVelocityEstimate = (currentPlayerPos - lastPlayerPosition) / Time.deltaTime;
+        lastPlayerPosition = currentPlayerPos;
+
         if (player.CurrentPlanet == null)
             FollowPlayer();
         else
@@ -35,10 +44,9 @@ public class CameraFollow : MonoBehaviour
 
     private void FollowPlayer()
     {
-        Vector3 target = new Vector3(
-            player.transform.position.x,
-            player.transform.position.y,
-            transform.position.z);
+        Vector3 predicted = player.transform.position + playerVelocityEstimate * positionSmoothTime;
+
+        Vector3 target = new Vector3(predicted.x, predicted.y, transform.position.z);
 
         transform.position = Vector3.SmoothDamp(
             transform.position, target, ref positionVelocity, positionSmoothTime);
