@@ -12,6 +12,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField]
     private OrbitEntryConfig orbitEntryConfig;
 
+    private bool firstEntry = true;
 
     private void Awake()
     {
@@ -23,10 +24,18 @@ public class ScoreManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        TotalScore = 0;
     }
 
     public void AwardOrbitEntry(OrbitEntryInfo orbitEntryInfo)
     {
+        if (firstEntry)
+        {
+            firstEntry = false;
+            return;
+        }
+
         OrbitEntryType entryType = Evaluate(orbitEntryInfo, orbitEntryConfig);
 
         int points = GetPoints(entryType, orbitEntryConfig);
@@ -60,9 +69,9 @@ public class ScoreManager : MonoBehaviour
 
     public string GetLabel(OrbitEntryType entryType) => entryType switch
     {
-        OrbitEntryType.Good => "GOOD",
+        OrbitEntryType.Good => "GOOD!",
         OrbitEntryType.Perfect => "PERFECT!",
-        OrbitEntryType.NearMiss => "NEAR MISS",
+        OrbitEntryType.NearMiss => "NEAR MISS!",
         _ => ""
     };
 }

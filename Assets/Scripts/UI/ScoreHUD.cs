@@ -17,8 +17,6 @@ public class ScoreHUD : MonoBehaviour
         if (ScoreManager.Instance == null)
             return;
 
-       UpdateDisplay(ScoreManager.Instance.TotalScore, 0);
-
        ScoreManager.Instance.OnScoreScoreChanged += UpdateDisplay;
     }
 
