@@ -18,6 +18,11 @@ public class PlanetSpawnerConfig : ScriptableObject
     public float minPlanetScale;
     public float maxPlanetScale;
 
+    public float minRotationSpeed;
+    public float maxRotationSpeed;
+
+    public float scaleAnimationPercent;
+
     [Header("Orbit")]
     public float minOrbitRadius;
     public float maxOrbitRadius;

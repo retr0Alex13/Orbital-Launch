@@ -147,7 +147,9 @@ public class PlanetSpawner : MonoBehaviour
 
         int randomIndex = Random.Range(0, config.planets.Length);
 
-        planet.Configure(scale, orbitRadius, orbitSpeed);
+        PlanetSettings planetSettings = new PlanetSettings(scale, config.scaleAnimationPercent, config.minRotationSpeed, config.maxRotationSpeed, orbitRadius, orbitSpeed);
+
+        planet.Configure(planetSettings);
         planet.SetPlanetSprite(config.planets[randomIndex]);
         planet.SetDifficultyTint(speedDifficulty);
 

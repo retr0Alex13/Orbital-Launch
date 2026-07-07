@@ -1,5 +1,7 @@
+using PrimeTween;
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Planet : MonoBehaviour
 {
@@ -22,21 +24,39 @@ public class Planet : MonoBehaviour
     [SerializeField]
     private SpriteRenderer planetSpriteRenderer;
 
+    private float rotatedAnimationSpeed;
+    private float scaleAnimationPercent;
+    private float planetScale;
     private Color baseColor;
+    private Tween scaleTween;
 
     private void Awake()
     {
         baseColor = planetSpriteRenderer.color;
     }
 
-    public void Configure(float planetScale, float orbitRadius, float newOrbitSpeed)
+    private void Update()
     {
-        planetSprite.localScale = Vector3.one * planetScale;
+        planetSprite.Rotate(Vector3.forward * rotatedAnimationSpeed * Time.deltaTime);
+    }
 
-        float orbitScale = orbitRadius / orbitCollider.radius;
+    public void Configure(PlanetSettings planetSettings)
+    {
+        planetSprite.localScale = Vector3.one * planetSettings.PlanetScale;
+        planetScale = planetSettings.PlanetScale;
+        scaleAnimationPercent = planetSettings.ScaleAnimationPercent;
+
+        float orbitScale = planetSettings.OrbitRadius / orbitCollider.radius;
         orbitCollider.transform.localScale = Vector3.one * orbitScale;
 
-        orbitSpeed = newOrbitSpeed;
+        orbitSpeed = planetSettings.NewOrbitSpeed;
+
+        float calculatedRotationSpeed = Random.Range(planetSettings.MinRotationSpeed, planetSettings.MaxRotationSpeed);
+        rotatedAnimationSpeed = 360f / calculatedRotationSpeed;
+
+        scaleTween.Stop();
+        float targetScale = planetScale * (1f + scaleAnimationPercent);
+        scaleTween = Tween.Scale(planetSprite, endValue: Vector3.one * targetScale, duration: 1f, Ease.InOutSine, cycles: -1, CycleMode.Yoyo);
     }
 
     public void SetPlanetSprite(Sprite sprite)
@@ -57,5 +77,25 @@ public class Planet : MonoBehaviour
                 orbitCollider = GetComponent<CircleCollider2D>();
             return orbitCollider.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.y);
         }
+    }
+}
+
+public struct PlanetSettings
+{
+    public float PlanetScale { get; private set; }
+    public float ScaleAnimationPercent { get; private set; }
+    public float MinRotationSpeed { get; private set; }
+    public float MaxRotationSpeed { get; private set; }
+    public float OrbitRadius { get; private set; }
+    public float NewOrbitSpeed { get; private set; }
+
+    public PlanetSettings(float planetScale, float scaleAnimationPercent, float minRotationSpeed, float maxRotationSpeed, float orbitRadius, float newOrbitSpeed)
+    {
+        PlanetScale = planetScale;
+        ScaleAnimationPercent = scaleAnimationPercent;
+        MinRotationSpeed = minRotationSpeed;
+        MaxRotationSpeed = maxRotationSpeed;
+        OrbitRadius = orbitRadius;
+        NewOrbitSpeed = newOrbitSpeed;
     }
 }
