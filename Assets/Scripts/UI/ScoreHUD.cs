@@ -9,9 +9,6 @@ public class ScoreHUD : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI scoreLabel;
 
-    [SerializeField]
-    private Player player;
-
     private void Start()
     {
         if (ScoreManager.Instance == null)
