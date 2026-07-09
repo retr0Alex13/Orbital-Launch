@@ -16,6 +16,7 @@ public class PlanetSpawner : MonoBehaviour
     private readonly List<Planet> activePlanets = new();
 
     private float traveledDistance;
+    private int previousSpriteIndex;
 
     private void Start()
     {
@@ -146,6 +147,11 @@ public class PlanetSpawner : MonoBehaviour
         float orbitSpeed = RandomBiasedHigh(config.minOrbitSpeed, config.maxOrbitSpeed, speedDifficulty);
 
         int randomIndex = Random.Range(0, config.planets.Length);
+
+        if (randomIndex == previousSpriteIndex)
+            randomIndex = Mathf.Clamp(randomIndex + 1, 0, config.planets.Length);
+
+        previousSpriteIndex = randomIndex;
 
         PlanetSettings planetSettings = new PlanetSettings(scale, config.scaleAnimationPercent, config.minRotationSpeed, config.maxRotationSpeed, orbitRadius, orbitSpeed);
 
