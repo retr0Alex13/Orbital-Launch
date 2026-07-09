@@ -123,6 +123,8 @@ public class Player : MonoBehaviour
             {
                 currentPlanet = null;
                 isTransitioning = false;
+
+                OnPlayerLaunched?.Invoke();
             }
         }
     }

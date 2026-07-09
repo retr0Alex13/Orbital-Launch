@@ -23,7 +23,6 @@ public class ScoreManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         TotalScore = 0;
     }
