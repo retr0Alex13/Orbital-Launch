@@ -148,8 +148,10 @@ public class PlanetSpawner : MonoBehaviour
 
         int randomIndex = Random.Range(0, config.planets.Length);
 
-        if (randomIndex == previousSpriteIndex)
-            randomIndex = Mathf.Clamp(randomIndex + 1, 0, config.planets.Length);
+        if (randomIndex == previousSpriteIndex && config.planets.Length > 1)
+        {
+            randomIndex = (randomIndex + 1) % config.planets.Length;
+        }
 
         previousSpriteIndex = randomIndex;
 
