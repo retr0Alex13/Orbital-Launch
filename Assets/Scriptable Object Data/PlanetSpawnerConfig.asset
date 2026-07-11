@@ -23,7 +23,7 @@ MonoBehaviour:
   minRotationSpeed: 8
   maxRotationSpeed: 15
   scaleAnimationPercent: 0.05
-  minOrbitRadius: 3
+  minOrbitRadius: 4.5
   maxOrbitRadius: 6
   minOrbitSpeed: 2.5
   maxOrbitSpeed: 8
