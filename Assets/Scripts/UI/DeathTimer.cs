@@ -78,6 +78,7 @@ public class DeathTimer : MonoBehaviour
         }
 
         player.DestroyPlayer();
+        PokiUnitySDK.Instance.gameplayStop();
     }
 
     private void AnimateAndHide()
