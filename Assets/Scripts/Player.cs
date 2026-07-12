@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -112,6 +113,10 @@ public class Player : MonoBehaviour
             orbitDirection = crossZ > 0 ? -1f : 1f;
 
             OnPlayerCaptured?.Invoke(planet);
+        }
+        if (collision.TryGetComponent(out Asteroid asteroid))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
