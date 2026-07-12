@@ -77,6 +77,7 @@ public class DeathTimer : MonoBehaviour
             yield return null;
         }
 
+        PokiUnitySDK.Instance.gameplayStop();
         GameManager.Instance.RestartGame();
     }
 
