@@ -1,16 +1,16 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Player))]
+[RequireComponent(typeof(PlayerController))]
 public class OrbitEntryScorer : MonoBehaviour
 {
-    private Player player;
+    private PlayerController player;
     private Rigidbody2D rb;
 
     private OrbitEntryInfo orbitEntryInfo;
 
     private void Awake()
     {
-        player = GetComponent<Player>();
+        player = GetComponent<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
     }
 

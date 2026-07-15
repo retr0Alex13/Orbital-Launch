@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public event Action OnPlayerLaunched;
     public event Action<Planet> OnPlayerCaptured;
@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float radiusCorrectionSpeed = 5f;
+
+    [SerializeField]
+    private ParticleSystem rocketThrust;
 
     [SerializeField]
     private Rigidbody2D playerRigidBody;

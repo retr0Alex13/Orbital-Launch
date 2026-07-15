@@ -7,7 +7,7 @@ public class PlanetSpawner : MonoBehaviour
     [SerializeField] private PlanetSpawnerConfig config;
     [SerializeField] private AsteroidRingSpawner asteroidSpawner;
 
-    [SerializeField] private Player player;
+    [SerializeField] private PlayerController player;
 
     private Planet[] pool;
     private int poolIndex;

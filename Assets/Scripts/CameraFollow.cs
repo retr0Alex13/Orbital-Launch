@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private Player player;
+    [SerializeField] private PlayerController player;
     [SerializeField] private PlanetSpawner planetSpawner;
 
     [SerializeField] private float positionSmoothTime = 0.2f;

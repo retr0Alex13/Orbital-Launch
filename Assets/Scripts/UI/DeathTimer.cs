@@ -14,7 +14,7 @@ public class DeathTimer : MonoBehaviour
     private CanvasGroup canvasGroup;
 
     [SerializeField]
-    private Player player;
+    private PlayerController player;
 
     [SerializeField]
     private float delayTime = 2f;
