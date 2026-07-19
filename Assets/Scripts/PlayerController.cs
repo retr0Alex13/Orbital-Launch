@@ -1,3 +1,4 @@
+using AudioSystem;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,6 +25,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Rigidbody2D playerRigidBody;
 
+    [SerializeField]
+    private SoundData rocketThrustSound;
+
     private float transitionElapsed;
     private float orbitDirection;
 
@@ -31,6 +35,14 @@ public class PlayerController : MonoBehaviour
 
     private Planet currentPlanet;
     private Vector2 velocityAtEntry;
+
+    private SoundBuilder soundBuilder;
+    private SoundEmitter engineSound;
+
+    private void Start()
+    {
+        soundBuilder = SoundManager.Instance.CreateSoundBuilder();
+    }
 
     private void Update()
     {
@@ -51,6 +63,7 @@ public class PlayerController : MonoBehaviour
         playerRigidBody.AddForce(playerRigidBody.linearVelocity.normalized * launchSpeed, ForceMode2D.Impulse);
 
         OnPlayerLaunched?.Invoke();
+        ToggleEffects(true);
     }
 
     private void FixedUpdate()
@@ -116,10 +129,25 @@ public class PlayerController : MonoBehaviour
             orbitDirection = crossZ > 0 ? -1f : 1f;
 
             OnPlayerCaptured?.Invoke(planet);
+            ToggleEffects(false);
         }
         if (collision.TryGetComponent(out Asteroid asteroid))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+    }
+
+    private void ToggleEffects(bool enable)
+    {
+        if (enable)
+        {
+            engineSound = soundBuilder.Play(rocketThrustSound);
+            rocketThrust.Play(true);
+        }
+        else
+        {
+            engineSound?.Stop();
+            rocketThrust.Stop(true);
         }
     }
 
