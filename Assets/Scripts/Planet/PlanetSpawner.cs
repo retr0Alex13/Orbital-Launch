@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlanetSpawner : MonoBehaviour
 {
+    [SerializeField] private float initialSpawnOffset = 2f;
     [SerializeField] private Planet planetPrefab;
     [SerializeField] private PlanetSpawnerConfig config;
     [SerializeField] private AsteroidRingSpawner asteroidSpawner;
@@ -29,7 +30,7 @@ public class PlanetSpawner : MonoBehaviour
             pool[i].gameObject.SetActive(false);
         }
 
-        mainPath.Add(SpawnPlanet(Vector2.zero, 0f));
+        mainPath.Add(SpawnPlanet(Vector2.right * initialSpawnOffset, 0f));
 
         for (int i = 0; i < config.lookaheadPlanets; i++)
             SpawnAheadOnMainPath();

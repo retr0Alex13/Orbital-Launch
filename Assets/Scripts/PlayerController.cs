@@ -42,6 +42,9 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         soundBuilder = SoundManager.Instance.CreateSoundBuilder();
+
+        playerRigidBody.linearVelocity = Vector2.right * launchSpeed;
+        transform.up = playerRigidBody.linearVelocity.normalized;
     }
 
     private void Update()
