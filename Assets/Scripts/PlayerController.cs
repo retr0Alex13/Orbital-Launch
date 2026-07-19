@@ -164,6 +164,7 @@ public class PlayerController : MonoBehaviour
                 isTransitioning = false;
 
                 OnPlayerLaunched?.Invoke();
+                ToggleEffects(true);
             }
         }
     }
