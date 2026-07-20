@@ -11,6 +11,7 @@ namespace AudioSystem {
 
         AudioSource audioSource;
         Coroutine playingCoroutine;
+        bool isStopped = true;
 
         void Awake() {
             audioSource = gameObject.GetOrAdd<AudioSource>();
@@ -18,6 +19,7 @@ namespace AudioSystem {
 
         public void Initialize(SoundData data) {
             Data = data;
+            isStopped = false;
             audioSource.clip = data.clip;
             audioSource.outputAudioMixerGroup = data.mixerGroup;
             audioSource.loop = data.loop;
@@ -46,26 +48,40 @@ namespace AudioSystem {
             audioSource.rolloffMode = data.rolloffMode;
         }
 
-        public void Play() {
-            if (playingCoroutine != null) {
+        public void Play()
+        {
+            if (playingCoroutine != null)
+            {
                 StopCoroutine(playingCoroutine);
+                playingCoroutine = null;
             }
-            
+
+            isStopped = false;
             audioSource.Play();
-            playingCoroutine = StartCoroutine(WaitForSoundToEnd());
+
+            if (!Data.loop)
+            {
+                playingCoroutine = StartCoroutine(WaitForSoundToEnd());
+            }
         }
 
-        IEnumerator WaitForSoundToEnd() {
+        IEnumerator WaitForSoundToEnd()
+        {
             yield return new WaitWhile(() => audioSource.isPlaying);
             Stop();
         }
 
-        public void Stop() {
-            if (playingCoroutine != null) {
+        public void Stop()
+        {
+            if (isStopped) return;
+                isStopped = true;
+
+            if (playingCoroutine != null)
+            {
                 StopCoroutine(playingCoroutine);
                 playingCoroutine = null;
             }
-            
+
             audioSource.Stop();
             SoundManager.Instance.ReturnToPool(this);
         }
