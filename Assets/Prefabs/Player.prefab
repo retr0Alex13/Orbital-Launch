@@ -170,7 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   launchSpeed: 3
-  orbitTransitionDuration: 1
+  introSpeed: 5
+  orbitTransitionDuration: 0.5
   radiusCorrectionSpeed: 5
   rocketThrust: {fileID: 7313350753847179120}
   playerRigidBody: {fileID: 4084989458506052570}
