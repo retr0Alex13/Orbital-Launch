@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     private float launchSpeed = 3f;
 
     [SerializeField]
+    private float introSpeed = 5f;
+
+    [SerializeField]
     private float orbitTransitionDuration = 1f;
 
     [SerializeField]
@@ -43,8 +46,9 @@ public class PlayerController : MonoBehaviour
     {
         soundBuilder = SoundManager.Instance.CreateSoundBuilder();
 
-        playerRigidBody.linearVelocity = Vector2.right * launchSpeed;
+        playerRigidBody.linearVelocity = Vector2.right * introSpeed;
         transform.up = playerRigidBody.linearVelocity.normalized;
+        ToggleEffects(true);
     }
 
     private void Update()
