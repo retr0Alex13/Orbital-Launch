@@ -86,7 +86,7 @@ namespace AudioSystem {
             SoundManager.Instance.ReturnToPool(this);
         }
 
-        public void WithRandomPitch(float min = -0.05f, float max = 0.05f) {
+        public void WithRandomPitch(float min = -0.25f, float max = 0.25f) {
             audioSource.pitch += Random.Range(min, max);
         }
     }
