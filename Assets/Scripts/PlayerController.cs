@@ -31,6 +31,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private SoundData rocketThrustSound;
 
+    [SerializeField]
+    private SoundData rocketLaunchSound;
+
     private float transitionElapsed;
     private float orbitDirection;
 
@@ -45,10 +48,11 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         soundBuilder = SoundManager.Instance.CreateSoundBuilder();
+        soundBuilder = soundBuilder.WithRandomPitch();
 
         playerRigidBody.linearVelocity = Vector2.right * introSpeed;
         transform.up = playerRigidBody.linearVelocity.normalized;
-        ToggleEffects(true);
+        ToggleThrustEffects(true);
     }
 
     private void Update()
@@ -70,7 +74,9 @@ public class PlayerController : MonoBehaviour
         playerRigidBody.AddForce(playerRigidBody.linearVelocity.normalized * launchSpeed, ForceMode2D.Impulse);
 
         OnPlayerLaunched?.Invoke();
-        ToggleEffects(true);
+
+        soundBuilder.Play(rocketLaunchSound);
+        ToggleThrustEffects(true);
     }
 
     private void FixedUpdate()
@@ -136,7 +142,7 @@ public class PlayerController : MonoBehaviour
             orbitDirection = crossZ > 0 ? -1f : 1f;
 
             OnPlayerCaptured?.Invoke(planet);
-            ToggleEffects(false);
+            ToggleThrustEffects(false);
         }
         if (collision.TryGetComponent(out Asteroid asteroid))
         {
@@ -144,7 +150,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void ToggleEffects(bool enable)
+    private void ToggleThrustEffects(bool enable)
     {
         if (enable)
         {
@@ -168,7 +174,7 @@ public class PlayerController : MonoBehaviour
                 isTransitioning = false;
 
                 OnPlayerLaunched?.Invoke();
-                ToggleEffects(true);
+                ToggleThrustEffects(true);
             }
         }
     }
