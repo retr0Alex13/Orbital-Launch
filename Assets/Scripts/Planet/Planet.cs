@@ -24,6 +24,9 @@ public class Planet : MonoBehaviour
     [SerializeField]
     private SpriteRenderer planetSpriteRenderer;
 
+    [SerializeField]
+    private OrbitShockWaveController orbitVisual;
+
     private float rotatedAnimationSpeed;
     private float scaleAnimationPercent;
     private float planetScale;
@@ -67,6 +70,11 @@ public class Planet : MonoBehaviour
     public void SetDifficultyTint(float difficulty)
     {
         planetSpriteRenderer.color = Color.Lerp(baseColor, Color.red, difficulty);
+    }
+
+    public void PlayShockWaveEffect(Vector2 position)
+    {
+        orbitVisual.PlayWave(position);
     }
 
     public float TriggerRadius

@@ -68,6 +68,8 @@ public class PlayerController : MonoBehaviour
         if (currentPlanet == null)
             return;
 
+        currentPlanet.PlayShockWaveEffect(transform.position);
+
         currentPlanet = null;
         isTransitioning = false;
 
@@ -143,6 +145,8 @@ public class PlayerController : MonoBehaviour
 
             OnPlayerCaptured?.Invoke(planet);
             ToggleThrustEffects(false);
+
+            currentPlanet.PlayShockWaveEffect(transform.position);
         }
         if (collision.TryGetComponent(out Asteroid asteroid))
         {

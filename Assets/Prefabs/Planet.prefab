@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5750758782114012256}
   - component: {fileID: 641489653921651651}
+  - component: {fileID: 8128145363405466507}
   m_Layer: 0
   m_Name: OrbitSprite
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3075819802918625597}
@@ -58,7 +59,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 1949d250b18c5d548a69c7b0d68bed9d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,8 +82,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.11952651, g: 0.23432943, b: 0.3207547, a: 0.26666668}
+  m_Sprite: {fileID: 3150547157567880597, guid: 37b359285035380459904c9e0910f644, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -91,6 +92,22 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &8128145363405466507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7357266094173063519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82b10ad7cc350e945a461dd0c0479539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbitShockWaveController
+  orbitRenderer: {fileID: 641489653921651651}
+  waveDuration: 2
+  waveMaxDistance: 1
+  waveStrength: -0.1
 --- !u!1 &8619869347213187621
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,6 +196,7 @@ MonoBehaviour:
   orbitCollider: {fileID: 8280061508371363544}
   planetSprite: {fileID: 1292532132765204841}
   planetSpriteRenderer: {fileID: 6697189935250800820}
+  orbitVisual: {fileID: 8128145363405466507}
 --- !u!1 &8829762453693668692
 GameObject:
   m_ObjectHideFlags: 0
