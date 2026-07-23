@@ -105,9 +105,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrbitShockWaveController
   orbitRenderer: {fileID: 641489653921651651}
-  waveDuration: 2
-  waveMaxDistance: 1
+  waveDuration: 1.2
+  waveMaxDistance: 0.3
   waveStrength: -0.1
+  waveFadeStart: 0.7
 --- !u!1 &8619869347213187621
 GameObject:
   m_ObjectHideFlags: 0

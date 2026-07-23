@@ -15,6 +15,10 @@ public class OrbitShockWaveController : MonoBehaviour
     [SerializeField]
     private float waveStrength = 1f;
 
+    [SerializeField]
+    [Range(0f, 1f)]
+    private float waveFadeStart = 0.7f;
+
     private Material orbitMaterial;
 
     private float waveTimer;
@@ -31,7 +35,6 @@ public class OrbitShockWaveController : MonoBehaviour
 
     private void Awake()
     {
-        // Створюємо окремий Material Instance
         orbitMaterial = orbitRenderer.material;
 
         orbitMaterial.SetFloat(WaveDistanceFromCenter, 0f);
@@ -46,28 +49,23 @@ public class OrbitShockWaveController : MonoBehaviour
         waveTimer += Time.deltaTime;
 
         float t = waveTimer / waveDuration;
+        t = Mathf.Clamp01(t);
+
+        float smoothT = Mathf.SmoothStep(0f, 1f, t);
+        float waveDistance = Mathf.Lerp(0f, waveMaxDistance, smoothT);
+
+        orbitMaterial.SetFloat(WaveDistanceFromCenter, waveDistance);
+
+        float fadeT = Mathf.InverseLerp(waveFadeStart, 1f, t);
+        float fade = 1f - Mathf.SmoothStep(0f, 1f, fadeT);
+
+        orbitMaterial.SetFloat(ShockWaveStrength, waveStrength * fade);
 
         if (t >= 1f)
         {
-            t = 1f;
             isPlaying = false;
-        }
 
-        // Плавний рух хвилі від центру
-        float smoothT = Mathf.SmoothStep(0f, 1f, t);
-
-        float waveDistance =
-            Mathf.Lerp(0f, waveMaxDistance, smoothT);
-
-        orbitMaterial.SetFloat(
-            WaveDistanceFromCenter,
-            waveDistance);
-
-        if (!isPlaying)
-        {
-            orbitMaterial.SetFloat(
-                ShockWaveStrength,
-                0f);
+            orbitMaterial.SetFloat(ShockWaveStrength, 0f);
         }
     }
 
@@ -75,20 +73,9 @@ public class OrbitShockWaveController : MonoBehaviour
     {
         Vector2 uvPosition = WorldToUV(worldPosition);
 
-        orbitMaterial.SetVector(
-            RingSpawnPosition,
-            uvPosition
-        );
-
-        orbitMaterial.SetFloat(
-            WaveDistanceFromCenter,
-            0f
-        );
-
-        orbitMaterial.SetFloat(
-            ShockWaveStrength,
-            waveStrength
-        );
+        orbitMaterial.SetVector(RingSpawnPosition, uvPosition);
+        orbitMaterial.SetFloat(WaveDistanceFromCenter, 0f);
+        orbitMaterial.SetFloat(ShockWaveStrength, waveStrength);
 
         waveTimer = 0f;
         isPlaying = true;

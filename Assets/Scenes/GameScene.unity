@@ -1472,6 +1472,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2639901903203845334, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: rocketLaunchSound.clip
       value: 
@@ -1482,6 +1486,10 @@ PrefabInstance:
       objectReference: {fileID: 4796280562796518393, guid: 0648aff6a08d3f0468df28399773aba6, type: 2}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: rocketLaunchSound.frequentSound
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8192182908323315639, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: m_SortingOrder
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8323791155711702160, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
