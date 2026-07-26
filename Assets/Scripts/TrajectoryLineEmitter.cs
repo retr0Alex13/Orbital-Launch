@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-public class TrajectoryPredictor : MonoBehaviour
+public class TrajectoryLineEmitter : MonoBehaviour
 {
+    public event Action OnOrbitHitDetected;
+
     [SerializeField] private PlayerController player;
     [SerializeField] private LayerMask planetLayerMask;
 
@@ -16,6 +19,9 @@ public class TrajectoryPredictor : MonoBehaviour
 
     [Header("Smoothing")]
     [SerializeField, Range(1f, 60f)] private float followSharpness = 25f;
+
+    [Header("Hit Detection")]
+    [SerializeField] private float minTimeBeforeHitDetection = 0.4f;
 
     [Header("Sorting")]
     [SerializeField] private string sortingLayerName = "Default";
@@ -32,6 +38,7 @@ public class TrajectoryPredictor : MonoBehaviour
     private Vector2 smoothedOrigin;
     private Vector2 smoothedDirection = Vector2.up;
     private bool wasVisible;
+    private float lastCaptureUnscaledTime = -Mathf.Infinity;
 
     private void Awake()
     {
@@ -42,6 +49,23 @@ public class TrajectoryPredictor : MonoBehaviour
         meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
         meshRenderer.sortingLayerName = sortingLayerName;
         meshRenderer.sortingOrder = sortingOrder;
+    }
+
+    private void OnEnable()
+    {
+        if (player != null)
+            player.OnPlayerCaptured += HandlePlayerCaptured;
+    }
+
+    private void OnDisable()
+    {
+        if (player != null)
+            player.OnPlayerCaptured -= HandlePlayerCaptured;
+    }
+
+    private void HandlePlayerCaptured(Planet planet)
+    {
+        lastCaptureUnscaledTime = Time.unscaledTime;
     }
 
     private void LateUpdate()
@@ -57,6 +81,8 @@ public class TrajectoryPredictor : MonoBehaviour
 
         meshRenderer.enabled = true;
 
+        float dt = Time.unscaledDeltaTime;
+
         Vector2 targetOrigin = player.transform.position;
         Vector2 targetDirection = player.transform.up;
 
@@ -67,7 +93,7 @@ public class TrajectoryPredictor : MonoBehaviour
         }
         else
         {
-            float t = 1f - Mathf.Exp(-followSharpness * Time.deltaTime);
+            float t = 1f - Mathf.Exp(-followSharpness * dt);
             smoothedOrigin = Vector2.Lerp(smoothedOrigin, targetOrigin, t);
             smoothedDirection = ((Vector2)Vector3.Slerp(smoothedDirection, targetDirection, t)).normalized;
         }
@@ -75,9 +101,15 @@ public class TrajectoryPredictor : MonoBehaviour
         wasVisible = true;
 
         float length = rayLength;
-        if (TryFindNearestOrbitHit(smoothedOrigin, smoothedDirection, player.CurrentPlanet, out float hitDistance))
+        bool hitFound = TryFindNearestOrbitHit(smoothedOrigin, smoothedDirection, player.CurrentPlanet, out float hitDistance);
+
+        if (hitFound)
         {
             length = Mathf.Min(rayLength, hitDistance);
+
+            bool pastMinDelay = Time.unscaledTime - lastCaptureUnscaledTime >= minTimeBeforeHitDetection;
+            if (pastMinDelay)
+                OnOrbitHitDetected?.Invoke();
         }
 
         BuildDashedMesh(smoothedOrigin, smoothedDirection, length);
@@ -153,7 +185,8 @@ public class TrajectoryPredictor : MonoBehaviour
 
         Vector2 normal = new Vector2(-direction.y, direction.x) * (lineWidth * 0.5f);
         float tile = Mathf.Max(dashLength + gapLength, 0.001f);
-        float phase = (Time.time * scrollSpeed) % tile;
+
+        float phase = (Time.unscaledTime * scrollSpeed) % tile;
         float traveled = phase - tile;
 
         while (traveled < length)
