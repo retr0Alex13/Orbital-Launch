@@ -32,33 +32,39 @@ public class CameraFollow : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 currentPlayerPos = player.transform.position;
-        if (Time.deltaTime > 0f)
-            playerVelocityEstimate = (currentPlayerPos - lastPlayerPosition) / Time.deltaTime;
+        if (Time.unscaledDeltaTime > 0f)
+        {
+            playerVelocityEstimate = (currentPlayerPos - lastPlayerPosition) / Time.unscaledDeltaTime;
+        }
+
         lastPlayerPosition = currentPlayerPos;
 
         if (player.CurrentPlanet == null)
-            FollowPlayer();
+        {
+            FollowPlayer(Time.unscaledDeltaTime);
+        }
         else
-            FrameCurrentAndNextPlanet();
+        {
+            FrameCurrentAndNextPlanet(Time.unscaledDeltaTime);
+        }
     }
 
-    private void FollowPlayer()
+    private void FollowPlayer(float dt)
     {
         Vector3 predicted = player.transform.position + playerVelocityEstimate * positionSmoothTime;
-
         Vector3 target = new Vector3(predicted.x, predicted.y, transform.position.z);
 
         transform.position = Vector3.SmoothDamp(
-            transform.position, target, ref positionVelocity, positionSmoothTime);
+            transform.position, target, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
 
         cam.orthographicSize = Mathf.SmoothDamp(
-            cam.orthographicSize, minOrthographicSize, ref sizeVelocity, sizeSmoothTime);
+            cam.orthographicSize, minOrthographicSize, ref sizeVelocity, sizeSmoothTime, Mathf.Infinity, dt);
 
         lastFramedPosition = transform.position;
         lastFramedSize = cam.orthographicSize;
     }
 
-    private void FrameCurrentAndNextPlanet()
+    private void FrameCurrentAndNextPlanet(float dt)
     {
         Planet current = player.CurrentPlanet;
         Planet next = planetSpawner.GetNextPlanetAfter(current);
@@ -102,9 +108,9 @@ public class CameraFollow : MonoBehaviour
         }
 
         transform.position = Vector3.SmoothDamp(
-            transform.position, targetPosition, ref positionVelocity, positionSmoothTime);
+            transform.position, targetPosition, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
 
         cam.orthographicSize = Mathf.SmoothDamp(
-            cam.orthographicSize, targetSize, ref sizeVelocity, sizeSmoothTime);
+            cam.orthographicSize, targetSize, ref sizeVelocity, sizeSmoothTime, Mathf.Infinity, dt);
     }
 }
