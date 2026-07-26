@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public event Action<Planet> OnPlayerCaptured;
 
     public Planet CurrentPlanet => currentPlanet;
-    public bool CanLaunch { get; set; }
+    public bool CanLaunch { get; set; } = true;
 
     [SerializeField]
     private float launchSpeed = 3f;
