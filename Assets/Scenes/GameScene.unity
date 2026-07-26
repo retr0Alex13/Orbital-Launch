@@ -1051,7 +1051,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
   m_PrefabInstance: {fileID: 6377843805738760054}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1012685850}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cf15f71dd303e14e9320bdb300a05b9, type: 3}
@@ -1162,9 +1162,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialController
   timesToRepeatTutorial: 2
+  planetsToDisableLine: 4
   tutorialPanel: {fileID: 565218277}
   trajectoryLineEmitter: {fileID: 508591109}
   playerController: {fileID: 857721169}
+  visitedPlanets: {fileID: 1012685855}
 --- !u!4 &980192402
 Transform:
   m_ObjectHideFlags: 0
@@ -1180,6 +1182,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1012685850 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8323791155711702160, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+  m_PrefabInstance: {fileID: 6377843805738760054}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1012685855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012685850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a08e7e77bfe3ac468e312d7e64ceab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisitedPlanetsCounter
 --- !u!1 &1060752013
 GameObject:
   m_ObjectHideFlags: 0
@@ -2023,7 +2042,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8323791155711702160, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1012685855}
   m_SourcePrefab: {fileID: 100100000, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

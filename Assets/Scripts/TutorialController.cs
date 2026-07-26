@@ -6,6 +6,9 @@ public class TutorialController : MonoBehaviour
     private int timesToRepeatTutorial = 2;
 
     [SerializeField]
+    private int planetsToDisableLine = 4;
+
+    [SerializeField]
     private Transform tutorialPanel;
 
     [SerializeField]
@@ -13,6 +16,9 @@ public class TutorialController : MonoBehaviour
 
     [SerializeField]
     private PlayerController playerController;
+
+    [SerializeField]
+    private VisitedPlanetsCounter visitedPlanets;
 
     private int tutorialCounter;
 
@@ -31,6 +37,8 @@ public class TutorialController : MonoBehaviour
 
             PlayerPrefs.SetInt(Constants.IS_FIRST_TIME_PLAYER, 0);
         }
+
+        playerController.OnPlayerCaptured += CheckCountOfVisitedPlanets;
     }
 
     private void ReleaseTime()
@@ -52,5 +60,13 @@ public class TutorialController : MonoBehaviour
         tutorialPanel.gameObject.SetActive(true);
         Time.timeScale = 0f;
         playerController.CanLaunch = true;
+    }
+
+    private void CheckCountOfVisitedPlanets(Planet planet)
+    {
+        if (visitedPlanets.VisitedPlanets >= planetsToDisableLine)
+        {
+            trajectoryLineEmitter.enabled = false;
+        }
     }
 }
