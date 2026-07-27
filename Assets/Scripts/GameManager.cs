@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
+        PokiUnitySDK.Instance.gameplayStop();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         SoundManager.Instance.StopAll();
     }

@@ -1,10 +1,7 @@
-using AudioSystem;
 using PrimeTween;
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DeathTimer : MonoBehaviour
 {
@@ -77,7 +74,6 @@ public class DeathTimer : MonoBehaviour
             yield return null;
         }
 
-        PokiUnitySDK.Instance.gameplayStop();
         GameManager.Instance.RestartGame();
     }
 
