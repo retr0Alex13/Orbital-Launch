@@ -152,6 +152,7 @@ public class PlayerController : MonoBehaviour
         if (collision.TryGetComponent(out Asteroid asteroid))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SoundManager.Instance.StopAll();
         }
     }
 
