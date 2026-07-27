@@ -77,9 +77,7 @@ public class DeathTimer : MonoBehaviour
             yield return null;
         }
 
-        PokiUnitySDK.Instance.gameplayStop();
-        SoundManager.Instance.StopAll();
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.RestartGame();
     }
 
     private void AnimateAndHide()
