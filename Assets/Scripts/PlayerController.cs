@@ -147,6 +147,7 @@ public class PlayerController : MonoBehaviour
             OnPlayerCaptured?.Invoke(planet);
             ToggleThrustEffects(false);
 
+            soundBuilder.Play(rocketLaunchSound);
             currentPlanet.PlayShockWaveEffect(transform.position);
         }
         if (collision.TryGetComponent(out Asteroid asteroid))
