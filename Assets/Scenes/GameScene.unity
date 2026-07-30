@@ -345,6 +345,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   rayLength: 20
+  minLengthScale: 0.3
   lineWidth: 0.1
   dashLength: 0.3
   gapLength: 0.2
@@ -2534,7 +2535,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -35, y: -30.2}
+  m_AnchoredPosition: {x: -35, y: -30.199951}
   m_SizeDelta: {x: 426.1727, y: 92.4426}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2078769515
@@ -2626,6 +2627,14 @@ PrefabInstance:
     - target: {fileID: 2639901903203845334, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_SortingOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: maxLaunchSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: minLaunchSpeed
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: rocketLaunchSound.clip
