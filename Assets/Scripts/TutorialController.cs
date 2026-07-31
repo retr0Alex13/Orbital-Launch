@@ -12,7 +12,13 @@ public class TutorialController : MonoBehaviour
     private Transform tutorialPanel;
 
     [SerializeField]
-    private TrajectoryLineEmitter trajectoryLineEmitter;
+    private RectTransform canvas;
+
+    [SerializeField]
+    private RectTransform handContainer;
+
+    [SerializeField]
+    private OrbitTutorialScanner orbitTutorialScanner;
 
     [SerializeField]
     private PlayerController playerController;
@@ -29,9 +35,13 @@ public class TutorialController : MonoBehaviour
             PlayerPrefs.SetInt(Constants.IS_FIRST_TIME_PLAYER, 1);
         }
 
-        if (PlayerPrefs.GetInt(Constants.IS_FIRST_TIME_PLAYER, 0) == 1)
+        bool isFirstTimePlayer = PlayerPrefs.GetInt(Constants.IS_FIRST_TIME_PLAYER, 0) == 1;
+
+        orbitTutorialScanner.enabled = isFirstTimePlayer;
+
+        if (isFirstTimePlayer)
         {
-            trajectoryLineEmitter.OnOrbitHitDetected += StopTime;
+            orbitTutorialScanner.OnOrbitHitDetected += StopTime;
             playerController.OnPlayerLaunched += ReleaseTime;
             playerController.CanLaunch = false;
 
@@ -50,12 +60,18 @@ public class TutorialController : MonoBehaviour
     {
         if (tutorialCounter >= timesToRepeatTutorial)
         {
-            trajectoryLineEmitter.OnOrbitHitDetected -= StopTime;
+            orbitTutorialScanner.OnOrbitHitDetected -= StopTime;
             playerController.OnPlayerLaunched -= ReleaseTime;
+            orbitTutorialScanner.enabled = false;
             return;
         }
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, playerController.transform.position);
 
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPoint, null, out Vector2 localPoint);
+        localPoint.y -= 10f;
+        handContainer.localPosition = localPoint;
         tutorialPanel.gameObject.SetActive(true);
+
         Time.timeScale = 0f;
         playerController.CanLaunch = true;
     }

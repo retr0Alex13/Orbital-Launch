@@ -106,8 +106,9 @@ public class TrajectoryLineEmitter : MonoBehaviour
         wasVisible = true;
 
         float length = Mathf.Lerp(rayLength * minLengthScale, rayLength, player.AimPower);
-        bool hitFound = TryFindNearestOrbitHit(smoothedOrigin, smoothedDirection, player.CurrentPlanet, out float hitDistance);
-
+        bool hitFound = OrbitRayUtility.TryFindNearestOrbitHit(
+            smoothedOrigin, smoothedDirection, rayLength, player.CurrentPlanet, planetLayerMask, overlapBuffer, out float hitDistance);
+        
         if (hitFound)
         {
             length = Mathf.Min(length, hitDistance);
@@ -120,62 +121,6 @@ public class TrajectoryLineEmitter : MonoBehaviour
         currentLineColor = Color.Lerp(minPowerColor, maxPowerColor, Mathf.SmoothStep(0f, 1f, player.AimPower));
 
         BuildDashedMesh(smoothedOrigin, smoothedDirection, length, currentLineColor);
-    }
-
-    private bool TryFindNearestOrbitHit(Vector2 origin, Vector2 direction, Planet ignorePlanet, out float hitDistance)
-    {
-        hitDistance = rayLength;
-        bool found = false;
-
-        int count = Physics2D.OverlapCircleNonAlloc(origin, rayLength, overlapBuffer, planetLayerMask);
-
-        for (int i = 0; i < count; i++)
-        {
-            if (!overlapBuffer[i].TryGetComponent(out Planet planet))
-                planet = overlapBuffer[i].GetComponentInParent<Planet>();
-
-            if (planet == null || planet == ignorePlanet)
-                continue;
-
-            if (RayIntersectsCircle(origin, direction, planet.transform.position, planet.OrbitRadius, out float distance)
-                && distance < hitDistance)
-            {
-                hitDistance = distance;
-                found = true;
-            }
-        }
-
-        return found;
-    }
-
-    private static bool RayIntersectsCircle(Vector2 origin, Vector2 direction, Vector2 center, float radius, out float distance)
-    {
-        Vector2 toCenter = center - origin;
-        float tClosest = Vector2.Dot(toCenter, direction);
-
-        if (tClosest < 0f)
-        {
-            distance = 0f;
-            return false;
-        }
-
-        Vector2 closestPoint = origin + direction * tClosest;
-        float distToCenterSqr = (closestPoint - center).sqrMagnitude;
-        float radiusSqr = radius * radius;
-
-        if (distToCenterSqr > radiusSqr)
-        {
-            distance = 0f;
-            return false;
-        }
-
-        float halfChord = Mathf.Sqrt(radiusSqr - distToCenterSqr);
-        distance = tClosest - halfChord;
-
-        if (distance < 0f)
-            distance = tClosest + halfChord;
-
-        return distance >= 0f;
     }
 
     private void BuildDashedMesh(Vector2 origin, Vector2 direction, float length, Color color)
