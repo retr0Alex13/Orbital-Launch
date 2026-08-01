@@ -1,7 +1,6 @@
 using AudioSystem;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -98,14 +97,11 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                // Covers both a normal mouse-up and any missed GetMouseButtonUp frame.
                 EndAim();
             }
         }
         else if (Input.GetMouseButtonDown(0) && !isTransitioning)
         {
-            // Only allow aiming once the player has settled into a stable orbit,
-            // so we don't have to fight an in-progress orbit-entry transition.
             BeginAim();
         }
     }
@@ -133,7 +129,6 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateAim()
     {
-        // Smooth the pointer itself.
         Vector2 rawPointer = GetPointerWorldPosition();
 
         smoothedPointer = Vector2.SmoothDamp(
@@ -147,7 +142,6 @@ public class PlayerController : MonoBehaviour
         Vector2 dragVector = smoothedPointer - dragStartWorldPos;
         float dragDistance = dragVector.magnitude;
 
-        // Smooth direction.
         if (dragDistance > 0.001f)
         {
             Vector2 targetDirection = (-dragVector).normalized;
@@ -156,9 +150,7 @@ public class PlayerController : MonoBehaviour
             AimDirection = Vector2.Lerp(AimDirection, targetDirection, t).normalized;
         }
 
-        // Smooth power.
         float targetPower = Mathf.Clamp01(dragDistance / maxDragDistance);
-
         float powerT = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
         AimPower = Mathf.Lerp(AimPower, targetPower, powerT);
     }
@@ -177,12 +169,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (isTransitioning)
         {
-            // Aim was cancelled mid-transition; restart the transition cleanly from the
-            // zero velocity we froze at, instead of snapping from the stale pre-aim velocity.
             velocityAtEntry = Vector2.zero;
             transitionElapsed = 0f;
         }
-        // Otherwise the aim is simply cancelled and orbit motion resumes next FixedUpdate.
     }
 
     private void LaunchFromOrbit(Vector2 direction, float speed)
@@ -273,7 +262,11 @@ public class PlayerController : MonoBehaviour
             soundBuilder.Play(rocketLaunchSound);
             currentPlanet.PlayShockWaveEffect(transform.position);
         }
-        if (collision.TryGetComponent(out Asteroid asteroid))
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Asteroid asteroid) || collision.transform.parent.TryGetComponent(out Planet planet))
         {
             GameManager.Instance.RestartGame();
         }
