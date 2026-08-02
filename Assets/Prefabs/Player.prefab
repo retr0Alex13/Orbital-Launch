@@ -104,6 +104,7 @@ GameObject:
   - component: {fileID: 2935637179894901858}
   - component: {fileID: 7254275162875502722}
   - component: {fileID: 1708852431424009269}
+  - component: {fileID: 2627707066256999552}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -169,10 +170,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cf15f71dd303e14e9320bdb300a05b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  launchSpeed: 3
-  introSpeed: 5
+  introSpeed: 10
   orbitTransitionDuration: 0.5
   radiusCorrectionSpeed: 5
+  minLaunchSpeed: 10
+  maxLaunchSpeed: 10
+  maxDragDistance: 2.5
+  minDragDistanceToLaunch: 0.1
+  maxSteerAngleDegrees: 90
+  aimSmoothTime: 0.01
+  aimPowerSharpness: 20
   rocketThrust: {fileID: 7313350753847179120}
   playerRigidBody: {fileID: 4084989458506052570}
   rocketThrustSound:
@@ -187,6 +194,29 @@ MonoBehaviour:
     bypassReverbZones: 0
     priority: 128
     volume: 0.15
+    pitch: 1
+    panStereo: 0
+    spatialBlend: 0
+    reverbZoneMix: 1
+    dopplerLevel: 1
+    spread: 0
+    minDistance: 1
+    maxDistance: 500
+    ignoreListenerVolume: 0
+    ignoreListenerPause: 0
+    rolloffMode: 0
+  rocketLaunchSound:
+    clip: {fileID: 8300000, guid: 6bbb1a0e8ba75e543b4b80712585020b, type: 3}
+    mixerGroup: {fileID: 4796280562796518393, guid: 0648aff6a08d3f0468df28399773aba6, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 1
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    bypassReverbZones: 0
+    priority: 128
+    volume: 1
     pitch: 1
     panStereo: 0
     spatialBlend: 0
@@ -247,6 +277,18 @@ CapsuleCollider2D:
   m_Offset: {x: -0.004180178, y: -0.004180193}
   m_Size: {x: 0.2742705, y: 1.2535973}
   m_Direction: 0
+--- !u!114 &2627707066256999552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8323791155711702160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a08e7e77bfe3ac468e312d7e64ceab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VisitedPlanetsCounter
 --- !u!1001 &1348908260902955264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -294,6 +336,10 @@ PrefabInstance:
     - target: {fileID: 6684196359856707758, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
@@ -395,6 +441,10 @@ PrefabInstance:
     - target: {fileID: 6684196359856707758, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
