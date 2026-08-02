@@ -11,11 +11,14 @@ public class TrajectoryLineEmitter : MonoBehaviour
     [SerializeField] private LayerMask planetLayerMask;
 
     [SerializeField] private float rayLength = 6f;
+    [SerializeField, Range(0f, 1f)]
+    private float minLengthScale = 0.3f;
     [SerializeField] private float lineWidth = 0.1f;
     [SerializeField] private float dashLength = 0.3f;
     [SerializeField] private float gapLength = 0.2f;
     [SerializeField] private float scrollSpeed = 1f;
-    [SerializeField] private Color lineColor = Color.white;
+    [SerializeField] private Color minPowerColor = Color.white;
+    [SerializeField] private Color maxPowerColor = Color.red;
 
     [Header("Smoothing")]
     [SerializeField, Range(1f, 60f)] private float followSharpness = 25f;
@@ -39,6 +42,8 @@ public class TrajectoryLineEmitter : MonoBehaviour
     private Vector2 smoothedDirection = Vector2.up;
     private bool wasVisible;
     private float lastCaptureUnscaledTime = -Mathf.Infinity;
+
+    private Color currentLineColor;
 
     private void Awake()
     {
@@ -70,9 +75,9 @@ public class TrajectoryLineEmitter : MonoBehaviour
 
     private void LateUpdate()
     {
-        bool canLaunch = player.CurrentPlanet != null;
+        bool visible = player.CurrentPlanet != null && player.IsAiming;
 
-        if (!canLaunch)
+        if (!visible)
         {
             meshRenderer.enabled = false;
             wasVisible = false;
@@ -84,7 +89,7 @@ public class TrajectoryLineEmitter : MonoBehaviour
         float dt = Time.unscaledDeltaTime;
 
         Vector2 targetOrigin = player.transform.position;
-        Vector2 targetDirection = player.transform.up;
+        Vector2 targetDirection = player.AimDirection;
 
         if (!wasVisible)
         {
@@ -100,78 +105,25 @@ public class TrajectoryLineEmitter : MonoBehaviour
 
         wasVisible = true;
 
-        float length = rayLength;
-        bool hitFound = TryFindNearestOrbitHit(smoothedOrigin, smoothedDirection, player.CurrentPlanet, out float hitDistance);
-
+        float length = Mathf.Lerp(rayLength * minLengthScale, rayLength, player.AimPower);
+        bool hitFound = OrbitRayUtility.TryFindNearestOrbitHit(
+            smoothedOrigin, smoothedDirection, rayLength, player.CurrentPlanet, planetLayerMask, overlapBuffer, out float hitDistance);
+        
         if (hitFound)
         {
-            length = Mathf.Min(rayLength, hitDistance);
+            length = Mathf.Min(length, hitDistance);
 
             bool pastMinDelay = Time.unscaledTime - lastCaptureUnscaledTime >= minTimeBeforeHitDetection;
             if (pastMinDelay)
                 OnOrbitHitDetected?.Invoke();
         }
 
-        BuildDashedMesh(smoothedOrigin, smoothedDirection, length);
+        currentLineColor = Color.Lerp(minPowerColor, maxPowerColor, Mathf.SmoothStep(0f, 1f, player.AimPower));
+
+        BuildDashedMesh(smoothedOrigin, smoothedDirection, length, currentLineColor);
     }
 
-    private bool TryFindNearestOrbitHit(Vector2 origin, Vector2 direction, Planet ignorePlanet, out float hitDistance)
-    {
-        hitDistance = rayLength;
-        bool found = false;
-
-        int count = Physics2D.OverlapCircleNonAlloc(origin, rayLength, overlapBuffer, planetLayerMask);
-
-        for (int i = 0; i < count; i++)
-        {
-            if (!overlapBuffer[i].TryGetComponent(out Planet planet))
-                planet = overlapBuffer[i].GetComponentInParent<Planet>();
-
-            if (planet == null || planet == ignorePlanet)
-                continue;
-
-            if (RayIntersectsCircle(origin, direction, planet.transform.position, planet.OrbitRadius, out float distance)
-                && distance < hitDistance)
-            {
-                hitDistance = distance;
-                found = true;
-            }
-        }
-
-        return found;
-    }
-
-    private static bool RayIntersectsCircle(Vector2 origin, Vector2 direction, Vector2 center, float radius, out float distance)
-    {
-        Vector2 toCenter = center - origin;
-        float tClosest = Vector2.Dot(toCenter, direction);
-
-        if (tClosest < 0f)
-        {
-            distance = 0f;
-            return false;
-        }
-
-        Vector2 closestPoint = origin + direction * tClosest;
-        float distToCenterSqr = (closestPoint - center).sqrMagnitude;
-        float radiusSqr = radius * radius;
-
-        if (distToCenterSqr > radiusSqr)
-        {
-            distance = 0f;
-            return false;
-        }
-
-        float halfChord = Mathf.Sqrt(radiusSqr - distToCenterSqr);
-        distance = tClosest - halfChord;
-
-        if (distance < 0f)
-            distance = tClosest + halfChord;
-
-        return distance >= 0f;
-    }
-
-    private void BuildDashedMesh(Vector2 origin, Vector2 direction, float length)
+    private void BuildDashedMesh(Vector2 origin, Vector2 direction, float length, Color color)
     {
         vertices.Clear();
         triangles.Clear();
@@ -214,10 +166,10 @@ public class TrajectoryLineEmitter : MonoBehaviour
                 triangles.Add(baseIndex + 2);
                 triangles.Add(baseIndex + 3);
 
-                colors.Add(lineColor);
-                colors.Add(lineColor);
-                colors.Add(lineColor);
-                colors.Add(lineColor);
+                colors.Add(color);
+                colors.Add(color);
+                colors.Add(color);
+                colors.Add(color);
             }
 
             traveled += tile;

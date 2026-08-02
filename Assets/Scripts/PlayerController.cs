@@ -1,7 +1,6 @@
 using AudioSystem;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,9 +9,9 @@ public class PlayerController : MonoBehaviour
 
     public Planet CurrentPlanet => currentPlanet;
     public bool CanLaunch { get; set; } = true;
-
-    [SerializeField]
-    private float launchSpeed = 3f;
+    public bool IsAiming { get; set; }
+    public Vector2 AimDirection { get; private set; }
+    public float AimPower { get; private set; }
 
     [SerializeField]
     private float introSpeed = 5f;
@@ -22,6 +21,26 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private float radiusCorrectionSpeed = 5f;
+
+    [Header("Slingshot Aiming")]
+    [SerializeField] private float minLaunchSpeed = 2f;
+    [SerializeField] private float maxLaunchSpeed = 6f;
+
+    [Tooltip("Pull distance (world units) along the pull axis required to reach full power/max launch speed.")]
+    [SerializeField] private float maxDragDistance = 2.5f;
+
+    [Tooltip("Minimum pull distance (world units) required to actually launch on release. Shorter pulls cancel the aim.")]
+    [SerializeField] private float minDragDistanceToLaunch = 0.3f;
+
+    [Tooltip("Max angle (degrees) the launch direction can steer away from the current orbit direction, driven by the sideways component of the drag. Direction can never flip past this, so pulling back can't send the ray backwards.")]
+    [SerializeField] private float maxSteerAngleDegrees = 50f;
+
+    [Header("Aim Smoothing")]
+    [SerializeField]
+    private float aimSmoothTime = 0.03f;
+
+    [SerializeField]
+    private float aimPowerSharpness = 20f;
 
     [SerializeField]
     private ParticleSystem rocketThrust;
@@ -46,8 +65,17 @@ public class PlayerController : MonoBehaviour
     private SoundBuilder soundBuilder;
     private SoundEmitter engineSound;
 
+    private Camera mainCamera;
+    private Vector2 dragStartWorldPos;
+    private Vector2 smoothedPointer;
+    private Vector2 pointerVelocity;
+    private Vector2 baseAimDirection;
+    private Vector2 baseAimPerpendicular;
+
     private void Start()
     {
+        mainCamera = Camera.main;
+
         soundBuilder = SoundManager.Instance.CreateSoundBuilder();
         soundBuilder = soundBuilder.WithRandomPitch();
 
@@ -58,13 +86,100 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && CanLaunch)
+        if (currentPlanet == null || !CanLaunch)
+            return;
+
+        if (IsAiming)
         {
-            LaunchFromOrbit();
+            if (Input.GetMouseButton(0))
+            {
+                UpdateAim();
+            }
+            else
+            {
+                EndAim();
+            }
+        }
+        else if (Input.GetMouseButtonDown(0) && !isTransitioning)
+        {
+            BeginAim();
         }
     }
 
-    private void LaunchFromOrbit()
+    private Vector2 GetPointerWorldPosition()
+    {
+        Vector3 screenPos = Input.mousePosition;
+        screenPos.z = Mathf.Abs(mainCamera.transform.position.z - transform.position.z);
+        return mainCamera.ScreenToWorldPoint(screenPos);
+    }
+
+    private void BeginAim()
+    {
+        IsAiming = true;
+        dragStartWorldPos = GetPointerWorldPosition();
+
+        smoothedPointer = dragStartWorldPos;
+        pointerVelocity = Vector2.zero;
+
+        baseAimDirection = transform.up;
+        baseAimPerpendicular = new Vector2(baseAimDirection.y, -baseAimDirection.x);
+
+        AimDirection = baseAimDirection;
+        AimPower = 0f;
+
+        playerRigidBody.linearVelocity = Vector2.zero;
+    }
+
+    private void UpdateAim()
+    {
+        Vector2 rawPointer = GetPointerWorldPosition();
+
+        smoothedPointer = Vector2.SmoothDamp(
+            smoothedPointer,
+            rawPointer,
+            ref pointerVelocity,
+            aimSmoothTime,
+            Mathf.Infinity,
+            Time.unscaledDeltaTime);
+
+        Vector2 dragVector = smoothedPointer - dragStartWorldPos;
+
+        float pull = Mathf.Max(0f, Vector2.Dot(dragVector, -baseAimDirection));
+        float steer = Vector2.Dot(dragVector, baseAimPerpendicular);
+
+        float targetPower = Mathf.Clamp01(pull / maxDragDistance);
+        float steerT = Mathf.Clamp(steer / maxDragDistance, -1f, 1f);
+        float targetSteerAngle = steerT * maxSteerAngleDegrees;
+
+        Vector2 targetDirection = Quaternion.Euler(0f, 0f, targetSteerAngle) * baseAimDirection;
+
+        float t = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
+        AimDirection = Vector2.Lerp(AimDirection, targetDirection, t).normalized;
+        AimPower = Mathf.Lerp(AimPower, targetPower, t);
+    }
+
+
+    private void EndAim()
+    {
+        IsAiming = false;
+
+        Vector2 currentPointerWorldPos = GetPointerWorldPosition();
+        Vector2 dragVector = currentPointerWorldPos - dragStartWorldPos;
+        float pull = Mathf.Max(0f, Vector2.Dot(dragVector, -baseAimDirection));
+
+        if (pull >= minDragDistanceToLaunch)
+        {
+            float launchSpeed = Mathf.Lerp(minLaunchSpeed, maxLaunchSpeed, AimPower);
+            LaunchFromOrbit(AimDirection, launchSpeed);
+        }
+        else if (isTransitioning)
+        {
+            velocityAtEntry = Vector2.zero;
+            transitionElapsed = 0f;
+        }
+    }
+
+    private void LaunchFromOrbit(Vector2 direction, float speed)
     {
         if (currentPlanet == null)
             return;
@@ -74,7 +189,9 @@ public class PlayerController : MonoBehaviour
         currentPlanet = null;
         isTransitioning = false;
 
-        playerRigidBody.AddForce(playerRigidBody.linearVelocity.normalized * launchSpeed, ForceMode2D.Impulse);
+        Vector2 launchDirection = direction.normalized;
+        playerRigidBody.linearVelocity = launchDirection * speed;
+        transform.up = launchDirection;
 
         OnPlayerLaunched?.Invoke();
 
@@ -84,7 +201,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (currentPlanet == null)
+        if (currentPlanet == null || IsAiming)
             return;
 
         Vector2 targetVelocity = CalculateOrbitVelocity();
@@ -150,7 +267,11 @@ public class PlayerController : MonoBehaviour
             soundBuilder.Play(rocketLaunchSound);
             currentPlanet.PlayShockWaveEffect(transform.position);
         }
-        if (collision.TryGetComponent(out Asteroid asteroid))
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.TryGetComponent(out Asteroid asteroid) || collision.transform.parent.TryGetComponent(out Planet planet))
         {
             GameManager.Instance.RestartGame();
         }
