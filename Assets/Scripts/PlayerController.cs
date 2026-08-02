@@ -23,19 +23,17 @@ public class PlayerController : MonoBehaviour
     private float radiusCorrectionSpeed = 5f;
 
     [Header("Slingshot Aiming")]
-    [SerializeField]
-    private float minLaunchSpeed = 2f;
+    [SerializeField] private float minLaunchSpeed = 2f;
+    [SerializeField] private float maxLaunchSpeed = 6f;
 
-    [SerializeField]
-    private float maxLaunchSpeed = 6f;
+    [Tooltip("Pull distance (world units) along the pull axis required to reach full power/max launch speed.")]
+    [SerializeField] private float maxDragDistance = 2.5f;
 
-    [Tooltip("Drag distance (world units) required to reach full power/max launch speed.")]
-    [SerializeField]
-    private float maxDragDistance = 2.5f;
+    [Tooltip("Minimum pull distance (world units) required to actually launch on release. Shorter pulls cancel the aim.")]
+    [SerializeField] private float minDragDistanceToLaunch = 0.3f;
 
-    [Tooltip("Minimum drag distance (world units) required to actually launch on release. Shorter drags cancel the aim.")]
-    [SerializeField]
-    private float minDragDistanceToLaunch = 0.3f;
+    [Tooltip("Max angle (degrees) the launch direction can steer away from the current orbit direction, driven by the sideways component of the drag. Direction can never flip past this, so pulling back can't send the ray backwards.")]
+    [SerializeField] private float maxSteerAngleDegrees = 50f;
 
     [Header("Aim Smoothing")]
     [SerializeField]
@@ -71,6 +69,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragStartWorldPos;
     private Vector2 smoothedPointer;
     private Vector2 pointerVelocity;
+    private Vector2 baseAimDirection;
+    private Vector2 baseAimPerpendicular;
 
     private void Start()
     {
@@ -121,7 +121,10 @@ public class PlayerController : MonoBehaviour
         smoothedPointer = dragStartWorldPos;
         pointerVelocity = Vector2.zero;
 
-        AimDirection = transform.up;
+        baseAimDirection = transform.up;
+        baseAimPerpendicular = new Vector2(baseAimDirection.y, -baseAimDirection.x);
+
+        AimDirection = baseAimDirection;
         AimPower = 0f;
 
         playerRigidBody.linearVelocity = Vector2.zero;
@@ -140,29 +143,31 @@ public class PlayerController : MonoBehaviour
             Time.unscaledDeltaTime);
 
         Vector2 dragVector = smoothedPointer - dragStartWorldPos;
-        float dragDistance = dragVector.magnitude;
 
-        if (dragDistance > 0.001f)
-        {
-            Vector2 targetDirection = (-dragVector).normalized;
+        float pull = Mathf.Max(0f, Vector2.Dot(dragVector, -baseAimDirection));
+        float steer = Vector2.Dot(dragVector, baseAimPerpendicular);
 
-            float t = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
-            AimDirection = Vector2.Lerp(AimDirection, targetDirection, t).normalized;
-        }
+        float targetPower = Mathf.Clamp01(pull / maxDragDistance);
+        float steerT = Mathf.Clamp(steer / maxDragDistance, -1f, 1f);
+        float targetSteerAngle = steerT * maxSteerAngleDegrees;
 
-        float targetPower = Mathf.Clamp01(dragDistance / maxDragDistance);
-        float powerT = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
-        AimPower = Mathf.Lerp(AimPower, targetPower, powerT);
+        Vector2 targetDirection = Quaternion.Euler(0f, 0f, targetSteerAngle) * baseAimDirection;
+
+        float t = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
+        AimDirection = Vector2.Lerp(AimDirection, targetDirection, t).normalized;
+        AimPower = Mathf.Lerp(AimPower, targetPower, t);
     }
+
 
     private void EndAim()
     {
         IsAiming = false;
 
         Vector2 currentPointerWorldPos = GetPointerWorldPosition();
-        float dragDistance = (currentPointerWorldPos - dragStartWorldPos).magnitude;
+        Vector2 dragVector = currentPointerWorldPos - dragStartWorldPos;
+        float pull = Mathf.Max(0f, Vector2.Dot(dragVector, -baseAimDirection));
 
-        if (dragDistance >= minDragDistanceToLaunch)
+        if (pull >= minDragDistanceToLaunch)
         {
             float launchSpeed = Mathf.Lerp(minLaunchSpeed, maxLaunchSpeed, AimPower);
             LaunchFromOrbit(AimDirection, launchSpeed);

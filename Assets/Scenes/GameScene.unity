@@ -345,7 +345,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   rayLength: 20
-  minLengthScale: 0.3
+  minLengthScale: 0
   lineWidth: 0.1
   dashLength: 0.3
   gapLength: 0.2
@@ -2542,6 +2542,10 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: aimSmoothTime
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: maxLaunchSpeed
       value: 10
       objectReference: {fileID: 0}
@@ -2550,9 +2554,17 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: maxSteerAngleDegrees
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: rocketLaunchSound.clip
       value: 
       objectReference: {fileID: 8300000, guid: 6bbb1a0e8ba75e543b4b80712585020b, type: 3}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: minDragDistanceToLaunch
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: rocketLaunchSound.mixerGroup
       value: 
