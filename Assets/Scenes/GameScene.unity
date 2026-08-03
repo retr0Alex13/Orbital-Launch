@@ -345,7 +345,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   rayLength: 20
-  minLengthScale: 0
+  minLengthScale: 0.1
   lineWidth: 0.1
   dashLength: 0.3
   gapLength: 0.2
@@ -2526,6 +2526,22 @@ PrefabInstance:
     - target: {fileID: 2435837951527863998, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: aimSmoothTime
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: minLaunchSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: aimPowerSharpness
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: maxSteerAngleDegrees
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 8323791155711702160, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_Name

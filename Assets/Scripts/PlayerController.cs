@@ -43,6 +43,12 @@ public class PlayerController : MonoBehaviour
     private float aimPowerSharpness = 20f;
 
     [SerializeField]
+    private float aimDirectionSharpness = 6f;
+
+    [SerializeField]
+    private float dragDeadzone = 0.08f;
+
+    [SerializeField]
     private ParticleSystem rocketThrust;
 
     [SerializeField]
@@ -69,8 +75,6 @@ public class PlayerController : MonoBehaviour
     private Vector2 dragStartWorldPos;
     private Vector2 smoothedPointer;
     private Vector2 pointerVelocity;
-    private Vector2 baseAimDirection;
-    private Vector2 baseAimPerpendicular;
 
     private void Start()
     {
@@ -121,10 +125,7 @@ public class PlayerController : MonoBehaviour
         smoothedPointer = dragStartWorldPos;
         pointerVelocity = Vector2.zero;
 
-        baseAimDirection = transform.up;
-        baseAimPerpendicular = new Vector2(baseAimDirection.y, -baseAimDirection.x);
-
-        AimDirection = baseAimDirection;
+        AimDirection = transform.up;
         AimPower = 0f;
 
         playerRigidBody.linearVelocity = Vector2.zero;
@@ -143,19 +144,21 @@ public class PlayerController : MonoBehaviour
             Time.unscaledDeltaTime);
 
         Vector2 dragVector = smoothedPointer - dragStartWorldPos;
+        float dragDistance = dragVector.magnitude;
 
-        float pull = Mathf.Max(0f, Vector2.Dot(dragVector, -baseAimDirection));
-        float steer = Vector2.Dot(dragVector, baseAimPerpendicular);
+        Vector2 targetDirection = dragDistance > 0.0001f
+            ? -dragVector / dragDistance 
+            : AimDirection;                
 
-        float targetPower = Mathf.Clamp01(pull / maxDragDistance);
-        float steerT = Mathf.Clamp(steer / maxDragDistance, -1f, 1f);
-        float targetSteerAngle = steerT * maxSteerAngleDegrees;
+        float effectiveDistance = Mathf.Max(0f, dragDistance - dragDeadzone);
+        float targetPower = Mathf.Clamp01(effectiveDistance / maxDragDistance);
+        targetPower = targetPower * targetPower;
 
-        Vector2 targetDirection = Quaternion.Euler(0f, 0f, targetSteerAngle) * baseAimDirection;
+        float tPower = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
+        float tDir = 1f - Mathf.Exp(-aimDirectionSharpness * Time.unscaledDeltaTime);
 
-        float t = 1f - Mathf.Exp(-aimPowerSharpness * Time.unscaledDeltaTime);
-        AimDirection = Vector2.Lerp(AimDirection, targetDirection, t).normalized;
-        AimPower = Mathf.Lerp(AimPower, targetPower, t);
+        AimDirection = Vector2.Lerp(AimDirection, targetDirection, tDir).normalized;
+        AimPower = Mathf.Lerp(AimPower, targetPower, tPower);
     }
 
 
@@ -165,9 +168,9 @@ public class PlayerController : MonoBehaviour
 
         Vector2 currentPointerWorldPos = GetPointerWorldPosition();
         Vector2 dragVector = currentPointerWorldPos - dragStartWorldPos;
-        float pull = Mathf.Max(0f, Vector2.Dot(dragVector, -baseAimDirection));
+        float dragDistance = dragVector.magnitude;
 
-        if (pull >= minDragDistanceToLaunch)
+        if (dragDistance >= minDragDistanceToLaunch)
         {
             float launchSpeed = Mathf.Lerp(minLaunchSpeed, maxLaunchSpeed, AimPower);
             LaunchFromOrbit(AimDirection, launchSpeed);
