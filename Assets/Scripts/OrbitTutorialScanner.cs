@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class OrbitTutorialScanner : MonoBehaviour
 {
-    public event Action OnOrbitHitDetected;
+    public event Action<Vector2, float> OnOrbitHitDetected;
 
     [SerializeField] private PlayerController player;
     [SerializeField] private LayerMask planetLayerMask;
-    [SerializeField] private float rayLength = 6f;
+    [SerializeField] private float rayLength = 20f;
 
     private readonly Collider2D[] overlapBuffer = new Collider2D[16];
 
@@ -20,9 +20,9 @@ public class OrbitTutorialScanner : MonoBehaviour
         Vector2 direction = player.transform.up;
 
         if (OrbitRayUtility.TryFindNearestOrbitHit(
-            origin, direction, rayLength, player.CurrentPlanet, planetLayerMask, overlapBuffer, out _))
+            origin, direction, rayLength, player.CurrentPlanet, planetLayerMask, overlapBuffer, out float hitDistance))
         {
-            OnOrbitHitDetected?.Invoke();
+            OnOrbitHitDetected?.Invoke(direction, hitDistance);
         }
     }
 }

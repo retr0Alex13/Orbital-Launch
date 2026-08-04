@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public event Action OnPlayerLaunched;
     public event Action<Planet> OnPlayerCaptured;
+    public Func<Vector2, bool> LaunchValidator { get; set; }
 
     public Planet CurrentPlanet => currentPlanet;
     public bool CanLaunch { get; set; } = true;
@@ -173,6 +174,12 @@ public class PlayerController : MonoBehaviour
 
         if (dragDistance >= minDragDistanceToLaunch)
         {
+            if (LaunchValidator != null && !LaunchValidator(AimDirection))
+            {
+                AimPower = 0f;
+                return;
+            }
+
             float launchSpeed = Mathf.Lerp(minLaunchSpeed, maxLaunchSpeed, AimPower);
             LaunchFromOrbit(AimDirection, launchSpeed);
         }
