@@ -1,4 +1,4 @@
 public static class Constants
 {
-    public const string IS_FIRST_TIME_PLAYER = nameof(IS_FIRST_TIME_PLAYER);
+    public const string IS_TUTORIAL_COMPLETED = nameof(IS_TUTORIAL_COMPLETED);
 }

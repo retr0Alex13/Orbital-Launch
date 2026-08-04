@@ -108,13 +108,13 @@ public class TrajectoryLineEmitter : MonoBehaviour
         float length = Mathf.Lerp(rayLength * minLengthScale, rayLength, player.AimPower);
         bool hitFound = OrbitRayUtility.TryFindNearestOrbitHit(
             smoothedOrigin, smoothedDirection, rayLength, player.CurrentPlanet, planetLayerMask, overlapBuffer, out float hitDistance);
-        
+
         if (hitFound)
         {
             length = Mathf.Min(length, hitDistance);
 
             bool pastMinDelay = Time.unscaledTime - lastCaptureUnscaledTime >= minTimeBeforeHitDetection;
-            if (pastMinDelay)
+            if (pastMinDelay && !player.IsTransitioning)
                 OnOrbitHitDetected?.Invoke();
         }
 

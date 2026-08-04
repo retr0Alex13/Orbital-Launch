@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     public Planet CurrentPlanet => currentPlanet;
     public bool CanLaunch { get; set; } = true;
     public bool IsAiming { get; set; }
+    public bool IsTransitioning => isTransitioning;
     public Vector2 AimDirection { get; private set; }
     public float AimPower { get; private set; }
 

@@ -30,22 +30,15 @@ public class TutorialController : MonoBehaviour
 
     void Start()
     {
-        if (!PlayerPrefs.HasKey(Constants.IS_FIRST_TIME_PLAYER))
-        {
-            PlayerPrefs.SetInt(Constants.IS_FIRST_TIME_PLAYER, 1);
-        }
+        bool isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED, 0) == 1;
 
-        bool isFirstTimePlayer = PlayerPrefs.GetInt(Constants.IS_FIRST_TIME_PLAYER, 0) == 1;
+        orbitTutorialScanner.enabled = !isTutorialCompleted;
 
-        orbitTutorialScanner.enabled = isFirstTimePlayer;
-
-        if (isFirstTimePlayer)
+        if (!isTutorialCompleted)
         {
             orbitTutorialScanner.OnOrbitHitDetected += StopTime;
             playerController.OnPlayerLaunched += ReleaseTime;
             playerController.CanLaunch = false;
-
-            PlayerPrefs.SetInt(Constants.IS_FIRST_TIME_PLAYER, 0);
         }
     }
 
@@ -58,15 +51,19 @@ public class TutorialController : MonoBehaviour
 
     private void StopTime()
     {
+        if (playerController.IsTransitioning)
+            return;
+
         if (tutorialCounter >= timesToRepeatTutorial)
         {
             orbitTutorialScanner.OnOrbitHitDetected -= StopTime;
             playerController.OnPlayerLaunched -= ReleaseTime;
             orbitTutorialScanner.enabled = false;
+            PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED, 1);
             return;
         }
-        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, playerController.transform.position);
 
+        Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, playerController.transform.position);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPoint, null, out Vector2 localPoint);
         localPoint.y -= 10f;
         handContainer.localPosition = localPoint;
