@@ -4,6 +4,7 @@ public class TutorialController : MonoBehaviour
 {
     [SerializeField] private int timesToRepeatTutorial = 2;
     [SerializeField] private int planetsToDisableLine = 4;
+    [SerializeField] private float handOffsetY = 40f;
     [SerializeField] private Transform tutorialPanel;
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform handContainer;
@@ -74,7 +75,7 @@ public class TutorialController : MonoBehaviour
 
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, playerController.transform.position);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPoint, null, out Vector2 localPoint);
-        localPoint.y -= 10f;
+        localPoint.y -= handOffsetY;
         handContainer.localPosition = localPoint;
         tutorialPanel.gameObject.SetActive(true);
 
