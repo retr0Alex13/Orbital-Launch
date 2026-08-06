@@ -148,9 +148,20 @@ public class PlayerController : MonoBehaviour
         Vector2 dragVector = smoothedPointer - dragStartWorldPos;
         float dragDistance = dragVector.magnitude;
 
+        float actualMaxDistance = maxDragDistance + dragDeadzone;
+
+        if (dragDistance > actualMaxDistance)
+        {
+            Vector2 direction = dragVector / dragDistance;
+            dragStartWorldPos = smoothedPointer - direction * actualMaxDistance;
+
+            dragVector = smoothedPointer - dragStartWorldPos;
+            dragDistance = actualMaxDistance;
+        }
+
         Vector2 targetDirection = dragDistance > 0.0001f
-            ? -dragVector / dragDistance 
-            : AimDirection;                
+            ? dragVector / dragDistance
+            : AimDirection;
 
         float effectiveDistance = Mathf.Max(0f, dragDistance - dragDeadzone);
         float targetPower = Mathf.Clamp01(effectiveDistance / maxDragDistance);
