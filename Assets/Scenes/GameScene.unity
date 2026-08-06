@@ -2780,7 +2780,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: aimSmoothTime
-      value: 0.05
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: minLaunchSpeed
@@ -2788,7 +2788,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: aimPowerSharpness
-      value: 8
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: maxSteerAngleDegrees
@@ -2796,7 +2796,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: aimDirectionSharpness
-      value: 4
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8323791155711702160, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_Name
