@@ -77,6 +77,10 @@ public class TutorialController : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPoint, null, out Vector2 localPoint);
         localPoint.y -= handOffsetY;
         handContainer.localPosition = localPoint;
+
+        float angle = Mathf.Atan2(idealAimDirection.y, idealAimDirection.x) * Mathf.Rad2Deg;
+        handContainer.localRotation = Quaternion.Euler(0f, 0f, angle);
+
         tutorialPanel.gameObject.SetActive(true);
 
         Time.timeScale = 0f;
