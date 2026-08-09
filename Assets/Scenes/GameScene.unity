@@ -739,6 +739,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a966a4a017e324da8b1fdfc513e7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+--- !u!1 &571905851
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 571905852}
+  - component: {fileID: 571905853}
+  m_Layer: 0
+  m_Name: RocketParts Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &571905852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571905851}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &571905853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571905851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd5e263ade50ff4d887b79311632443, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RocketParts
+  rocketPartsParent: {fileID: 5117802265254045819, guid: 0a3ee0ac2d7820845bb501ff5f732c5a, type: 3}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1491,7 +1536,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TutorialController
   timesToRepeatTutorial: 2
-  planetsToDisableLine: 4
   handOffsetY: 40
   tutorialPanel: {fileID: 565218277}
   canvas: {fileID: 1379893186}
@@ -2641,31 +2685,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
-      propertyPath: aimSmoothTime
-      value: 0.01
-      objectReference: {fileID: 0}
+      propertyPath: rocketParts
+      value: 
+      objectReference: {fileID: 571905853}
     - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
-      propertyPath: minLaunchSpeed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
-      propertyPath: aimPowerSharpness
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
-      propertyPath: maxSteerAngleDegrees
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
-      propertyPath: aimDirectionSharpness
-      value: 20
+      propertyPath: rocketExplosion
+      value: 
+      objectReference: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+    - target: {fileID: 5534482331835213822, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8323791155711702160, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5534482331835213822, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
@@ -2687,3 +2724,4 @@ SceneRoots:
   - {fileID: 980192402}
   - {fileID: 568448706}
   - {fileID: 920801156}
+  - {fileID: 571905852}

@@ -23,4 +23,9 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         SoundManager.Instance.StopAll();
     }
+
+    public void RestartGameWithDelay(float delay)
+    {
+        Invoke(nameof(RestartGame), delay);
+    }
 }

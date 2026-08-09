@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 7254275162875502722}
   - component: {fileID: 1708852431424009269}
   - component: {fileID: 2627707066256999552}
+  - component: {fileID: 6760111184036755551}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -129,6 +130,7 @@ Transform:
   - {fileID: 1975369389552618191}
   - {fileID: 5655186077288378798}
   - {fileID: 3973779367542816325}
+  - {fileID: 5534482331835213811}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &4084989458506052570
@@ -171,17 +173,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   introSpeed: 10
-  orbitTransitionDuration: 0.5
-  radiusCorrectionSpeed: 5
-  minLaunchSpeed: 10
-  maxLaunchSpeed: 10
-  maxDragDistance: 2.5
-  minDragDistanceToLaunch: 0.1
-  maxSteerAngleDegrees: 90
-  aimSmoothTime: 0.01
-  aimPowerSharpness: 20
-  rocketThrust: {fileID: 7313350753847179120}
-  playerRigidBody: {fileID: 4084989458506052570}
+  aimSettings:
+    minLaunchSpeed: 5
+    maxLaunchSpeed: 10
+    maxDragDistance: 2.5
+    minDragDistanceToLaunch: 0.3
+    deadzone: 0.08
+    smoothTime: 0.01
+    powerSharpness: 10
+    directionSharpness: 20
+  orbitSettings:
+    transitionDuration: 0.5
+    radiusCorrectionSpeed: 5
+  rocketParts: {fileID: 0}
+  rocketExplosion: {fileID: 5534482331835213820}
+  rocketSprite: {fileID: 5553280304883316192}
+  rocketTrails:
+  - {fileID: 2639901903203845334}
+  - {fileID: 8192182908323315639}
   rocketThrustSound:
     clip: {fileID: 8300000, guid: ee5ecd077019c4545ad19128c8566bf2, type: 3}
     mixerGroup: {fileID: 4796280562796518393, guid: 0648aff6a08d3f0468df28399773aba6, type: 2}
@@ -228,6 +237,7 @@ MonoBehaviour:
     ignoreListenerVolume: 0
     ignoreListenerPause: 0
     rolloffMode: 0
+  rocketThrust: {fileID: 7313350753847179120}
 --- !u!114 &7254275162875502722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,6 +299,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a08e7e77bfe3ac468e312d7e64ceab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisitedPlanetsCounter
+--- !u!114 &6760111184036755551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8323791155711702160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68a5bfc3669cd94c8c5118570c32ea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEffectsFeedback
 --- !u!1001 &1348908260902955264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -394,6 +416,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TrailController
   trailRenderer: {fileID: 8192182908323315639}
   playerRigidBody: {fileID: 4084989458506052570}
+--- !u!1001 &5105971518493207772
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2435837951527863998}
+    m_Modifications:
+    - target: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_Name
+      value: CFXR Explosion Smoke 2 Solo (HDR)
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90.00001
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+--- !u!4 &5534482331835213811 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 725748389856807727, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+  m_PrefabInstance: {fileID: 5105971518493207772}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5534482331835213820 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 725748389856807712, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+  m_PrefabInstance: {fileID: 5105971518493207772}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5164189317161095777
 PrefabInstance:
   m_ObjectHideFlags: 0

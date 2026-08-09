@@ -3,7 +3,6 @@ using UnityEngine;
 public class TutorialController : MonoBehaviour
 {
     [SerializeField] private int timesToRepeatTutorial = 2;
-    [SerializeField] private int planetsToDisableLine = 4;
     [SerializeField] private float handOffsetY = 40f;
     [SerializeField] private Transform tutorialPanel;
     [SerializeField] private RectTransform canvas;
