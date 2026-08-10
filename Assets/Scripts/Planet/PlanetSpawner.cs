@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlanetSpawner : MonoBehaviour
 {
-    [SerializeField] private float planetReturnDelay = 0.6f;
     [SerializeField] private float initialSpawnOffset = 2f;
     [SerializeField] private Planet planetPrefab;
     [SerializeField] private PlanetSpawnerConfig config;
@@ -176,7 +175,7 @@ public class PlanetSpawner : MonoBehaviour
         if (planet == null) return;
 
         planet.OnDespawned += HandlePlanetDespawned;
-        planet.ReturnToPoolAfterDelay(planetReturnDelay);
+        planet.ReturnToPool();
     }
 
     private void HandlePlanetDespawned(Planet planet)

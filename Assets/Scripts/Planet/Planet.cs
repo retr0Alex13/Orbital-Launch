@@ -21,20 +21,35 @@ public class Planet : MonoBehaviour
     private CircleCollider2D orbitCollider;
 
     [SerializeField]
-    private Transform planetSprite;
+    private Transform orbitTransform;
+
+    [SerializeField]
+    private Transform planetSpriteTransform;
 
     [SerializeField]
     private SpriteRenderer planetSpriteRenderer;
 
     [SerializeField]
-    private OrbitShockWaveController orbitVisual;
+    private OrbitShockWaveController orbitWaveController;
+
+    [SerializeField]
+    private float despawnDelay = 0.12f;
+
+    [SerializeField]
+    private float despawnPunchScale = 1.15f;
+
+    [SerializeField]
+    private float despawnPunchDuration = 0.12f;
+
+    [SerializeField]
+    private float despawnShrinkDuration = 0.3f;
 
     private float rotatedAnimationSpeed;
     private float scaleAnimationPercent;
     private float planetScale;
     private Color baseColor;
     private Tween scaleTween;
-    private Tween despawnTween;
+    private Sequence despawnSequence;
 
     private void Awake()
     {
@@ -43,14 +58,14 @@ public class Planet : MonoBehaviour
 
     private void Update()
     {
-        planetSprite.Rotate(Vector3.forward * rotatedAnimationSpeed * Time.deltaTime);
+        planetSpriteTransform.Rotate(Vector3.forward * rotatedAnimationSpeed * Time.deltaTime);
     }
 
     public void Configure(PlanetSettings planetSettings)
     {
         CancelPendingDespawn();
 
-        planetSprite.localScale = Vector3.one * planetSettings.PlanetScale;
+        planetSpriteTransform.localScale = Vector3.one * planetSettings.PlanetScale;
         planetScale = planetSettings.PlanetScale;
         scaleAnimationPercent = planetSettings.ScaleAnimationPercent;
 
@@ -64,7 +79,7 @@ public class Planet : MonoBehaviour
 
         scaleTween.Stop();
         float targetScale = planetScale * (1f + scaleAnimationPercent);
-        scaleTween = Tween.Scale(planetSprite, endValue: Vector3.one * targetScale, duration: 1f, Ease.InOutSine, cycles: -1, CycleMode.Yoyo);
+        scaleTween = Tween.Scale(planetSpriteTransform, endValue: Vector3.one * targetScale, duration: 1f, Ease.InOutSine, cycles: -1, CycleMode.Yoyo);
     }
 
     public void SetPlanetSprite(Sprite sprite)
@@ -79,22 +94,32 @@ public class Planet : MonoBehaviour
 
     public void PlayShockWaveEffect(Vector2 position)
     {
-        orbitVisual.PlayWave(position);
+        orbitWaveController.PlayWave(position);
     }
 
-    public void ReturnToPoolAfterDelay(float delay)
+    public void ReturnToPool()
     {
-        despawnTween.Stop();
-        despawnTween = Tween.Delay(delay, () =>
-        {
-            gameObject.SetActive(false);
-            OnDespawned?.Invoke(this);
-        });
+        scaleTween.Stop();
+        despawnSequence.Stop();
+
+        Vector3 planetPunchScale = planetSpriteTransform.localScale * despawnPunchScale;
+        Vector3 orbitPunchScale = orbitTransform.localScale * despawnPunchScale;
+
+        despawnSequence = Sequence.Create(Tween.Delay(despawnDelay))
+            .Chain(Tween.Scale(planetSpriteTransform, endValue: planetPunchScale, duration: despawnPunchDuration, Ease.OutQuad))
+            .Group(Tween.Scale(orbitTransform, endValue: orbitPunchScale, duration: despawnPunchDuration, Ease.OutQuad))
+            .Chain(Tween.Scale(planetSpriteTransform, endValue: Vector3.zero, duration: despawnShrinkDuration, Ease.InQuad))
+            .Group(Tween.Scale(orbitTransform, endValue: Vector3.zero, duration: despawnShrinkDuration, Ease.InQuad))
+            .OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                OnDespawned?.Invoke(this);
+            });
     }
 
     public void CancelPendingDespawn()
     {
-        despawnTween.Stop();
+        despawnSequence.Stop();
     }
 
     public float TriggerRadius

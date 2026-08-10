@@ -195,9 +195,14 @@ MonoBehaviour:
   gravityStrength: 5
   orbitSpeed: 3
   orbitCollider: {fileID: 8280061508371363544}
-  planetSprite: {fileID: 1292532132765204841}
+  orbitTransform: {fileID: 5750758782114012256}
+  planetSpriteTransform: {fileID: 1292532132765204841}
   planetSpriteRenderer: {fileID: 6697189935250800820}
-  orbitVisual: {fileID: 8128145363405466507}
+  orbitWaveController: {fileID: 8128145363405466507}
+  despawnDelay: 0.12
+  despawnPunchScale: 1.15
+  despawnPunchDuration: 0.3
+  despawnShrinkDuration: 0.3
 --- !u!1 &8829762453693668692
 GameObject:
   m_ObjectHideFlags: 0
