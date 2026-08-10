@@ -8,13 +8,14 @@ public class PlayerEffectsFeedback : MonoBehaviour
     private SpriteRenderer rocketSprite;
     private SoundData rocketThrustSound;
     private SoundData rocketLaunchSound;
+    private SoundData rocketExplosionSound;
 
     private SoundBuilder soundBuilder;
     private SoundEmitter engineSound;
 
     public void Initialize(ParticleSystem rocketThrust, GameObject rocketExplosion,
         TrailRenderer[] rocketTrails, SpriteRenderer rocketSprite,
-        SoundData rocketThrustSound, SoundData rocketLaunchSound)
+        SoundData rocketThrustSound, SoundData rocketLaunchSound, SoundData rocketExplosionSound)
     {
         this.rocketThrust = rocketThrust;
         this.rocketExplosion = rocketExplosion;
@@ -22,6 +23,7 @@ public class PlayerEffectsFeedback : MonoBehaviour
         this.rocketSprite = rocketSprite;
         this.rocketThrustSound = rocketThrustSound;
         this.rocketLaunchSound = rocketLaunchSound;
+        this.rocketExplosionSound = rocketExplosionSound;
 
         soundBuilder = SoundManager.Instance.CreateSoundBuilder().WithRandomPitch();
     }
@@ -50,6 +52,11 @@ public class PlayerEffectsFeedback : MonoBehaviour
             engineSound?.Stop();
             rocketThrust.Stop(true);
         }
+    }
+
+    public void PlayExplosionSFX()
+    {
+        soundBuilder.Play(rocketExplosionSound);
     }
 
     public void SetTrailsActive(bool active)
@@ -83,5 +90,14 @@ public class PlayerEffectsFeedback : MonoBehaviour
     public void SpawnExplosion()
     {
         Instantiate(rocketExplosion, transform.position, Quaternion.identity);
+    }
+
+    public void HandleCrashEffects()
+    {
+        SetSpriteActive(false);
+        SetThrustActive(false);
+        SetTrailsActive(false);
+        PlayExplosionSFX();
+        SpawnExplosion();
     }
 }

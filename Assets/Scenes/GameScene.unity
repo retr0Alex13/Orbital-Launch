@@ -2692,6 +2692,14 @@ PrefabInstance:
       propertyPath: rocketExplosion
       value: 
       objectReference: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: rocketExplosionSound.clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 451803ed4cb7044418592e93f74aca7f, type: 3}
+    - target: {fileID: 2935637179894901858, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: rocketExplosionSound.mixerGroup
+      value: 
+      objectReference: {fileID: 4796280562796518393, guid: 0648aff6a08d3f0468df28399773aba6, type: 2}
     - target: {fileID: 5534482331835213822, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_IsActive
       value: 0

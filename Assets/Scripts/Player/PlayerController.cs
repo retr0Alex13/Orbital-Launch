@@ -38,6 +38,7 @@ public class PlayerController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private SoundData rocketThrustSound;
     [SerializeField] private SoundData rocketLaunchSound;
+    [SerializeField] private SoundData rocketExplosionSound;
     [SerializeField] private ParticleSystem rocketThrust;
 
     private Rigidbody2D playerRigidBody;
@@ -60,7 +61,9 @@ public class PlayerController : MonoBehaviour
         aimHandler = new PlayerAimHandler(aimSettings, mainCamera, transform);
         orbitFlight = new OrbitFlightController(orbitSettings);
 
-        feedback.Initialize(rocketThrust, rocketExplosion, rocketTrails, rocketSprite, rocketThrustSound, rocketLaunchSound);
+        feedback.Initialize(rocketThrust, rocketExplosion, rocketTrails, rocketSprite,
+            rocketThrustSound, rocketLaunchSound, rocketExplosionSound);
+
         OnPlayerLaunched += feedback.HandleLaunched;
         OnPlayerCaptured += feedback.HandleCaptured;
 
@@ -178,10 +181,7 @@ public class PlayerController : MonoBehaviour
 
         float duration = rocketExplosion.GetComponent<ParticleSystem>().main.duration;
         GameManager.Instance.RestartGameWithDelay(duration);
-        feedback.SetSpriteActive(false);
-        feedback.SetThrustActive(false);
-        feedback.SetTrailsActive(false);
-        feedback.SpawnExplosion();
+        feedback.HandleCrashEffects();
         rocketParts.SpawnParts(transform.position);
 
         OnPlayerDestroyed?.Invoke();
