@@ -2046,6 +2046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76bbb5ec1e0db1a4da2b3a7d2ac6caff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlanetSpawner
+  planetReturnDelay: 2
   initialSpawnOffset: 5
   planetPrefab: {fileID: 3038691229389213603, guid: d74424c140a88714bac67beb61b8de55, type: 3}
   config: {fileID: 11400000, guid: bb80182a6946c2f4db42b2b2ade5e2da, type: 2}

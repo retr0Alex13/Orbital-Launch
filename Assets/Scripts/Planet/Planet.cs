@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 
 public class Planet : MonoBehaviour
 {
+    public event Action<Planet> OnDespawned;
+
     public float GravityStrength => gravityStrength;
     public float OrbitSpeed => orbitSpeed;
     public float OrbitRadius => orbitCollider.radius * orbitCollider.transform.lossyScale.x;
@@ -32,6 +34,7 @@ public class Planet : MonoBehaviour
     private float planetScale;
     private Color baseColor;
     private Tween scaleTween;
+    private Tween despawnTween;
 
     private void Awake()
     {
@@ -45,6 +48,8 @@ public class Planet : MonoBehaviour
 
     public void Configure(PlanetSettings planetSettings)
     {
+        CancelPendingDespawn();
+
         planetSprite.localScale = Vector3.one * planetSettings.PlanetScale;
         planetScale = planetSettings.PlanetScale;
         scaleAnimationPercent = planetSettings.ScaleAnimationPercent;
@@ -75,6 +80,21 @@ public class Planet : MonoBehaviour
     public void PlayShockWaveEffect(Vector2 position)
     {
         orbitVisual.PlayWave(position);
+    }
+
+    public void ReturnToPoolAfterDelay(float delay)
+    {
+        despawnTween.Stop();
+        despawnTween = Tween.Delay(delay, () =>
+        {
+            gameObject.SetActive(false);
+            OnDespawned?.Invoke(this);
+        });
+    }
+
+    public void CancelPendingDespawn()
+    {
+        despawnTween.Stop();
     }
 
     public float TriggerRadius

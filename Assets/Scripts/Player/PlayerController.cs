@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
 {
     public event Action OnPlayerLaunched;
     public event Action<Planet> OnPlayerCaptured;
+    public event Action<Planet> OnPlanetLeft;
     public event Action OnPlayerDestroyed;
 
     public Func<Vector2, bool> LaunchValidator { get; set; }
@@ -137,7 +138,8 @@ public class PlayerController : MonoBehaviour
         if (CurrentPlanet == null)
             return;
 
-        CurrentPlanet.PlayShockWaveEffect(transform.position);
+        Planet previousPlanet = CurrentPlanet;
+        previousPlanet.PlayShockWaveEffect(transform.position);
 
         CurrentPlanet = null;
         orbitFlight.ResetTransition();
@@ -147,6 +149,7 @@ public class PlayerController : MonoBehaviour
         transform.up = launchDirection;
 
         OnPlayerLaunched?.Invoke();
+        OnPlanetLeft?.Invoke(previousPlanet);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -166,9 +169,11 @@ public class PlayerController : MonoBehaviour
         if (CurrentPlanet == null || collision.gameObject != CurrentPlanet.gameObject || !orbitFlight.IsTransitioning)
             return;
 
+        Planet previousPlanet = CurrentPlanet;
         CurrentPlanet = null;
         orbitFlight.ResetTransition();
         OnPlayerLaunched?.Invoke();
+        OnPlanetLeft?.Invoke(previousPlanet);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class PlanetSpawner : MonoBehaviour
 {
+    [SerializeField] private float planetReturnDelay = 0.6f;
     [SerializeField] private float initialSpawnOffset = 2f;
     [SerializeField] private Planet planetPrefab;
     [SerializeField] private PlanetSpawnerConfig config;
@@ -22,6 +23,7 @@ public class PlanetSpawner : MonoBehaviour
     private void Start()
     {
         player.OnPlayerCaptured += AdvanceMainPathTo;
+        player.OnPlanetLeft += HandlePlanetLeft;
 
         pool = new Planet[config.maxPlanetsToSpawn];
         for (int i = 0; i < pool.Length; i++)
@@ -39,6 +41,7 @@ public class PlanetSpawner : MonoBehaviour
     private void OnDisable()
     {
         player.OnPlayerCaptured -= AdvanceMainPathTo;
+        player.OnPlanetLeft -= HandlePlanetLeft;
     }
 
     private void AdvanceMainPathTo(Planet landedPlanet)
@@ -166,6 +169,21 @@ public class PlanetSpawner : MonoBehaviour
         asteroidSpawner.SpawnForPlanet(planet, difficulty);
 
         return planet;
+    }
+
+    private void HandlePlanetLeft(Planet planet)
+    {
+        if (planet == null) return;
+
+        planet.OnDespawned += HandlePlanetDespawned;
+        planet.ReturnToPoolAfterDelay(planetReturnDelay);
+    }
+
+    private void HandlePlanetDespawned(Planet planet)
+    {
+        planet.OnDespawned -= HandlePlanetDespawned;
+        activePlanets.Remove(planet);
+        asteroidSpawner.DespawnForPlanet(planet);
     }
 
     public Planet GetNextPlanetAfter(Planet current)
