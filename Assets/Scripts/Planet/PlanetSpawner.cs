@@ -7,6 +7,7 @@ public class PlanetSpawner : MonoBehaviour
     [SerializeField] private Planet planetPrefab;
     [SerializeField] private PlanetSpawnerConfig config;
     [SerializeField] private AsteroidRingSpawner asteroidSpawner;
+    [SerializeField] private CoinSpawner coinSpawner; // Already here, now we will use it!
 
     [SerializeField] private PlayerController player;
 
@@ -74,6 +75,7 @@ public class PlanetSpawner : MonoBehaviour
 
         mainPath.Add(planet);
         traveledDistance += distance;
+        coinSpawner.SpawnForPlanet(tail, planet, difficulty);
     }
 
     private Planet TrySpawnPlanet(Vector2 desiredPosition, float difficulty, float orbitRadius = -1f)
@@ -110,6 +112,9 @@ public class PlanetSpawner : MonoBehaviour
         poolIndex = (poolIndex + 1) % pool.Length;
 
         asteroidSpawner.DespawnForPlanet(planet);
+
+        // NEW: Clean up any old coins left over before we recycle this planet.
+        coinSpawner.DespawnForPlanet(planet);
 
         if (planet.gameObject.activeSelf)
             activePlanets.Remove(planet);
@@ -161,6 +166,8 @@ public class PlanetSpawner : MonoBehaviour
         planet.OnDespawned -= HandlePlanetDespawned;
         activePlanets.Remove(planet);
         asteroidSpawner.DespawnForPlanet(planet);
+
+        coinSpawner.DespawnForPlanet(planet);
     }
 
     public Planet GetNextPlanetAfter(Planet current)
