@@ -74,28 +74,6 @@ public class PlanetSpawner : MonoBehaviour
 
         mainPath.Add(planet);
         traveledDistance += distance;
-
-        SpawnExtraPlanets(planet, direction, difficulty);
-    }
-
-    private void SpawnExtraPlanets(Planet center, Vector2 forward, float difficulty)
-    {
-        int count = 0;
-        if (difficulty > 0.3f && Random.value < 0.35f) count++;
-        if (difficulty > 0.7f && Random.value < 0.15f) count++;
-
-        for (int i = 0; i < count; i++)
-        {
-            float extraOrbitRadius = RandomBiasedLow(config.minOrbitRadius, config.maxOrbitRadius, difficulty);
-            float gap = RandomBiasedHigh(config.minDistanceBetween, config.maxDistanceBetween, difficulty);
-            float offset = center.OrbitRadius + extraOrbitRadius + gap;
-
-            float angle = Random.value < 0.5f ? Random.Range(-90f, -40f) : Random.Range(40f, 90f);
-            Vector2 direction = Quaternion.Euler(0, 0, angle) * forward;
-
-            Vector2 position = (Vector2)center.transform.position + direction * offset;
-            TrySpawnPlanet(position, difficulty, extraOrbitRadius);
-        }
     }
 
     private Planet TrySpawnPlanet(Vector2 desiredPosition, float difficulty, float orbitRadius = -1f)
@@ -191,19 +169,7 @@ public class PlanetSpawner : MonoBehaviour
         if (index >= 0 && index + 1 < mainPath.Count)
             return mainPath[index + 1];
 
-        Vector2 playerPos = current != null ? (Vector2)current.transform.position : Vector2.zero;
-        Planet best = null;
-        float bestDist = float.MaxValue;
-        foreach (Planet p in mainPath)
-        {
-            float d = Vector2.Distance(playerPos, p.transform.position);
-            if (d > 0.1f && d < bestDist)
-            {
-                bestDist = d;
-                best = p;
-            }
-        }
-        return best;
+        return null;
     }
 
     private float GetDifficulty() =>

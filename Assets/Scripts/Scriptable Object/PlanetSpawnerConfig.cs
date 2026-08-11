@@ -7,8 +7,6 @@ public class PlanetSpawnerConfig : ScriptableObject
     [Header("Spacing")]
     public float minSpawnDistance;
     public float maxSpawnDistance;
-    public float minDistanceBetween;
-    public float maxDistanceBetween;
     public float maxAngle;
 
     [Header("Lookahead")]
@@ -28,9 +26,6 @@ public class PlanetSpawnerConfig : ScriptableObject
     public float maxOrbitRadius;
     public float minOrbitSpeed;
     public float maxOrbitSpeed;
-
-    [Header("Multi-planet spawning")]
-    public int maxExtraPlanets = 2;
 
     [Header("Orbit speed fluctuation")]
     public float speedOscillationAmplitude = 0.3f;
