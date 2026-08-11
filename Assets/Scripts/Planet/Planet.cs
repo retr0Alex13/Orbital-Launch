@@ -50,10 +50,12 @@ public class Planet : MonoBehaviour
     private Color baseColor;
     private Tween scaleTween;
     private Sequence despawnSequence;
+    private Vector3 baseOrbitScale;
 
     private void Awake()
     {
         baseColor = planetSpriteRenderer.color;
+        baseOrbitScale = orbitTransform.localScale;
     }
 
     private void Update()
@@ -69,9 +71,10 @@ public class Planet : MonoBehaviour
         planetScale = planetSettings.PlanetScale;
         scaleAnimationPercent = planetSettings.ScaleAnimationPercent;
 
+        orbitTransform.localScale = baseOrbitScale;
+
         float orbitScale = planetSettings.OrbitRadius / orbitCollider.radius;
         orbitCollider.transform.localScale = Vector3.one * orbitScale;
-
         orbitSpeed = planetSettings.NewOrbitSpeed;
 
         float calculatedRotationSpeed = Random.Range(planetSettings.MinRotationSpeed, planetSettings.MaxRotationSpeed);
