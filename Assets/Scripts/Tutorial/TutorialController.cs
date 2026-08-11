@@ -45,6 +45,7 @@ public class TutorialController : MonoBehaviour
             tutorialAimLine.HideLine();
 
         playerController.LaunchValidator = null;
+        playerController.CanLaunch = false;
 
         Time.timeScale = 1f;
         tutorialCounter++;
@@ -60,6 +61,7 @@ public class TutorialController : MonoBehaviour
             orbitTutorialScanner.OnOrbitHitDetected -= StopTime;
             playerController.OnPlayerLaunched -= ReleaseTime;
             orbitTutorialScanner.enabled = false;
+            playerController.CanLaunch = true;
             PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED, 1);
             return;
         }
