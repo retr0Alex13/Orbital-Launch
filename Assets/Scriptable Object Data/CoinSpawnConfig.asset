@@ -21,6 +21,6 @@ MonoBehaviour:
   normalCoinValue: 1
   rareCoinValue: 3
   rareCoinChance: 0.15
-  orbitRadiusMultiplier: 1
+  orbitRadiusMultiplier: 1.03
   planetMargin: 1.5
   poolSize: 24
