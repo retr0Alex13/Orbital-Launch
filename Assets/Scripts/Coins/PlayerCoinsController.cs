@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class PlayerCoinsController : MonoBehaviour
 {
+    public event Action<int> OnCoinCollected;
+
     public int Coins { get; private set; }
 
     public void AddCoins(int amount)
@@ -10,5 +13,6 @@ public class PlayerCoinsController : MonoBehaviour
             return;
 
         Coins += amount;
+        OnCoinCollected?.Invoke(Coins);
     }
 }
