@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace AudioSystem {
+namespace AudioSystem
+{
     [RequireComponent(typeof(AudioSource))]
-    public class SoundEmitter : MonoBehaviour {
+    public class SoundEmitter : MonoBehaviour
+    {
         public SoundData Data { get; private set; }
         public LinkedListNode<SoundEmitter> Node { get; set; }
 
@@ -13,23 +15,25 @@ namespace AudioSystem {
         Coroutine playingCoroutine;
         bool isStopped = true;
 
-        void Awake() {
+        void Awake()
+        {
             audioSource = gameObject.GetOrAdd<AudioSource>();
         }
 
-        public void Initialize(SoundData data) {
+        public void Initialize(SoundData data)
+        {
             Data = data;
             isStopped = false;
             audioSource.clip = data.clip;
             audioSource.outputAudioMixerGroup = data.mixerGroup;
             audioSource.loop = data.loop;
             audioSource.playOnAwake = data.playOnAwake;
-            
+
             audioSource.mute = data.mute;
             audioSource.bypassEffects = data.bypassEffects;
             audioSource.bypassListenerEffects = data.bypassListenerEffects;
             audioSource.bypassReverbZones = data.bypassReverbZones;
-            
+
             audioSource.priority = data.priority;
             audioSource.volume = data.volume;
             audioSource.pitch = data.pitch;
@@ -38,13 +42,13 @@ namespace AudioSystem {
             audioSource.reverbZoneMix = data.reverbZoneMix;
             audioSource.dopplerLevel = data.dopplerLevel;
             audioSource.spread = data.spread;
-            
+
             audioSource.minDistance = data.minDistance;
             audioSource.maxDistance = data.maxDistance;
-            
+
             audioSource.ignoreListenerVolume = data.ignoreListenerVolume;
             audioSource.ignoreListenerPause = data.ignoreListenerPause;
-            
+
             audioSource.rolloffMode = data.rolloffMode;
         }
 
@@ -74,7 +78,7 @@ namespace AudioSystem {
         public void Stop()
         {
             if (isStopped) return;
-                isStopped = true;
+            isStopped = true;
 
             if (playingCoroutine != null)
             {
@@ -86,8 +90,14 @@ namespace AudioSystem {
             SoundManager.Instance.ReturnToPool(this);
         }
 
-        public void WithRandomPitch(float min = -0.25f, float max = 0.25f) {
+        public void WithRandomPitch(float min = -0.25f, float max = 0.25f)
+        {
             audioSource.pitch += Random.Range(min, max);
+        }
+
+        public void WithPitch(float pitch = 1f)
+        {
+            audioSource.pitch = pitch;
         }
     }
 }
