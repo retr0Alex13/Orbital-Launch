@@ -30,6 +30,8 @@ public class OrbitEntryScorer : MonoBehaviour
             return;
 
         orbitEntryInfo = new OrbitEntryInfo(rb.linearVelocity, transform.position, planet.transform.position);
-        ScoreManager.Instance?.AwardOrbitEntry(orbitEntryInfo);
+
+        float newSpeedMultiplier = ScoreManager.Instance.AwardOrbitEntry(orbitEntryInfo);
+        player.OrbitFlightController.SpeedMultiplier = newSpeedMultiplier;
     }
 }

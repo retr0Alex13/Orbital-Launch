@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public event Action<Planet> OnPlanetLeft;
     public event Action OnPlayerDestroyed;
 
+    public OrbitFlightController OrbitFlightController => orbitFlight;
     public Func<Vector2, bool> LaunchValidator { get; set; }
 
     public Planet CurrentPlanet { get; private set; }
@@ -130,6 +131,8 @@ public class PlayerController : MonoBehaviour
         }
 
         float launchSpeed = Mathf.Lerp(aimSettings.minLaunchSpeed, aimSettings.maxLaunchSpeed, release.Power);
+        launchSpeed *= orbitFlight.SpeedMultiplier;
+
         LaunchFromOrbit(release.Direction, launchSpeed);
     }
 

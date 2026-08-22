@@ -15,6 +15,7 @@ public struct OrbitTransitionSettings
 
 public class OrbitFlightController
 {
+    public float SpeedMultiplier { get; set; } = 1f;
     public bool IsTransitioning { get; private set; }
 
     private readonly OrbitTransitionSettings settings;
@@ -59,7 +60,7 @@ public class OrbitFlightController
         Vector2 directionToPlanet = toPlanet / distanceToPlanet;
 
         Vector2 tangent = new Vector2(-directionToPlanet.y, directionToPlanet.x) * orbitDirection;
-        Vector2 tangentVelocity = tangent * planet.OrbitSpeed;
+        Vector2 tangentVelocity = tangent * planet.OrbitSpeed * SpeedMultiplier;
 
         float radiusError = distanceToPlanet - planet.OrbitRadius;
         Vector2 radialCorrection = directionToPlanet * (radiusError * settings.radiusCorrectionSpeed);
