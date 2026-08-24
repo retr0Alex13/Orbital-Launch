@@ -11,6 +11,11 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float minOrthographicSize = 5f;
     [SerializeField] private float maxOrthographicSize = 8f;
 
+    [Header("Aim Offset")]
+    [SerializeField] private float maxAimOffsetDistance = 2.5f;
+    [SerializeField] private float aimOffsetSmoothTime = 0.25f;
+    [SerializeField] private float aimOffsetReturnSmoothTime = 0.35f;
+
     private Camera cam;
     private Vector3 positionVelocity;
     private float sizeVelocity;
@@ -20,6 +25,9 @@ public class CameraFollow : MonoBehaviour
 
     private Vector3 lastPlayerPosition;
     private Vector3 playerVelocityEstimate;
+
+    private Vector3 currentAimOffset;
+    private Vector3 aimOffsetVelocity;
 
     private void Awake()
     {
@@ -39,20 +47,36 @@ public class CameraFollow : MonoBehaviour
 
         lastPlayerPosition = currentPlayerPos;
 
+        Vector3 aimOffset = UpdateAimOffset(Time.unscaledDeltaTime);
+
         if (player.CurrentPlanet == null)
         {
-            FollowPlayer(Time.unscaledDeltaTime);
+            FollowPlayer(Time.unscaledDeltaTime, aimOffset);
         }
         else
         {
-            FrameCurrentAndNextPlanet(Time.unscaledDeltaTime);
+            FrameCurrentAndNextPlanet(Time.unscaledDeltaTime, aimOffset);
         }
     }
 
-    private void FollowPlayer(float dt)
+    private Vector3 UpdateAimOffset(float dt)
+    {
+        Vector3 targetOffset = player.IsAiming
+            ? (Vector3)(player.AimDirection * player.AimPower * maxAimOffsetDistance)
+            : Vector3.zero;
+
+        float smoothTime = player.IsAiming ? aimOffsetSmoothTime : aimOffsetReturnSmoothTime;
+
+        currentAimOffset = Vector3.SmoothDamp(
+            currentAimOffset, targetOffset, ref aimOffsetVelocity, smoothTime, Mathf.Infinity, dt);
+
+        return currentAimOffset;
+    }
+
+    private void FollowPlayer(float dt, Vector3 aimOffset)
     {
         Vector3 predicted = player.transform.position + playerVelocityEstimate * positionSmoothTime;
-        Vector3 target = new Vector3(predicted.x, predicted.y, transform.position.z);
+        Vector3 target = new Vector3(predicted.x, predicted.y, transform.position.z) + aimOffset;
 
         transform.position = Vector3.SmoothDamp(
             transform.position, target, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
@@ -64,7 +88,7 @@ public class CameraFollow : MonoBehaviour
         lastFramedSize = cam.orthographicSize;
     }
 
-    private void FrameCurrentAndNextPlanet(float dt)
+    private void FrameCurrentAndNextPlanet(float dt, Vector3 aimOffset)
     {
         Planet current = player.CurrentPlanet;
         Planet next = planetSpawner.GetNextPlanetAfter(current);
@@ -107,8 +131,10 @@ public class CameraFollow : MonoBehaviour
             targetSize = lastFramedSize;
         }
 
+        Vector3 finalTargetPosition = targetPosition + aimOffset;
+
         transform.position = Vector3.SmoothDamp(
-            transform.position, targetPosition, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
+            transform.position, finalTargetPosition, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
 
         cam.orthographicSize = Mathf.SmoothDamp(
             cam.orthographicSize, targetSize, ref sizeVelocity, sizeSmoothTime, Mathf.Infinity, dt);

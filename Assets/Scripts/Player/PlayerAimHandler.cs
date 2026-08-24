@@ -62,6 +62,10 @@ public class PlayerAimHandler
     private Vector2 smoothedPointer;
     private Vector2 pointerVelocity;
 
+    private Vector3 cameraPositionSnapshot;
+    private float cameraOrthoSizeSnapshot;
+    private float cameraAspectSnapshot;
+
     public PlayerAimHandler(AimSettings settings, Camera aimCamera, Transform playerTransform)
     {
         this.settings = settings;
@@ -72,6 +76,11 @@ public class PlayerAimHandler
     public void BeginAim()
     {
         IsAiming = true;
+
+        cameraPositionSnapshot = aimCamera.transform.position;
+        cameraOrthoSizeSnapshot = aimCamera.orthographicSize;
+        cameraAspectSnapshot = aimCamera.aspect;
+
         dragStartWorldPos = GetPointerWorldPosition();
 
         smoothedPointer = dragStartWorldPos;
@@ -140,8 +149,13 @@ public class PlayerAimHandler
 
     private Vector2 GetPointerWorldPosition()
     {
-        Vector3 screenPos = Input.mousePosition;
-        screenPos.z = Mathf.Abs(aimCamera.transform.position.z - playerTransform.position.z);
-        return aimCamera.ScreenToWorldPoint(screenPos);
+        Vector3 viewportPos = aimCamera.ScreenToViewportPoint(Input.mousePosition);
+
+        float halfHeight = cameraOrthoSizeSnapshot;
+        float halfWidth = halfHeight * cameraAspectSnapshot;
+
+        return new Vector2(
+            cameraPositionSnapshot.x + (viewportPos.x - 0.5f) * halfWidth * 2f,
+            cameraPositionSnapshot.y + (viewportPos.y - 0.5f) * halfHeight * 2f);
     }
 }
