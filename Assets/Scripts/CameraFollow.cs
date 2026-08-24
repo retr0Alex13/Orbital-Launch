@@ -12,9 +12,10 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float maxOrthographicSize = 8f;
 
     [Header("Aim Offset")]
-    [SerializeField] private float maxAimOffsetDistance = 2.5f;
+    [SerializeField] private float maxAimOffsetDistance = 3.5f;
     [SerializeField] private float aimOffsetSmoothTime = 0.25f;
     [SerializeField] private float aimOffsetReturnSmoothTime = 0.35f;
+    [SerializeField, Range(0.1f, 0.95f)] private float orbitVisibleAreaFraction = 0.7f;
 
     private Camera cam;
     private Vector3 positionVelocity;
@@ -47,48 +48,39 @@ public class CameraFollow : MonoBehaviour
 
         lastPlayerPosition = currentPlayerPos;
 
-        Vector3 aimOffset = UpdateAimOffset(Time.unscaledDeltaTime);
+        float dt = Time.unscaledDeltaTime;
+
+        Vector3 baseTargetPosition;
+        float targetSize;
 
         if (player.CurrentPlanet == null)
         {
-            FollowPlayer(Time.unscaledDeltaTime, aimOffset);
+            Vector3 predicted = player.transform.position + playerVelocityEstimate * positionSmoothTime;
+            baseTargetPosition = new Vector3(predicted.x, predicted.y, transform.position.z);
+            targetSize = minOrthographicSize;
         }
         else
         {
-            FrameCurrentAndNextPlanet(Time.unscaledDeltaTime, aimOffset);
+            (baseTargetPosition, targetSize) = ComputeOrbitFramingTarget();
+        }
+
+        Vector3 aimOffset = UpdateAimOffset(dt, baseTargetPosition);
+        Vector3 finalTargetPosition = baseTargetPosition + aimOffset;
+
+        transform.position = Vector3.SmoothDamp(
+            transform.position, finalTargetPosition, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
+
+        cam.orthographicSize = Mathf.SmoothDamp(
+            cam.orthographicSize, targetSize, ref sizeVelocity, sizeSmoothTime, Mathf.Infinity, dt);
+
+        if (player.CurrentPlanet == null)
+        {
+            lastFramedPosition = transform.position;
+            lastFramedSize = cam.orthographicSize;
         }
     }
 
-    private Vector3 UpdateAimOffset(float dt)
-    {
-        Vector3 targetOffset = player.IsAiming
-            ? (Vector3)(player.AimDirection * player.AimPower * maxAimOffsetDistance)
-            : Vector3.zero;
-
-        float smoothTime = player.IsAiming ? aimOffsetSmoothTime : aimOffsetReturnSmoothTime;
-
-        currentAimOffset = Vector3.SmoothDamp(
-            currentAimOffset, targetOffset, ref aimOffsetVelocity, smoothTime, Mathf.Infinity, dt);
-
-        return currentAimOffset;
-    }
-
-    private void FollowPlayer(float dt, Vector3 aimOffset)
-    {
-        Vector3 predicted = player.transform.position + playerVelocityEstimate * positionSmoothTime;
-        Vector3 target = new Vector3(predicted.x, predicted.y, transform.position.z) + aimOffset;
-
-        transform.position = Vector3.SmoothDamp(
-            transform.position, target, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
-
-        cam.orthographicSize = Mathf.SmoothDamp(
-            cam.orthographicSize, minOrthographicSize, ref sizeVelocity, sizeSmoothTime, Mathf.Infinity, dt);
-
-        lastFramedPosition = transform.position;
-        lastFramedSize = cam.orthographicSize;
-    }
-
-    private void FrameCurrentAndNextPlanet(float dt, Vector3 aimOffset)
+    private (Vector3 position, float size) ComputeOrbitFramingTarget()
     {
         Planet current = player.CurrentPlanet;
         Planet next = planetSpawner.GetNextPlanetAfter(current);
@@ -131,12 +123,64 @@ public class CameraFollow : MonoBehaviour
             targetSize = lastFramedSize;
         }
 
-        Vector3 finalTargetPosition = targetPosition + aimOffset;
+        return (targetPosition, targetSize);
+    }
 
-        transform.position = Vector3.SmoothDamp(
-            transform.position, finalTargetPosition, ref positionVelocity, positionSmoothTime, Mathf.Infinity, dt);
+    private Vector3 UpdateAimOffset(float dt, Vector3 baseCameraTarget)
+    {
+        Vector3 targetOffset = Vector3.zero;
 
-        cam.orthographicSize = Mathf.SmoothDamp(
-            cam.orthographicSize, targetSize, ref sizeVelocity, sizeSmoothTime, Mathf.Infinity, dt);
+        if (player.IsAiming)
+        {
+            float maxDistance = maxAimOffsetDistance;
+
+            if (player.CurrentPlanet != null)
+            {
+                float visibilityMax = GetMaxOffsetKeepingPlayerVisible(player.AimDirection, baseCameraTarget);
+                maxDistance = Mathf.Min(maxDistance, visibilityMax);
+            }
+
+            targetOffset = (Vector3)(player.AimDirection * player.AimPower * maxDistance);
+        }
+
+        float smoothTime = player.IsAiming ? aimOffsetSmoothTime : aimOffsetReturnSmoothTime;
+
+        currentAimOffset = Vector3.SmoothDamp(
+            currentAimOffset, targetOffset, ref aimOffsetVelocity, smoothTime, Mathf.Infinity, dt);
+
+        return currentAimOffset;
+    }
+
+    private float GetMaxOffsetKeepingPlayerVisible(Vector2 direction, Vector3 baseCameraTarget)
+    {
+        if (direction.sqrMagnitude < 0.0001f)
+            return maxAimOffsetDistance;
+
+        float halfHeight = cam.orthographicSize * orbitVisibleAreaFraction;
+        float halfWidth = halfHeight * cam.aspect;
+
+        Vector2 relativePlayerPos = (Vector2)player.transform.position - (Vector2)baseCameraTarget;
+
+        float maxT = float.PositiveInfinity;
+
+        if (Mathf.Abs(direction.x) > 0.0001f)
+        {
+            float axisMaxT = direction.x > 0f
+                ? (relativePlayerPos.x + halfWidth) / direction.x
+                : (relativePlayerPos.x - halfWidth) / direction.x;
+
+            maxT = Mathf.Min(maxT, axisMaxT);
+        }
+
+        if (Mathf.Abs(direction.y) > 0.0001f)
+        {
+            float axisMaxT = direction.y > 0f
+                ? (relativePlayerPos.y + halfHeight) / direction.y
+                : (relativePlayerPos.y - halfHeight) / direction.y;
+
+            maxT = Mathf.Min(maxT, axisMaxT);
+        }
+
+        return Mathf.Max(0f, maxT);
     }
 }

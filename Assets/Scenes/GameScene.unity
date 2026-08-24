@@ -586,6 +586,9 @@ MonoBehaviour:
   framingPadding: 1
   minOrthographicSize: 3
   maxOrthographicSize: 40
+  maxAimOffsetDistance: 5
+  aimOffsetSmoothTime: 0.25
+  aimOffsetReturnSmoothTime: 0.35
 --- !u!1 &553170114
 GameObject:
   m_ObjectHideFlags: 0
@@ -3144,6 +3147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
   orbitEntryConfig: {fileID: 11400000, guid: 2958f33db4d77fa4ca0861934d15b9e7, type: 2}
   comboConfig: {fileID: 11400000, guid: 1e60fe2660d9dd44a991369a0622952f, type: 2}
+  totalScore: 0
 --- !u!1 &2078769513
 GameObject:
   m_ObjectHideFlags: 0
