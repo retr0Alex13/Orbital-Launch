@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (CurrentPlanet == null || !CanLaunch)
+        if (!CanLaunch)
             return;
 
         if (aimHandler.IsAiming)
@@ -138,21 +138,23 @@ public class PlayerController : MonoBehaviour
 
     private void LaunchFromOrbit(Vector2 direction, float speed)
     {
-        if (CurrentPlanet == null)
-            return;
-
         Planet previousPlanet = CurrentPlanet;
-        previousPlanet.PlayShockWaveEffect(transform.position);
 
-        CurrentPlanet = null;
-        orbitFlight.ResetTransition();
+        if (previousPlanet != null)
+        {
+            previousPlanet.PlayShockWaveEffect(transform.position);
+            CurrentPlanet = null;
+            orbitFlight.ResetTransition();
+        }
 
         Vector2 launchDirection = direction.normalized;
         playerRigidBody.linearVelocity = launchDirection * speed;
         transform.up = launchDirection;
 
         OnPlayerLaunched?.Invoke();
-        OnPlanetLeft?.Invoke(previousPlanet);
+
+        if (previousPlanet != null)
+            OnPlanetLeft?.Invoke(previousPlanet);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

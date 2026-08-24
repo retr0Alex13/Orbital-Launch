@@ -75,7 +75,7 @@ public class TrajectoryLineEmitter : MonoBehaviour
 
     private void LateUpdate()
     {
-        bool visible = player.CurrentPlanet != null && player.IsAiming;
+        bool visible = player.IsAiming;
 
         if (!visible)
         {

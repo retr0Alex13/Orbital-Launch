@@ -2,7 +2,7 @@ using AudioSystem;
 using UnityEngine;
 public class PlayerEffectsFeedback : MonoBehaviour
 {
-    private ParticleSystem rocketThrust;
+    private ParticleSystem rocketThrustVFX;
     private GameObject rocketExplosion;
     private TrailRenderer[] rocketTrails;
     private SpriteRenderer rocketSprite;
@@ -17,7 +17,7 @@ public class PlayerEffectsFeedback : MonoBehaviour
         TrailRenderer[] rocketTrails, SpriteRenderer rocketSprite,
         SoundData rocketThrustSound, SoundData rocketLaunchSound, SoundData rocketExplosionSound)
     {
-        this.rocketThrust = rocketThrust;
+        this.rocketThrustVFX = rocketThrust;
         this.rocketExplosion = rocketExplosion;
         this.rocketTrails = rocketTrails;
         this.rocketSprite = rocketSprite;
@@ -30,6 +30,7 @@ public class PlayerEffectsFeedback : MonoBehaviour
 
     public void HandleLaunched()
     {
+        engineSound?.Stop();
         soundBuilder.Play(rocketLaunchSound);
         SetThrustActive(true);
     }
@@ -45,12 +46,12 @@ public class PlayerEffectsFeedback : MonoBehaviour
         if (active)
         {
             engineSound = soundBuilder.Play(rocketThrustSound);
-            rocketThrust.Play(true);
+            rocketThrustVFX.Play(true);
         }
         else
         {
             engineSound?.Stop();
-            rocketThrust.Stop(true);
+            rocketThrustVFX.Stop(true);
         }
     }
 
