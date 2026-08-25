@@ -4,10 +4,12 @@ using UnityEngine;
 public class PlanetSpawner : MonoBehaviour
 {
     [SerializeField] private float initialSpawnOffset = 2f;
+    [SerializeField] private float planetCleanupDistance = 40f;
+    [SerializeField] private float detachedObjectCleanupDistance = 30f;
     [SerializeField] private Planet planetPrefab;
     [SerializeField] private PlanetSpawnerConfig config;
     [SerializeField] private AsteroidRingSpawner asteroidSpawner;
-    [SerializeField] private CoinSpawner coinSpawner; // Already here, now we will use it!
+    [SerializeField] private CoinSpawner coinSpawner;
 
     [SerializeField] private PlayerController player;
 
@@ -16,6 +18,7 @@ public class PlanetSpawner : MonoBehaviour
 
     private readonly List<Planet> mainPath = new();
     private readonly List<Planet> activePlanets = new();
+    private readonly List<Planet> skippedPlanets = new();
 
     private float traveledDistance;
     private int previousSpriteIndex;
@@ -44,12 +47,43 @@ public class PlanetSpawner : MonoBehaviour
         player.OnPlanetLeft -= HandlePlanetLeft;
     }
 
+    private void Update()
+    {
+        Vector2 playerPosition = player.transform.position;
+        coinSpawner.CleanupBehindPlayer(playerPosition, detachedObjectCleanupDistance);
+        asteroidSpawner.CleanupBehindPlayer(playerPosition, detachedObjectCleanupDistance);
+        CleanupSkippedPlanets(playerPosition);
+    }
+
+    private void CleanupSkippedPlanets(Vector2 playerPosition)
+    {
+        for (int i = skippedPlanets.Count - 1; i >= 0; i--)
+        {
+            Planet planet = skippedPlanets[i];
+
+            if (!planet.gameObject.activeSelf)
+            {
+                skippedPlanets.RemoveAt(i);
+                continue;
+            }
+
+            if (Vector2.Distance(playerPosition, planet.transform.position) <= planetCleanupDistance)
+                continue;
+
+            skippedPlanets.RemoveAt(i);
+            ReturnPlanetToPool(planet);
+        }
+    }
+
     private void AdvanceMainPathTo(Planet landedPlanet)
     {
         int index = mainPath.IndexOf(landedPlanet);
 
         if (index > 0)
         {
+            for (int i = 0; i < index; i++)
+                skippedPlanets.Add(mainPath[i]);
+
             mainPath.RemoveRange(0, index);
         }
 
@@ -112,9 +146,10 @@ public class PlanetSpawner : MonoBehaviour
         poolIndex = (poolIndex + 1) % pool.Length;
 
         asteroidSpawner.DespawnForPlanet(planet);
-
-        // NEW: Clean up any old coins left over before we recycle this planet.
         coinSpawner.DespawnForPlanet(planet);
+        skippedPlanets.Remove(planet);
+
+        planet.OnDespawned -= HandlePlanetDespawned;
 
         if (planet.gameObject.activeSelf)
             activePlanets.Remove(planet);
@@ -156,7 +191,15 @@ public class PlanetSpawner : MonoBehaviour
     private void HandlePlanetLeft(Planet planet)
     {
         if (planet == null) return;
+        ReturnPlanetToPool(planet);
+    }
 
+    private void ReturnPlanetToPool(Planet planet)
+    {
+        if (!planet.gameObject.activeSelf)
+            return;
+
+        planet.OnDespawned -= HandlePlanetDespawned;
         planet.OnDespawned += HandlePlanetDespawned;
         planet.ReturnToPool();
     }
@@ -165,9 +208,8 @@ public class PlanetSpawner : MonoBehaviour
     {
         planet.OnDespawned -= HandlePlanetDespawned;
         activePlanets.Remove(planet);
-        asteroidSpawner.DespawnForPlanet(planet);
-
-        coinSpawner.DespawnForPlanet(planet);
+        asteroidSpawner.DetachFromPlanet(planet);
+        coinSpawner.DetachFromPlanet(planet);
     }
 
     public Planet GetNextPlanetAfter(Planet current)

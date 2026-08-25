@@ -9,6 +9,7 @@ public sealed class CoinSpawner : MonoBehaviour
     private CoinPool pool;
 
     private readonly Dictionary<Planet, List<Coin>> activeCoins = new();
+    private readonly List<Coin> detachedCoins = new();
 
     private void Awake()
     {
@@ -37,6 +38,15 @@ public sealed class CoinSpawner : MonoBehaviour
         activeCoins[planet] = coins;
     }
 
+    public void DetachFromPlanet(Planet planet)
+    {
+        if (activeCoins.TryGetValue(planet, out List<Coin> coins))
+        {
+            detachedCoins.AddRange(coins);
+            activeCoins.Remove(planet);
+        }
+    }
+
     private bool ShouldSpawnCoins()
     {
         return Random.value < config.spawnChance;
@@ -57,7 +67,28 @@ public sealed class CoinSpawner : MonoBehaviour
 
     public void ReturnToPool(Coin coin)
     {
+        detachedCoins.Remove(coin);
         pool.Return(coin);
+    }
+
+    public void CleanupBehindPlayer(Vector2 playerPosition, float cleanupDistance)
+    {
+        for (int i = detachedCoins.Count - 1; i >= 0; i--)
+        {
+            Coin coin = detachedCoins[i];
+
+            if (!coin.gameObject.activeSelf)
+            {
+                detachedCoins.RemoveAt(i);
+                continue;
+            }
+
+            if (Vector2.Distance(playerPosition, coin.transform.position) > cleanupDistance)
+            {
+                pool.Return(coin);
+                detachedCoins.RemoveAt(i);
+            }
+        }
     }
 
     private List<Coin> PlaceAlongOrbit(Planet planet, int count, float spacing)

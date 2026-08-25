@@ -18,6 +18,8 @@ public sealed class Asteroid : MonoBehaviour
     private float orbitRadius;
     private float angularSpeedDeg;
     private float targetWorldDiameter;
+    private Vector2 driftVelocity;
+    private bool isOrbiting;
 
     public void Activate(
         Transform target,
@@ -66,9 +68,17 @@ public sealed class Asteroid : MonoBehaviour
 
     private void Update()
     {
-        if (!IsActive || planetTransform == null) return;
-        angleDeg += angularSpeedDeg * Time.deltaTime;
-        UpdatePosition();
+        if (!IsActive) return;
+
+        if (planetTransform != null)
+        {
+            angleDeg += angularSpeedDeg * Time.deltaTime;
+            UpdatePosition();
+        }
+        else if (!isOrbiting)
+        {
+            transform.position += (Vector3)(driftVelocity * Time.deltaTime);
+        }
     }
 
     private void UpdatePosition()
@@ -76,5 +86,16 @@ public sealed class Asteroid : MonoBehaviour
         float rad = angleDeg * Mathf.Deg2Rad;
         transform.position = (Vector2)planetTransform.position
             + new Vector2(Mathf.Cos(rad), Mathf.Sin(rad)) * orbitRadius;
+    }
+
+    public void DetachAnchor()
+    {
+        float rad = angleDeg * Mathf.Deg2Rad;
+        Vector2 tangent = new Vector2(-Mathf.Sin(rad), Mathf.Cos(rad));
+        float angularSpeedRad = angularSpeedDeg * Mathf.Deg2Rad;
+        driftVelocity = tangent * (angularSpeedRad * orbitRadius);
+
+        planetTransform = null;
+        isOrbiting = false;
     }
 }

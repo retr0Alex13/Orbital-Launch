@@ -10,6 +10,7 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
     private int planetsSinceLastRing;
 
     private readonly Dictionary<Planet, AsteroidRing> activeRings = new();
+    private readonly List<Asteroid> detachedAsteroids = new();
 
     private void Awake()
     {
@@ -57,6 +58,39 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
         }
     }
 
+    public void DetachFromPlanet(Planet planet)
+    {
+        if (!activeRings.TryGetValue(planet, out AsteroidRing ring))
+            return;
+
+        activeRings.Remove(planet);
+
+        foreach (Asteroid a in ring.Asteroids)
+        {
+            a.DetachAnchor();
+            detachedAsteroids.Add(a);
+        }
+    }
+
+    public void CleanupBehindPlayer(Vector2 playerPosition, float cleanupDistance)
+    {
+        for (int i = detachedAsteroids.Count - 1; i >= 0; i--)
+        {
+            Asteroid a = detachedAsteroids[i];
+
+            if (!a.IsActive)
+            {
+                detachedAsteroids.RemoveAt(i);
+                continue;
+            }
+
+            if (Vector2.Distance(playerPosition, a.transform.position) > cleanupDistance)
+            {
+                pool.Return(a);
+                detachedAsteroids.RemoveAt(i);
+            }
+        }
+    }
 
     private bool TryComputeParameters(Planet planet, float difficulty, out RingParameters result)
     {
