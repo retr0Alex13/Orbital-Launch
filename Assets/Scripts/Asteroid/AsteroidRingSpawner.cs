@@ -3,6 +3,8 @@ using UnityEngine;
 
 public sealed class AsteroidRingSpawner : MonoBehaviour
 {
+    public bool HasActiveRing(Planet planet) => activeRings.ContainsKey(planet);
+
     [SerializeField] private Asteroid asteroidPrefab;
     [SerializeField] private AsteroidRingConfig config;
 

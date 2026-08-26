@@ -2046,6 +2046,7 @@ Transform:
   - {fileID: 1875338423}
   - {fileID: 1763274882}
   - {fileID: 254010537}
+  - {fileID: 1239515974}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1201148208
@@ -2260,6 +2261,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236879831}
   m_CullTransparentMesh: 1
+--- !u!1 &1239515973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1239515974}
+  - component: {fileID: 1239515975}
+  m_Layer: 0
+  m_Name: OrbitPropSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1239515974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239515973}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1161392394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1239515975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239515973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15efca7be5267594cb349741748dd28b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbitPropSpawner
+  asteroidPrefab: {fileID: 153731668303680917, guid: 53743be0065c2d041830c1a022029638, type: 3}
+  config: {fileID: 11400000, guid: 1a90ffd2817456a43ae038acb7d9a8e4, type: 2}
+  ringSpawner: {fileID: 1875338424}
 --- !u!1 &1373492090
 GameObject:
   m_ObjectHideFlags: 0
@@ -2513,6 +2561,7 @@ MonoBehaviour:
   config: {fileID: 11400000, guid: bb80182a6946c2f4db42b2b2ade5e2da, type: 2}
   asteroidSpawner: {fileID: 1875338424}
   coinSpawner: {fileID: 1763274883}
+  orbitPropSpawner: {fileID: 1239515975}
   player: {fileID: 857721169}
 --- !u!1 &1636050605
 GameObject:

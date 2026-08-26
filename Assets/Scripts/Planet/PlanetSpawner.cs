@@ -10,6 +10,7 @@ public class PlanetSpawner : MonoBehaviour
     [SerializeField] private PlanetSpawnerConfig config;
     [SerializeField] private AsteroidRingSpawner asteroidSpawner;
     [SerializeField] private CoinSpawner coinSpawner;
+    [SerializeField] private OrbitPropSpawner orbitPropSpawner;
 
     [SerializeField] private PlayerController player;
 
@@ -52,6 +53,7 @@ public class PlanetSpawner : MonoBehaviour
         Vector2 playerPosition = player.transform.position;
         coinSpawner.CleanupBehindPlayer(playerPosition, detachedObjectCleanupDistance);
         asteroidSpawner.CleanupBehindPlayer(playerPosition, detachedObjectCleanupDistance);
+        orbitPropSpawner.CleanupBehindPlayer(playerPosition, detachedObjectCleanupDistance);
         CleanupSkippedPlanets(playerPosition);
     }
 
@@ -146,6 +148,7 @@ public class PlanetSpawner : MonoBehaviour
         poolIndex = (poolIndex + 1) % pool.Length;
 
         asteroidSpawner.DespawnForPlanet(planet);
+        orbitPropSpawner.DespawnForPlanet(planet);
         coinSpawner.DespawnForPlanet(planet);
         skippedPlanets.Remove(planet);
 
@@ -184,6 +187,7 @@ public class PlanetSpawner : MonoBehaviour
 
         activePlanets.Add(planet);
         asteroidSpawner.SpawnForPlanet(planet, difficulty);
+        orbitPropSpawner.SpawnForPlanet(planet, difficulty);
 
         return planet;
     }
@@ -209,6 +213,7 @@ public class PlanetSpawner : MonoBehaviour
         planet.OnDespawned -= HandlePlanetDespawned;
         activePlanets.Remove(planet);
         asteroidSpawner.DetachFromPlanet(planet);
+        orbitPropSpawner.DetachFromPlanet(planet);
         coinSpawner.DetachFromPlanet(planet);
     }
 
