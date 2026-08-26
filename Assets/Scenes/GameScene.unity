@@ -256,6 +256,106 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 82455580}
   m_CullTransparentMesh: 1
+--- !u!1 &254010536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 254010537}
+  - component: {fileID: 254010538}
+  m_Layer: 0
+  m_Name: BackgroundObjectsSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &254010537
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254010536}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1161392394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &254010538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254010536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b7df387786dc0e43a8f70e4a3c5f95f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicBackgroundSpawner
+  mainCamera: {fileID: 519420031}
+  prefab: {fileID: 463903452901936222, guid: d819034f5c0838448b148ef02e1af875, type: 3}
+  backgroundSprites:
+  - sprite: {fileID: -1838984001962695065, guid: 1c5bee170b0ab6d47b8de1145b103414, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: -269140416421959863, guid: 9843f74d7acc22f42b1097763356e095, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: -1829539950349180878, guid: bf46a72321ee5e74983a48ec47f7c443, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: 2396250748795188391, guid: cbbad47339e520b43a234461c799ae92, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: -1555378249586793724, guid: c7f0daa28824dff4197e97da8c3d99df, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: 3432126016212381721, guid: 13b6a6e3267f04b42b5ee23ee3d6419b, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: 951679504244899334, guid: 437a1036e2b047d4d92117c6fb3caedb, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: -8963534596690228247, guid: 06c54c483b7ea544b840fe578ff1fdb4, type: 3}
+    useCustomScale: 0
+    customMinScale: 0
+    customMaxScale: 0
+  - sprite: {fileID: 8250244106463838973, guid: 847b80d81d09f4145a6dcd568c0b0b40, type: 3}
+    useCustomScale: 1
+    customMinScale: 0.5
+    customMaxScale: 1
+  - sprite: {fileID: -6669106366199071909, guid: 751ed1d62f5e2cf45973a836eb2d142d, type: 3}
+    useCustomScale: 1
+    customMinScale: 0.5
+    customMaxScale: 1
+  - sprite: {fileID: -6009460897249996692, guid: 5bf65bf9efb332749ab27a6b0c38bd87, type: 3}
+    useCustomScale: 1
+    customMinScale: 0.5
+    customMaxScale: 1
+  maxActiveObjects: 5
+  spawnDistanceInterval: 2
+  minScale: 0.1
+  maxScale: 0.5
+  minParallax: 0.1
+  maxParallax: 0.5
+  safeDistancePadding: 5
+  spawnMargin: 10
+  despawnDistance: 30
 --- !u!1 &468423792
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,6 +689,7 @@ MonoBehaviour:
   maxAimOffsetDistance: 5
   aimOffsetSmoothTime: 0.25
   aimOffsetReturnSmoothTime: 0.35
+  orbitVisibleAreaFraction: 0.7
 --- !u!1 &553170114
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,6 +2045,7 @@ Transform:
   - {fileID: 1525050946}
   - {fileID: 1875338423}
   - {fileID: 1763274882}
+  - {fileID: 254010537}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1201148208
@@ -2405,6 +2507,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlanetSpawner
   initialSpawnOffset: 15
+  planetCleanupDistance: 40
+  detachedObjectCleanupDistance: 30
   planetPrefab: {fileID: 3038691229389213603, guid: d74424c140a88714bac67beb61b8de55, type: 3}
   config: {fileID: 11400000, guid: bb80182a6946c2f4db42b2b2ade5e2da, type: 2}
   asteroidSpawner: {fileID: 1875338424}
