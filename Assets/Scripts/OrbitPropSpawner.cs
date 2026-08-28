@@ -11,6 +11,7 @@ public sealed class OrbitPropSpawner : MonoBehaviour
     private int planetsSinceLastSpawn;
 
     private readonly Dictionary<Planet, List<Asteroid>> activeSolo = new();
+    private readonly Dictionary<Asteroid, Planet> asteroidOwners = new();
     private readonly List<Asteroid> detachedAsteroids = new();
 
     private void Awake()
@@ -33,10 +34,10 @@ public sealed class OrbitPropSpawner : MonoBehaviour
         int count = Random.Range(config.minCount, config.maxCount + 1);
         if (count <= 0) return;
 
-        List<Asteroid> asteroids = PlaceProps(planet, count);
-        if (asteroids.Count == 0) return;
+        List<Asteroid> props = PlaceProps(planet, count);
+        if (props.Count == 0) return;
 
-        activeSolo[planet] = asteroids;
+        activeSolo[planet] = props;
         planetsSinceLastSpawn = 0;
     }
 
@@ -53,23 +54,24 @@ public sealed class OrbitPropSpawner : MonoBehaviour
 
     public void DespawnForPlanet(Planet planet)
     {
-        if (activeSolo.TryGetValue(planet, out List<Asteroid> asteroids))
+        if (activeSolo.TryGetValue(planet, out List<Asteroid> props))
         {
-            foreach (Asteroid a in asteroids)
-                pool.Return(a);
+            foreach (Asteroid a in props)
+                ReturnToPool(a);
             activeSolo.Remove(planet);
         }
     }
 
     public void DetachFromPlanet(Planet planet)
     {
-        if (!activeSolo.TryGetValue(planet, out List<Asteroid> asteroids))
+        if (!activeSolo.TryGetValue(planet, out List<Asteroid> props))
             return;
 
         activeSolo.Remove(planet);
 
-        foreach (Asteroid a in asteroids)
+        foreach (Asteroid a in props)
         {
+            asteroidOwners.Remove(a);
             a.DetachAnchor();
             detachedAsteroids.Add(a);
         }
@@ -89,10 +91,42 @@ public sealed class OrbitPropSpawner : MonoBehaviour
 
             if (Vector2.Distance(playerPosition, a.transform.position) > cleanupDistance)
             {
-                pool.Return(a);
+                ReturnToPool(a);
                 detachedAsteroids.RemoveAt(i);
             }
         }
+    }
+
+    private void SubscribeAsteroid(Asteroid asteroid, Planet planet)
+    {
+        asteroid.OnDestroyedByCollision += HandleAsteroidDestroyed;
+        asteroidOwners[asteroid] = planet;
+    }
+
+    private void HandleAsteroidDestroyed(Asteroid asteroid)
+    {
+        if (asteroidOwners.TryGetValue(asteroid, out Planet planet))
+        {
+            if (activeSolo.TryGetValue(planet, out List<Asteroid> props))
+            {
+                props.Remove(asteroid);
+                if (props.Count == 0)
+                    activeSolo.Remove(planet);
+            }
+        }
+        else
+        {
+            detachedAsteroids.Remove(asteroid);
+        }
+
+        ReturnToPool(asteroid);
+    }
+
+    private void ReturnToPool(Asteroid asteroid)
+    {
+        asteroid.OnDestroyedByCollision -= HandleAsteroidDestroyed;
+        asteroidOwners.Remove(asteroid);
+        pool.Return(asteroid);
     }
 
     private List<Asteroid> PlaceProps(Planet planet, int count)
@@ -121,6 +155,7 @@ public sealed class OrbitPropSpawner : MonoBehaviour
             Asteroid prop = pool.Get();
             prop.Activate(planet.transform, angle, speedDeg, scale, radius);
             prop.SetAsteroidSprite(variant.sprite);
+            SubscribeAsteroid(prop, planet);
             props.Add(prop);
         }
 

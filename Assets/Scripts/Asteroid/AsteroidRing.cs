@@ -4,7 +4,10 @@ using UnityEngine;
 public class AsteroidRing
 {
     public Planet Planet { get; }
-    public IReadOnlyList<Asteroid> Asteroids { get; }
+
+    private readonly List<Asteroid> asteroids;
+    public IReadOnlyList<Asteroid> Asteroids => asteroids;
+    public bool IsEmpty => asteroids.Count == 0;
 
     public float InitialGapCenterDeg { get; }
     public float GapDegrees { get; }
@@ -23,14 +26,16 @@ public class AsteroidRing
         float initialGapCenterDeg,
         float gapDegrees,
         float angularSpeedDeg,
-        float ringRadius)          
+        float ringRadius)
     {
         Planet = planet;
-        Asteroids = asteroids;
+        this.asteroids = new List<Asteroid>(asteroids);
         InitialGapCenterDeg = initialGapCenterDeg;
         GapDegrees = gapDegrees;
         AngularSpeedDeg = angularSpeedDeg;
         RingRadius = ringRadius;
         spawnTime = Time.time;
     }
+
+    public void RemoveAsteroid(Asteroid a) => asteroids.Remove(a);
 }

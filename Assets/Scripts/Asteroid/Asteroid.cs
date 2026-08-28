@@ -1,3 +1,4 @@
+using AudioSystem;
 using UnityEngine;
 
 public sealed class Asteroid : MonoBehaviour
@@ -13,6 +14,12 @@ public sealed class Asteroid : MonoBehaviour
     [SerializeField, Range(0.5f, 1f)]
     private float colliderFitMultiplier = 1f;
 
+    [SerializeField]
+    private GameObject explosionParticle;
+
+    [SerializeField]
+    private SoundData explosionSound;
+
     private Transform planetTransform;
     private float angleDeg;
     private float orbitRadius;
@@ -20,6 +27,10 @@ public sealed class Asteroid : MonoBehaviour
     private float targetWorldDiameter;
     private Vector2 driftVelocity;
     private bool isOrbiting;
+
+    private SoundBuilder soundBuilder;
+
+    public event System.Action<Asteroid> OnDestroyedByCollision;
 
     public void Activate(
         Transform target,
@@ -37,6 +48,8 @@ public sealed class Asteroid : MonoBehaviour
         gameObject.SetActive(true);
         IsActive = true;
         asteroidCollider.enabled = true;
+        soundBuilder = SoundManager.Instance.CreateSoundBuilder().WithRandomPitch();
+
         UpdatePosition();
     }
 
@@ -46,6 +59,7 @@ public sealed class Asteroid : MonoBehaviour
         asteroidCollider.enabled = false;
         gameObject.SetActive(false);
         IsActive = false;
+        OnDestroyedByCollision = null;
     }
 
     public void SetAsteroidSprite(Sprite sprite)
@@ -78,6 +92,21 @@ public sealed class Asteroid : MonoBehaviour
         else if (!isOrbiting)
         {
             transform.position += (Vector3)(driftVelocity * Time.deltaTime);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!spriteRenderer.isVisible)
+        {
+            return;
+        }
+
+        if (collision.transform.TryGetComponent(out Asteroid _) || collision.transform.TryGetComponent(out Planet _))
+        {
+            soundBuilder.Play(explosionSound);
+            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
+            OnDestroyedByCollision?.Invoke(this);
         }
     }
 

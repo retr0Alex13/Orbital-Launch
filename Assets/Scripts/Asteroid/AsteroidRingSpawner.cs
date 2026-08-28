@@ -12,6 +12,7 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
     private int planetsSinceLastRing;
 
     private readonly Dictionary<Planet, AsteroidRing> activeRings = new();
+    private readonly Dictionary<Asteroid, Planet> asteroidOwners = new();
     private readonly List<Asteroid> detachedAsteroids = new();
 
     private void Awake()
@@ -55,7 +56,7 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
         if (activeRings.TryGetValue(planet, out AsteroidRing ring))
         {
             foreach (Asteroid a in ring.Asteroids)
-                pool.Return(a);
+                ReturnToPool(a);
             activeRings.Remove(planet);
         }
     }
@@ -69,6 +70,7 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
 
         foreach (Asteroid a in ring.Asteroids)
         {
+            asteroidOwners.Remove(a);
             a.DetachAnchor();
             detachedAsteroids.Add(a);
         }
@@ -88,10 +90,42 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
 
             if (Vector2.Distance(playerPosition, a.transform.position) > cleanupDistance)
             {
-                pool.Return(a);
+                ReturnToPool(a);
                 detachedAsteroids.RemoveAt(i);
             }
         }
+    }
+
+    private void SubscribeAsteroid(Asteroid asteroid, Planet planet)
+    {
+        asteroid.OnDestroyedByCollision += HandleAsteroidDestroyed;
+        asteroidOwners[asteroid] = planet;
+    }
+
+    private void HandleAsteroidDestroyed(Asteroid asteroid)
+    {
+        if (asteroidOwners.TryGetValue(asteroid, out Planet planet))
+        {
+            if (activeRings.TryGetValue(planet, out AsteroidRing ring))
+            {
+                ring.RemoveAsteroid(asteroid);
+                if (ring.IsEmpty)
+                    activeRings.Remove(planet);
+            }
+        }
+        else
+        {
+            detachedAsteroids.Remove(asteroid);
+        }
+
+        ReturnToPool(asteroid);
+    }
+
+    private void ReturnToPool(Asteroid asteroid)
+    {
+        asteroid.OnDestroyedByCollision -= HandleAsteroidDestroyed;
+        asteroidOwners.Remove(asteroid);
+        pool.Return(asteroid);
     }
 
     private bool TryComputeParameters(Planet planet, float difficulty, out RingParameters result)
@@ -140,11 +174,11 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
             Asteroid asteroid = pool.Get();
             asteroid.Activate(planet.transform, angle, p.SpeedDeg, scale, radius);
             asteroid.SetAsteroidSprite(config.asteroidSprites[randomIndex]);
+            SubscribeAsteroid(asteroid, planet);
             asteroids.Add(asteroid);
         }
         return asteroids;
     }
-
 
     private readonly struct RingParameters
     {
