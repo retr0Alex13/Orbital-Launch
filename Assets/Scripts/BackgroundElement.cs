@@ -11,12 +11,14 @@ public class BackgroundElement : MonoBehaviour
     private Vector3 lastCameraPos;
     private SpriteRenderer spriteRenderer;
 
+    private Vector2 driftVelocity;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void Initialize(Sprite sprite, float scale, float parallax, Transform cam, Color tint)
+    public void Initialize(Sprite sprite, float scale, float parallax, Transform cam, Color tint, Vector2 driftVelocity = default)
     {
         spriteRenderer.sprite = sprite;
         CurrentSprite = sprite;
@@ -28,6 +30,8 @@ public class BackgroundElement : MonoBehaviour
         parallaxFactor = parallax;
         cameraTransform = cam;
         lastCameraPos = cameraTransform.position;
+
+        this.driftVelocity = driftVelocity;
     }
 
     private void LateUpdate()
@@ -38,5 +42,8 @@ public class BackgroundElement : MonoBehaviour
 
         transform.position += delta * parallaxFactor;
         lastCameraPos = cameraTransform.position;
+
+        if (driftVelocity != Vector2.zero)
+            transform.position += (Vector3)(driftVelocity * Time.deltaTime);
     }
 }

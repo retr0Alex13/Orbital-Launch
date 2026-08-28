@@ -8,6 +8,7 @@ public struct BackgroundSpriteConfig
     public bool useCustomScale;
     public float customMinScale;
     public float customMaxScale;
+    public bool canDrift;
 }
 
 public class DynamicBackgroundSpawner : MonoBehaviour
@@ -31,6 +32,10 @@ public class DynamicBackgroundSpawner : MonoBehaviour
     [SerializeField] private float safeDistancePadding = 2f;
     [SerializeField] private float spawnMargin = 3.5f;
     [SerializeField] private float despawnDistance = 45f;
+
+    [Header("Drift Settings")]
+    [SerializeField] private float minDriftSpeed = 0.05f;
+    [SerializeField] private float maxDriftSpeed = 0.2f;
 
     private BackgroundElement[] pool;
     private List<BackgroundElement> activeObjects = new List<BackgroundElement>();
@@ -125,9 +130,16 @@ public class DynamicBackgroundSpawner : MonoBehaviour
 
                 Color tint = new Color(0.6f, 0.6f, 0.6f, 1f);
 
+                Vector2 driftVelocity = Vector2.zero;
+                if (selectedConfig.canDrift)
+                {
+                    float speed = Random.Range(minDriftSpeed, maxDriftSpeed);
+                    driftVelocity = Random.insideUnitCircle.normalized * speed;
+                }
+
                 newObj.transform.position = spawnPos;
                 newObj.gameObject.SetActive(true);
-                newObj.Initialize(randomSprite, scale, parallax, mainCamera.transform, tint);
+                newObj.Initialize(randomSprite, scale, parallax, mainCamera.transform, tint, driftVelocity);
 
                 activeObjects.Add(newObj);
                 break;
