@@ -102,12 +102,18 @@ public sealed class Asteroid : MonoBehaviour
             return;
         }
 
-        if (collision.transform.TryGetComponent(out Asteroid _) || collision.transform.TryGetComponent(out Planet _))
+        if (GetInstanceID() < collision.gameObject.GetInstanceID() && collision.gameObject.GetComponent<Asteroid>())
         {
-            soundBuilder.Play(explosionSound);
-            Instantiate(explosionParticle, transform.position, explosionParticle.transform.rotation);
             OnDestroyedByCollision?.Invoke(this);
+            return;
         }
+
+        Vector2 contactPoint = collision.GetContact(0).point;
+
+        soundBuilder.Play(explosionSound);
+        Instantiate(explosionParticle, contactPoint, explosionParticle.transform.rotation);
+
+        OnDestroyedByCollision?.Invoke(this);
     }
 
     private void UpdatePosition()
