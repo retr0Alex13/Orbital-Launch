@@ -1,4 +1,5 @@
 using AudioSystem;
+using PrimeTween;
 using System;
 using UnityEngine;
 
@@ -21,8 +22,8 @@ public class PlayerController : MonoBehaviour
     public Vector2 AimDirection => aimHandler.AimDirection;
     public float AimPower => aimHandler.AimPower;
 
-    [SerializeField]
-    private float introSpeed = 5f;
+    [SerializeField] private float introSpeed = 5f;
+    [SerializeField] private float rotationSpeed = 10f;
 
     [Header("Aiming")]
     [SerializeField] private AimSettings aimSettings = AimSettings.Default;
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAimHandler aimHandler;
     private OrbitFlightController orbitFlight;
     private PlayerEffectsFeedback feedback;
+    private bool isLaunchRotating;
 
     private void Awake()
     {
@@ -103,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (CurrentPlanet == null || aimHandler.IsAiming)
+        if (CurrentPlanet == null || aimHandler.IsAiming || isLaunchRotating)
             return;
 
         Vector2 targetVelocity = orbitFlight.CalculateOrbitVelocity(transform.position, CurrentPlanet);
@@ -112,7 +114,9 @@ public class PlayerController : MonoBehaviour
             ? orbitFlight.StepTransition(Time.fixedDeltaTime, targetVelocity)
             : targetVelocity;
 
-        transform.up = playerRigidBody.linearVelocity.normalized;
+        float t = 1f - Mathf.Exp(-rotationSpeed * Time.fixedDeltaTime);
+        Vector3 smoothedDirection = Vector3.Slerp(transform.up, playerRigidBody.linearVelocity.normalized, t);
+        transform.up = smoothedDirection;
     }
 
     private void ResolveAimRelease()
@@ -151,7 +155,16 @@ public class PlayerController : MonoBehaviour
 
         Vector2 launchDirection = direction.normalized;
         playerRigidBody.linearVelocity = launchDirection * speed;
-        transform.up = launchDirection;
+
+        isLaunchRotating = true;
+
+        float startAngle = playerRigidBody.rotation;
+        float targetAngle = Mathf.Atan2(-launchDirection.x, launchDirection.y) * Mathf.Rad2Deg;
+        float deltaAngle = Mathf.DeltaAngle(startAngle, targetAngle);
+
+        Tween.Custom(0f, deltaAngle, duration: 0.25f, ease: Ease.OutCubic,
+                onValueChange: offset => playerRigidBody.MoveRotation(startAngle + offset))
+            .OnComplete(() => isLaunchRotating = false);
 
         OnPlayerLaunched?.Invoke();
 
