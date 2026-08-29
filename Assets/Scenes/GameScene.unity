@@ -372,8 +372,8 @@ MonoBehaviour:
   safeDistancePadding: 5
   spawnMargin: 10
   despawnDistance: 30
-  minDriftSpeed: 0.5
-  maxDriftSpeed: 0.2
+  minDriftSpeed: 0.2
+  maxDriftSpeed: 0.5
 --- !u!1 &468423792
 GameObject:
   m_ObjectHideFlags: 0

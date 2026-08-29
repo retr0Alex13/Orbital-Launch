@@ -44,6 +44,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private ParticleSystem rocketThrust;
 
     private Rigidbody2D playerRigidBody;
+    private Collider2D playerCollider;
     private Camera mainCamera;
 
     private PlayerAimHandler aimHandler;
@@ -53,6 +54,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         playerRigidBody = GetComponent<Rigidbody2D>();
+        playerCollider = GetComponent<Collider2D>();
         feedback = GetComponent<PlayerEffectsFeedback>();
     }
 
@@ -193,6 +195,7 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.RestartGameWithDelay(duration);
         feedback.HandleCrashEffects();
         rocketParts.SpawnParts(transform.position);
+        playerCollider.enabled = false;
 
         OnPlayerDestroyed?.Invoke();
     }
