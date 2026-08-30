@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
     private OrbitFlightController orbitFlight;
     private PlayerEffectsFeedback feedback;
     private bool isLaunchRotating;
+    private bool isGameplayStarted;
 
     private void Awake()
     {
@@ -167,6 +168,12 @@ public class PlayerController : MonoBehaviour
             .OnComplete(() => isLaunchRotating = false);
 
         OnPlayerLaunched?.Invoke();
+
+        if (!isGameplayStarted)
+        {
+            isGameplayStarted = true;
+            PokiUnitySDK.Instance.gameplayStart();
+        }
 
         if (previousPlanet != null)
             OnPlanetLeft?.Invoke(previousPlanet);
