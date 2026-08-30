@@ -19,6 +19,15 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
         }
+
+        bool isGameLoaded = PlayerPrefs.GetInt(Constants.IS_GAME_LOADED, 0) == 1;
+
+        if (!isGameLoaded)
+        {
+            PlayerPrefs.SetInt(Constants.IS_GAME_LOADED, 1);
+            PokiUnitySDK.Instance.gameLoadingFinished();
+            PokiUnitySDK.Instance.init();
+        }
     }
 
     public void RestartGame()
@@ -42,5 +51,9 @@ public class GameManager : MonoBehaviour
     public void RestartGameWithoutMenuWithDelay(float delay)
     {
         Invoke(nameof(RestartGameWithoutMenu), delay);
+    }
+        private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetInt(Constants.IS_GAME_LOADED, 0);
     }
 }

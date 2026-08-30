@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
     private TrailSkinApplier trailSkinApplier;
     private bool isLaunchRotating;
     private Vector2 preAimVelocity;
+    private bool isGameplayStarted;
 
     private void Awake()
     {
@@ -221,6 +222,12 @@ public class PlayerController : MonoBehaviour
             .OnComplete(() => isLaunchRotating = false);
 
         OnPlayerLaunched?.Invoke();
+
+        if (!isGameplayStarted)
+        {
+            isGameplayStarted = true;
+            PokiUnitySDK.Instance.gameplayStart();
+        }
 
         if (previousPlanet != null)
             OnPlanetLeft?.Invoke(previousPlanet);
