@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private RocketParts rocketParts;
     [SerializeField] private GameObject rocketExplosion;
 
+    [SerializeField] private FuelController fuelController;
+
     [SerializeField] private SpriteRenderer rocketSprite;
     [SerializeField] private TrailRenderer[] rocketTrails;
 
@@ -72,6 +74,7 @@ public class PlayerController : MonoBehaviour
 
         OnPlayerLaunched += feedback.HandleLaunched;
         OnPlayerCaptured += feedback.HandleCaptured;
+        OnPlayerCaptured += HandlePlayerCaptured;
 
         playerRigidBody.linearVelocity = Vector2.right * introSpeed;
         transform.up = playerRigidBody.linearVelocity.normalized;
@@ -82,6 +85,7 @@ public class PlayerController : MonoBehaviour
     {
         OnPlayerLaunched -= feedback.HandleLaunched;
         OnPlayerCaptured -= feedback.HandleCaptured;
+        OnPlayerCaptured -= HandlePlayerCaptured;
     }
 
     private void Update()
@@ -98,6 +102,12 @@ public class PlayerController : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0) && !orbitFlight.IsTransitioning)
         {
+            if (!fuelController.HasFuel)
+            {
+                fuelController.NotifyInsufficient();
+                return;
+            }
+
             aimHandler.BeginAim();
             playerRigidBody.linearVelocity = Vector2.zero;
         }
@@ -119,6 +129,11 @@ public class PlayerController : MonoBehaviour
         transform.up = smoothedDirection;
     }
 
+    private void HandlePlayerCaptured(Planet planet)
+    {
+        fuelController.Refill();
+    }
+
     private void ResolveAimRelease()
     {
         AimReleaseResult release = aimHandler.EndAim();
@@ -132,7 +147,13 @@ public class PlayerController : MonoBehaviour
 
         if (LaunchValidator != null && !LaunchValidator(release.Direction))
         {
-            aimHandler.CancelPower();
+            CancelLaunch();
+            return;
+        }
+
+        if (!fuelController.TryConsume())
+        {
+            CancelLaunch();
             return;
         }
 
@@ -140,6 +161,14 @@ public class PlayerController : MonoBehaviour
         launchSpeed *= orbitFlight.SpeedMultiplier;
 
         LaunchFromOrbit(release.Direction, launchSpeed);
+    }
+
+    private void CancelLaunch()
+    {
+        aimHandler.CancelPower();
+
+        if (orbitFlight.IsTransitioning)
+            orbitFlight.RestartFromZeroVelocity();
     }
 
     private void LaunchFromOrbit(Vector2 direction, float speed)
