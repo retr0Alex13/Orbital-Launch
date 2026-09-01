@@ -4,6 +4,12 @@ using UnityEngine;
 public class FuelWindow : MonoBehaviour
 {
     [SerializeField] private RectTransform fillTransform;
+    [SerializeField] private CanvasGroup canvasGroup;
+
+    [Header("Visibility")]
+    [SerializeField] private float visibilityTweenDuration = 0.2f;
+    [SerializeField] private float hideDelay = 0.6f;
+    [SerializeField] private Ease visibilityTweenEase = Ease.OutQuad;
 
     [Header("Fill Animation")]
     [SerializeField] private float fillTweenDuration = 0.25f;
@@ -13,8 +19,37 @@ public class FuelWindow : MonoBehaviour
     [SerializeField] private float punchScale = 1.15f;
     [SerializeField] private float punchDuration = 0.12f;
 
+    private bool isVisibleTarget;
     private Tween fillTween;
     private Sequence punchSequence;
+    private Sequence visibilitySequence;
+
+    public void SetTransparencyImmediate(float alpha)
+    {
+        visibilitySequence.Stop();
+        canvasGroup.alpha = alpha;
+        isVisibleTarget = alpha > 0f;
+    }
+
+    public void SetVisible(bool visible)
+    {
+        if (isVisibleTarget == visible && visibilitySequence.isAlive)
+            return;
+
+        isVisibleTarget = visible;
+        visibilitySequence.Stop();
+
+        if (visible)
+        {
+            visibilitySequence = Sequence.Create(
+                Tween.Alpha(canvasGroup, endValue: 1f, duration: visibilityTweenDuration, ease: visibilityTweenEase));
+        }
+        else
+        {
+            visibilitySequence = Sequence.Create(Tween.Delay(hideDelay))
+                .Chain(Tween.Alpha(canvasGroup, endValue: 0f, duration: visibilityTweenDuration, ease: visibilityTweenEase));
+        }
+    }
 
     public void SetFillImmediate(float amount)
     {
