@@ -33,7 +33,10 @@ public class FuelWindow : MonoBehaviour
 
     public void SetVisible(bool visible)
     {
-        if (isVisibleTarget == visible && visibilitySequence.isAlive)
+        float target = visible ? 1f : 0f;
+        bool alreadyAnimatingToTarget = isVisibleTarget == visible && visibilitySequence.isAlive;
+
+        if (alreadyAnimatingToTarget || (!visibilitySequence.isAlive && Mathf.Approximately(canvasGroup.alpha, target)))
             return;
 
         isVisibleTarget = visible;
