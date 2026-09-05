@@ -37,7 +37,7 @@ public class DeathTimer : MonoBehaviour
         player.OnPlayerCaptured += StopTimer;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         player.OnPlayerLaunched -= StartTimer;
         player.OnPlayerCaptured -= StopTimer;

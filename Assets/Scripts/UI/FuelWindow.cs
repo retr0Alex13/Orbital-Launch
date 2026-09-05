@@ -33,6 +33,12 @@ public class FuelWindow : MonoBehaviour
 
     public void SetVisible(bool visible)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            SetTransparencyImmediate(visible ? 1f : 0f);
+            return;
+        }
+
         float target = visible ? 1f : 0f;
         bool alreadyAnimatingToTarget = isVisibleTarget == visible && visibilitySequence.isAlive;
 
@@ -65,6 +71,12 @@ public class FuelWindow : MonoBehaviour
 
     public void SetFillAmount(float amount)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            SetFillImmediate(amount);
+            return;
+        }
+
         float clamped = Mathf.Clamp01(amount);
 
         if (Mathf.Approximately(fillTransform.localScale.x, clamped))
@@ -80,6 +92,9 @@ public class FuelWindow : MonoBehaviour
 
     public void PlayInsufficientFuelEffect()
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+
         punchSequence.Stop();
 
         Vector3 baseScale = Vector3.one;

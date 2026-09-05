@@ -37,6 +37,11 @@ public class ScorePopup : MonoBehaviour
 
         scoreText.text = $"+{pointsAwarded}";
 
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         AnimateAndHide();
     }
 

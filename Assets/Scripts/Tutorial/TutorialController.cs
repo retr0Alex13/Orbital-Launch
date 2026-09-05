@@ -10,6 +10,7 @@ public class TutorialController : MonoBehaviour
     [SerializeField] private OrbitTutorialScanner orbitTutorialScanner;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private VisitedPlanetsCounter visitedPlanets;
+    [SerializeField] private GameObject gameView;
 
     [Header("Aim Restrictions")]
     [SerializeField] private TutorialLineEmitter tutorialAimLine;
@@ -34,6 +35,7 @@ public class TutorialController : MonoBehaviour
             orbitTutorialScanner.OnOrbitHitDetected += StopTime;
             playerController.OnPlayerLaunched += ReleaseTime;
             playerController.CanLaunch = false;
+            gameView.SetActive(false);
         }
     }
 
@@ -63,6 +65,7 @@ public class TutorialController : MonoBehaviour
             orbitTutorialScanner.enabled = false;
             playerController.CanLaunch = true;
             PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED, 1);
+            gameView.SetActive(true);
             return;
         }
 
