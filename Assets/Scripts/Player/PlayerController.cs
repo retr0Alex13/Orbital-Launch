@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public Planet CurrentPlanet { get; private set; }
     public bool CanLaunch { get; set; } = true;
+    public bool ControlsBlocked { get; set; }
     public bool IsAiming => aimHandler.IsAiming;
     public bool IsTransitioning => orbitFlight.IsTransitioning;
     public Vector2 AimDirection => aimHandler.AimDirection;
@@ -90,6 +91,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (ControlsBlocked)
+            return;
+
         if (!CanLaunch)
             return;
 

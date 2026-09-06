@@ -15,7 +15,6 @@ public class Coin : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Coin OnTriggerEnter");
         if (collision.TryGetComponent(out CoinCollector coinCollector))
         {
             coinCollector.Collect(this);
