@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private OrbitFlightController orbitFlight;
     private PlayerEffectsFeedback feedback;
     private bool isLaunchRotating;
+    private Vector2 preAimVelocity;
 
     private void Awake()
     {
@@ -112,6 +113,7 @@ public class PlayerController : MonoBehaviour
                 return;
             }
 
+            preAimVelocity = playerRigidBody.linearVelocity;
             aimHandler.BeginAim();
             playerRigidBody.linearVelocity = Vector2.zero;
         }
@@ -146,6 +148,8 @@ public class PlayerController : MonoBehaviour
         {
             if (orbitFlight.IsTransitioning)
                 orbitFlight.RestartFromZeroVelocity();
+            else if (CurrentPlanet == null)
+                playerRigidBody.linearVelocity = preAimVelocity;
             return;
         }
 
@@ -173,6 +177,8 @@ public class PlayerController : MonoBehaviour
 
         if (orbitFlight.IsTransitioning)
             orbitFlight.RestartFromZeroVelocity();
+        else if (CurrentPlanet == null)
+            playerRigidBody.linearVelocity = preAimVelocity;
     }
 
     private void LaunchFromOrbit(Vector2 direction, float speed)

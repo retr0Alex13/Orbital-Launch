@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameFlowController : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
-    [SerializeField] private MainMenuWindow mainMenu;
+    [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject gameView;
 
     private bool isTutorialCompleted;
