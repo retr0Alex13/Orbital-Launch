@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 namespace AudioSystem {
-    public class SoundManager : PersistentSingleton<SoundManager> {
+    public class SoundManager : PersistentSingleton<SoundManager>
+    {
         IObjectPool<SoundEmitter> soundEmitterPool;
         readonly List<SoundEmitter> activeSoundEmitters = new();
         public readonly LinkedList<SoundEmitter> FrequentSoundEmitters = new();
@@ -14,20 +15,28 @@ namespace AudioSystem {
         [SerializeField] int maxPoolSize = 100;
         [SerializeField] int maxSoundInstances = 30;
 
-        void Start() {
+        protected override void Awake()
+        {
+            base.Awake();
+            if (instance != this) return;
             InitializePool();
         }
 
         public SoundBuilder CreateSoundBuilder() => new SoundBuilder(this);
 
-        public bool CanPlaySound(SoundData data) {
+        public bool CanPlaySound(SoundData data)
+        {
             if (!data.frequentSound) return true;
 
-            if (FrequentSoundEmitters.Count >= maxSoundInstances) {
-                try {
+            if (FrequentSoundEmitters.Count >= maxSoundInstances)
+            {
+                try
+                {
                     FrequentSoundEmitters.First.Value.Stop();
                     return true;
-                } catch {
+                }
+                catch
+                {
                     Debug.Log("SoundEmitter is already released");
                 }
                 return false;
@@ -35,18 +44,31 @@ namespace AudioSystem {
             return true;
         }
 
-        public SoundEmitter Get() {
-            return soundEmitterPool.Get();
+        public SoundEmitter Get()
+        {
+            if (!HasInstance || applicationIsQuitting) return null;
+
+            if (soundEmitterPool == null) InitializePool();
+
+            var emitter = soundEmitterPool.Get();
+            if (emitter == null)
+            {
+                Debug.LogWarning("SoundManager: pooled emitter was null, creating a new one.");
+                emitter = CreateSoundEmitter();
+            }
+            return emitter;
         }
 
-        public void ReturnToPool(SoundEmitter soundEmitter) {
+        public void ReturnToPool(SoundEmitter soundEmitter)
+        {
             soundEmitterPool.Release(soundEmitter);
         }
 
-        public void StopAll() {
-			LinkedList<SoundEmitter> tempList = new LinkedList<SoundEmitter>(activeSoundEmitters);
+        public void StopAll()
+        {
+            LinkedList<SoundEmitter> tempList = new LinkedList<SoundEmitter>(activeSoundEmitters);
 
-			foreach (var soundEmitter in tempList)
+            foreach (var soundEmitter in tempList)
             {
                 soundEmitter.Stop();
             }
@@ -54,7 +76,8 @@ namespace AudioSystem {
             FrequentSoundEmitters.Clear();
         }
 
-        void InitializePool() {
+        void InitializePool()
+        {
             soundEmitterPool = new ObjectPool<SoundEmitter>(
                 CreateSoundEmitter,
                 OnTakeFromPool,
@@ -65,19 +88,26 @@ namespace AudioSystem {
                 maxPoolSize);
         }
 
-        SoundEmitter CreateSoundEmitter() {
-            var soundEmitter = Instantiate(soundEmitterPrefab);
+        SoundEmitter CreateSoundEmitter()
+        {
+            var soundEmitter = Instantiate(soundEmitterPrefab, transform);
             soundEmitter.gameObject.SetActive(false);
             return soundEmitter;
         }
 
-        void OnTakeFromPool(SoundEmitter soundEmitter) {
+        void OnTakeFromPool(SoundEmitter soundEmitter)
+        {
+            if (soundEmitter == null) return;
             soundEmitter.gameObject.SetActive(true);
             activeSoundEmitters.Add(soundEmitter);
         }
 
-        void OnReturnedToPool(SoundEmitter soundEmitter) {
-            if (soundEmitter.Node != null) {
+        void OnReturnedToPool(SoundEmitter soundEmitter)
+        {
+            if (soundEmitter == null) return;
+
+            if (soundEmitter.Node != null)
+            {
                 FrequentSoundEmitters.Remove(soundEmitter.Node);
                 soundEmitter.Node = null;
             }
@@ -85,7 +115,9 @@ namespace AudioSystem {
             activeSoundEmitters.Remove(soundEmitter);
         }
 
-        void OnDestroyPoolObject(SoundEmitter soundEmitter) {
+        void OnDestroyPoolObject(SoundEmitter soundEmitter)
+        {
+            if (soundEmitter == null) return;
             Destroy(soundEmitter.gameObject);
         }
     }

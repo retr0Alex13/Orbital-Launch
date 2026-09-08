@@ -36,6 +36,8 @@ namespace AudioSystem
             if (!soundManager.CanPlaySound(soundData)) return null;
 
             SoundEmitter soundEmitter = soundManager.Get();
+            if (soundEmitter == null) return null;
+
             soundEmitter.Initialize(soundData);
             soundEmitter.transform.position = position;
             soundEmitter.transform.parent = soundManager.transform;
