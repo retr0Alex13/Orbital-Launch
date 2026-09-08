@@ -102,7 +102,7 @@ public sealed class Asteroid : MonoBehaviour
             return;
         }
 
-        if (GetInstanceID() < collision.gameObject.GetInstanceID() && collision.gameObject.GetComponent<Asteroid>())
+        if (GetEntityId() < collision.gameObject.GetEntityId() && collision.gameObject.GetComponent<Asteroid>())
         {
             OnDestroyedByCollision?.Invoke(this);
             return;
