@@ -16,7 +16,7 @@ public class GameServicesBootstrapper : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         Database = database;
-        Inventory = new InventoryService();
+        Inventory = new InventoryService(database);
         Shop = new ShopService(playerCoins, Inventory);
 
         shopController.Initialize(Shop, Inventory);

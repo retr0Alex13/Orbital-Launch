@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -48,10 +49,10 @@ public class ShopController : MonoBehaviour
         foreach (var box in database.Boxes)
             SpawnItemView(box, boxesContainer);
 
-        foreach (var skin in database.RocketSkins)
+        foreach (var skin in database.RocketSkins.Where(s => !s.IsDefault))
             SpawnItemView(skin, skinsContainer);
 
-        foreach (var skin in database.TrailSkins)
+        foreach (var skin in database.TrailSkins.Where(s => !s.IsDefault))
             SpawnItemView(skin, skinsContainer);
     }
 
@@ -59,7 +60,7 @@ public class ShopController : MonoBehaviour
     {
         var view = Instantiate(itemViewPrefab, container);
         var state = _inventory.GetState(item);
-        view.Bind(item, state, OnItemClicked);
+        view.Bind(item, state, ShopItemViewMode.Shop, OnItemClicked);
         _spawnedViews.Add(view);
     }
 

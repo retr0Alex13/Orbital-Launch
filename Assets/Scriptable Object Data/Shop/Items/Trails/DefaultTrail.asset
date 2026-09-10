@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 621915d2ee4e1744eab02a16c6a507f8, type: 3}
   m_Name: DefaultTrail
   m_EditorClassIdentifier: Assembly-CSharp::TrailSkinSO
-  itemId: 
+  itemId: default_trail
   type: 2
   rarity: 0
   price: 0
   icon: {fileID: 0}
+  isDefault: 1
   trailGradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}

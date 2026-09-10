@@ -53,7 +53,7 @@ public class InventoryController : MonoBehaviour
 
         var view = Instantiate(itemViewPrefab, container);
         var state = _inventory.GetState(skin);
-        view.Bind(skin, state, OnItemClicked);
+        view.Bind(skin, state, ShopItemViewMode.Inventory, OnItemClicked);
         _spawnedViews.Add(view);
     }
 

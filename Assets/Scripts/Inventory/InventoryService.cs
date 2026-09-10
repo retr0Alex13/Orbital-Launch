@@ -6,15 +6,22 @@ using UnityEngine;
 public class InventoryService
 {
     private readonly InventorySaveData _data;
+    private readonly ShopItemDatabase _database;
 
     public event Action<SkinItemSO> OnSkinAcquired;
     public event Action<SkinItemSO> OnSkinEquipped;
 
     public bool HasClaimedFreeBox => _data.hasClaimedFreeBox;
 
-    public InventoryService()
+    public InventoryService(ShopItemDatabase database)
     {
+        _database = database;
+
+        bool isFirstLaunch = !PlayerPrefs.HasKey(Constants.INVENTORY_SAVE_KEY);
         _data = Load();
+
+        if (isFirstLaunch)
+            GrantDefaultSkins();
     }
 
     public bool IsOwned(string itemId) => _data.ownedItemIds.Contains(itemId);
@@ -90,5 +97,25 @@ public class InventoryService
 
         string json = PlayerPrefs.GetString(Constants.INVENTORY_SAVE_KEY);
         return JsonUtility.FromJson<InventorySaveData>(json);
+    }
+
+    private void GrantDefaultSkins()
+    {
+        foreach (var skin in _database.AllSkins)
+        {
+            if (skin.IsDefault && !IsOwned(skin.ItemId))
+                _data.ownedItemIds.Add(skin.ItemId);
+        }
+
+        var defaultRocket = _database.RocketSkins.FirstOrDefault(s => s.IsDefault);
+        var defaultTrail = _database.TrailSkins.FirstOrDefault(s => s.IsDefault);
+
+        if (defaultRocket != null)
+            _data.equippedRocketSkinId = defaultRocket.ItemId;
+
+        if (defaultTrail != null)
+            _data.equippedTrailSkinId = defaultTrail.ItemId;
+
+        Save();
     }
 }

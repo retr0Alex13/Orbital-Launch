@@ -55,3 +55,5 @@ public class ShopService
         OnPurchaseCompleted?.Invoke(granted);
     }
 }
+
+public enum ShopItemViewMode { Shop, Inventory }

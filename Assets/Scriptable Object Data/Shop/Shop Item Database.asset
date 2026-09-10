@@ -16,14 +16,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f97d323ab62a5c344b161c9e7986dc47, type: 2}
   - {fileID: 11400000, guid: 0562e802c91007d49ab5c5ba3c9db671, type: 2}
   rocketSkins:
-  - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
-  - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
-  - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
-  - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
+  - {fileID: 11400000, guid: 80dade1358dc17c4e88728860e1795d7, type: 2}
   - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
   trailSkins:
-  - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
-  - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
-  - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
-  - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
+  - {fileID: 11400000, guid: 907fa17d0557a3b4eb8f6b76659d9f55, type: 2}
   - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
