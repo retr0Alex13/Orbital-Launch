@@ -34,7 +34,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5553280304883316192
 SpriteRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -91,6 +91,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+  m_BlendShapeWeights: []
 --- !u!1 &8323791155711702160
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,6 +108,9 @@ GameObject:
   - component: {fileID: 2627707066256999552}
   - component: {fileID: 6760111184036755551}
   - component: {fileID: 2846706354550764368}
+  - component: {fileID: 5072111244666321818}
+  - component: {fileID: 5678224850450374285}
+  - component: {fileID: 7298666858302222478}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -173,6 +177,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   introSpeed: 10
+  rotationSpeed: 10
   aimSettings:
     minLaunchSpeed: 5
     maxLaunchSpeed: 10
@@ -187,6 +192,7 @@ MonoBehaviour:
     radiusCorrectionSpeed: 5
   rocketParts: {fileID: 0}
   rocketExplosion: {fileID: 725748389856807714, guid: 4bda94453d2ca7444a0fff05b2d425f5, type: 3}
+  fuelController: {fileID: 5072111244666321818}
   rocketSprite: {fileID: 5553280304883316192}
   rocketTrails:
   - {fileID: 2639901903203845334}
@@ -261,6 +267,7 @@ MonoBehaviour:
     ignoreListenerPause: 0
     rolloffMode: 0
   rocketThrust: {fileID: 7313350753847179120}
+  shopItemDatabase: {fileID: 11400000, guid: 69aa6fbbd03287942bb19b1e672b4ef7, type: 2}
 --- !u!114 &7254275162875502722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,6 +382,50 @@ MonoBehaviour:
   comboPitchStep: 0.1
   maxComboPitch: 2
   comboResetTime: 0.5
+--- !u!114 &5072111244666321818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8323791155711702160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7be28d6212514b47999944575b735bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FuelController
+  maxFuel: 100
+  launchCost: 33
+--- !u!114 &5678224850450374285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8323791155711702160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f80dc36ea64ff4fb73477f8a7963d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RocketSkinApplier
+  rocketRenderer: {fileID: 5553280304883316192}
+  defaultSkin: {fileID: 11400000, guid: 80dade1358dc17c4e88728860e1795d7, type: 2}
+--- !u!114 &7298666858302222478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8323791155711702160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d80913f528dcf49b0bd315d0233a40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrailSkinApplier
+  trails:
+  - {fileID: 2639901903203845334}
+  - {fileID: 8192182908323315639}
+  defaultSkin: {fileID: 11400000, guid: 907fa17d0557a3b4eb8f6b76659d9f55, type: 2}
 --- !u!1001 &1348908260902955264
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -425,7 +476,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
@@ -530,7 +581,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7136008696350824119, guid: 4428fce7b923bb743956510a1c47741a, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b

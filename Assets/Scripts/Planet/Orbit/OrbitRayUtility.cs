@@ -14,7 +14,13 @@ public static class OrbitRayUtility
         hitDistance = rayLength;
         bool found = false;
 
-        int count = Physics2D.OverlapCircleNonAlloc(origin, rayLength, overlapBuffer, planetLayerMask);
+        ContactFilter2D filter = new ContactFilter2D
+        {
+            useLayerMask = true,
+            layerMask = planetLayerMask
+        };
+
+        int count = Physics2D.OverlapCircle(origin, rayLength, filter, overlapBuffer);
 
         for (int i = 0; i < count; i++)
         {

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e39b0dc4f5aaf14429df464b12e1931f, type: 3}
+  m_Name: BigRocket
+  m_EditorClassIdentifier: Assembly-CSharp::RocketSkinSO
+  itemId: big_rocket
+  type: 1
+  rarity: 0
+  price: 200
+  icon: {fileID: 0}
+  rocketSprite: {fileID: 0}

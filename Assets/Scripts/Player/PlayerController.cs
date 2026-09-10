@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private SoundData rocketExplosionSound;
     [SerializeField] private ParticleSystem rocketThrust;
 
+    [SerializeField] private ShopItemDatabase shopItemDatabase;
+
     private Rigidbody2D playerRigidBody;
     private Collider2D playerCollider;
     private Camera mainCamera;
@@ -54,6 +56,8 @@ public class PlayerController : MonoBehaviour
     private PlayerAimHandler aimHandler;
     private OrbitFlightController orbitFlight;
     private PlayerEffectsFeedback feedback;
+    private RocketSkinApplier rocketSkinApplier;
+    private TrailSkinApplier trailSkinApplier;
     private bool isLaunchRotating;
     private Vector2 preAimVelocity;
 
@@ -62,6 +66,8 @@ public class PlayerController : MonoBehaviour
         playerRigidBody = GetComponent<Rigidbody2D>();
         playerCollider = GetComponent<Collider2D>();
         feedback = GetComponent<PlayerEffectsFeedback>();
+        rocketSkinApplier = GetComponent<RocketSkinApplier>();
+        trailSkinApplier = GetComponent<TrailSkinApplier>();
     }
 
     private void Start()
@@ -73,6 +79,8 @@ public class PlayerController : MonoBehaviour
 
         feedback.Initialize(rocketThrust, rocketExplosion, rocketTrails, rocketSprite,
             rocketThrustSound, rocketLaunchSound, rocketExplosionSound);
+        rocketSkinApplier.Initialize(GameServicesBootstrapper.Inventory, shopItemDatabase);
+        trailSkinApplier.Initialize(GameServicesBootstrapper.Inventory, shopItemDatabase);
 
         OnPlayerLaunched += feedback.HandleLaunched;
         OnPlayerCaptured += feedback.HandleCaptured;
