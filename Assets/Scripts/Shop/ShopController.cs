@@ -8,6 +8,7 @@ public class ShopController : MonoBehaviour
     [SerializeField] private ShopItemView itemViewPrefab;
     [SerializeField] private Transform boxesContainer;
     [SerializeField] private Transform skinsContainer;
+    [SerializeField] private Transform trailsContainer;
     [SerializeField] private ShopItemDatabase database;
     [SerializeField] private TextMeshProUGUI playerCoins;
 
@@ -53,7 +54,7 @@ public class ShopController : MonoBehaviour
             SpawnItemView(skin, skinsContainer);
 
         foreach (var skin in database.TrailSkins.Where(s => !s.IsDefault))
-            SpawnItemView(skin, skinsContainer);
+            SpawnItemView(skin, trailsContainer);
     }
 
     private void SpawnItemView(ShopItemSO item, Transform container)
