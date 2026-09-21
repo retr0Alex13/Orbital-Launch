@@ -7,12 +7,11 @@ public class ShopItemView : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text priceText;
-    [SerializeField] private TMP_Text rarityText;
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text actionButtonLabel;
-    [SerializeField] private GameObject ownedBadge;
-    [SerializeField] private GameObject freeBadge;
     [SerializeField] private GameObject equippedBadge;
+    [SerializeField] private GameObject lockBadge;
+    [SerializeField] private GameObject coinIcon;
 
     private ShopItemSO _data;
     private Action<ShopItemSO> _onClick;
@@ -23,8 +22,6 @@ public class ShopItemView : MonoBehaviour
         _onClick = onClick;
 
         iconImage.sprite = data.Icon;
-        rarityText.text = data.Rarity.ToString();
-
         actionButton.onClick.RemoveAllListeners();
         actionButton.onClick.AddListener(() => _onClick?.Invoke(_data));
 
@@ -38,22 +35,30 @@ public class ShopItemView : MonoBehaviour
     {
         equippedBadge.SetActive(false);
 
-        ownedBadge.SetActive(state.IsOwned);
-        freeBadge.SetActive(state.CanClaimFree);
-        priceText.gameObject.SetActive(!state.IsOwned && !state.CanClaimFree);
+        bool showPrice = !state.IsOwned && !state.CanClaimFree;
+
+        lockBadge.SetActive(!state.IsOwned);
+        coinIcon.SetActive(showPrice);
+        priceText.gameObject.SetActive(showPrice);
         priceText.text = data.Price.ToString();
 
+        actionButtonLabel.gameObject.SetActive(!showPrice);
         actionButton.interactable = !state.IsOwned;
         actionButtonLabel.text = state.CanClaimFree ? "Free" : "Buy";
+        if (state.IsOwned)
+        {
+            actionButtonLabel.text = "Owned";
+        }
     }
 
     private void BindInventoryMode(ShopItemState state)
     {
-        ownedBadge.SetActive(false);
-        freeBadge.SetActive(false);
+        lockBadge.SetActive(false);
+        coinIcon.SetActive(false);
         priceText.gameObject.SetActive(false);
 
         equippedBadge.SetActive(state.IsEquipped);
+        actionButtonLabel.gameObject.SetActive(true);
         actionButton.interactable = !state.IsEquipped;
         actionButtonLabel.text = state.IsEquipped ? "Equipped" : "Equip";
     }

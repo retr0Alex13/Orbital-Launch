@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,8 +6,6 @@ public class RandomBoxSO : ShopItemSO
 {
     [SerializeField] private bool isFreeEligible;
     [SerializeField] private SkinItemSO[] possibleSkins;
-    [SerializeField] private float rareWeight = 70f;
-    [SerializeField] private float epicWeight = 30f;
 
     public bool IsFreeEligible => isFreeEligible;
 
@@ -19,24 +16,7 @@ public class RandomBoxSO : ShopItemSO
         if (available.Length == 0)
             available = possibleSkins;
 
-        var weighted = new List<(SkinItemSO skin, float weight)>();
-        foreach (var skin in available)
-        {
-            float weight = skin.Rarity == Rarity.Rare ? rareWeight : epicWeight;
-            weighted.Add((skin, weight));
-        }
-
-        float totalWeight = weighted.Sum(w => w.weight);
-        float roll = Random.Range(0f, totalWeight);
-        float cumulative = 0f;
-
-        foreach (var (skin, weight) in weighted)
-        {
-            cumulative += weight;
-            if (roll <= cumulative)
-                return skin;
-        }
-
-        return weighted[^1].skin;
+        int index = Random.Range(0, available.Length);
+        return available[index];
     }
 }

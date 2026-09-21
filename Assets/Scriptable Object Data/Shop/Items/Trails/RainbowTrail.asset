@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621915d2ee4e1744eab02a16c6a507f8, type: 3}
+  m_Name: RainbowTrail
+  m_EditorClassIdentifier: Assembly-CSharp::TrailSkinSO
+  itemId: rainbow_trail
+  type: 2
+  rarity: 0
+  price: 2
+  icon: {fileID: 0}
+  isDefault: 0
+  trailGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0.01978819, b: 0, a: 1}
+    key1: {r: 1, g: 0, b: 0.9780375, a: 1}
+    key2: {r: 0.018687248, g: 0, b: 1, a: 0}
+    key3: {r: 0, g: 0.87452483, b: 1, a: 0}
+    key4: {r: 0, g: 1, b: 0.050011814, a: 0}
+    key5: {r: 0.91449475, g: 1, b: 0, a: 0}
+    key6: {r: 0.99690884, g: 0.6023247, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 3855
+    ctime2: 9638
+    ctime3: 15420
+    ctime4: 21588
+    ctime5: 29105
+    ctime6: 35852
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: 0
+    m_NumColorKeys: 7
+    m_NumAlphaKeys: 2

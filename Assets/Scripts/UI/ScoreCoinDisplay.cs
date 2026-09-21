@@ -6,7 +6,7 @@ public class ScoreCoinDisplay : MonoBehaviour
     [SerializeField] private ScorePopup popupPrefab;
     [SerializeField] private PlayerCoinsController playerCoinsController;
 
-    [SerializeField] private TextMeshProUGUI scoreLabel;
+    [SerializeField] private TextMeshProUGUI scoreValue;
     [SerializeField] private TextMeshProUGUI coinsValue;
 
     [SerializeField] private RectTransform coinIcon;
@@ -28,7 +28,7 @@ public class ScoreCoinDisplay : MonoBehaviour
 
     private void UpdateScoreDisplay(object sender, ScoreEventArgs scoreEvent)
     {
-        scoreLabel.text = scoreEvent.Score.ToString("N0");
+        scoreValue.text = scoreEvent.Score.ToString("N0");
         popupPrefab.SetScore(scoreEvent.OrbitEntry, scoreEvent.PointsAwarded, scoreEvent.ComboActive, scoreEvent.CurrentComboMultiplier);
     }
 
