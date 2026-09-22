@@ -38,9 +38,6 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private FuelController fuelController;
 
-    [SerializeField] private SpriteRenderer rocketSprite;
-    [SerializeField] private TrailRenderer[] rocketTrails;
-
     [Header("Audio")]
     [SerializeField] private SoundData rocketThrustSound;
     [SerializeField] private SoundData rocketLaunchSound;
@@ -77,10 +74,14 @@ public class PlayerController : MonoBehaviour
         aimHandler = new PlayerAimHandler(aimSettings, mainCamera, transform);
         orbitFlight = new OrbitFlightController(orbitSettings);
 
-        feedback.Initialize(rocketThrust, rocketExplosion, rocketTrails, rocketSprite,
-            rocketThrustSound, rocketLaunchSound, rocketExplosionSound);
-        rocketSkinApplier.Initialize(GameServicesBootstrapper.Inventory, shopItemDatabase);
+        rocketSkinApplier.OnRigChanged += HandleRigChanged;
+
+        rocketSkinApplier.Initialize(GameServicesBootstrapper.Inventory, shopItemDatabase, playerRigidBody);
         trailSkinApplier.Initialize(GameServicesBootstrapper.Inventory, shopItemDatabase);
+
+        var rig = rocketSkinApplier.CurrentRig;
+        feedback.Initialize(rig.TurbineParticles, rocketExplosion, rig.Trails, rig.BodySprite,
+            rocketThrustSound, rocketLaunchSound, rocketExplosionSound);
 
         OnPlayerLaunched += feedback.HandleLaunched;
         OnPlayerCaptured += feedback.HandleCaptured;
@@ -91,11 +92,17 @@ public class PlayerController : MonoBehaviour
         OnPlayerLaunched?.Invoke();
     }
 
+    private void HandleRigChanged(RocketVisualRig rig)
+    {
+        feedback.UpdateVisualReferences(rig.TurbineParticles, rig.Trails, rig.BodySprite);
+    }
+
     private void OnDestroy()
     {
         OnPlayerLaunched -= feedback.HandleLaunched;
         OnPlayerCaptured -= feedback.HandleCaptured;
         OnPlayerCaptured -= HandlePlayerCaptured;
+        rocketSkinApplier.OnRigChanged -= HandleRigChanged;
     }
 
     private void Update()

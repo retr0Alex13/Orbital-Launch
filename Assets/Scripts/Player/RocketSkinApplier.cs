@@ -1,17 +1,24 @@
+using System;
 using UnityEngine;
 
 public class RocketSkinApplier : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer rocketRenderer;
+    [SerializeField] private Transform visualsRoot;
     [SerializeField] private RocketSkinSO defaultSkin;
 
+    private Rigidbody2D _playerRigidBody;
     private InventoryService _inventory;
     private ShopItemDatabase _database;
+    private RocketVisualRig _currentRig;
 
-    public void Initialize(InventoryService inventory, ShopItemDatabase database)
+    public RocketVisualRig CurrentRig => _currentRig;
+    public event Action<RocketVisualRig> OnRigChanged;
+
+    public void Initialize(InventoryService inventory, ShopItemDatabase database, Rigidbody2D playerRigidBody)
     {
         _inventory = inventory;
         _database = database;
+        _playerRigidBody = playerRigidBody;
 
         _inventory.OnSkinEquipped += HandleSkinEquipped;
         ApplyCurrentSkin();
@@ -29,13 +36,28 @@ public class RocketSkinApplier : MonoBehaviour
         var skin = FindSkinById(equippedId) ?? defaultSkin;
 
         if (skin != null)
-            rocketRenderer.sprite = skin.RocketSprite;
+            SwapRig(skin.RigPrefab);
     }
 
     private void HandleSkinEquipped(SkinItemSO skin)
     {
         if (skin is RocketSkinSO rocketSkin)
-            rocketRenderer.sprite = rocketSkin.RocketSprite;
+            SwapRig(rocketSkin.RigPrefab);
+    }
+
+    private void SwapRig(RocketVisualRig rigPrefab)
+    {
+        if (_currentRig != null)
+            Destroy(_currentRig.gameObject);
+
+        _currentRig = Instantiate(rigPrefab, visualsRoot);
+        _currentRig.transform.localPosition = Vector3.zero;
+        _currentRig.transform.localRotation = Quaternion.identity;
+
+        foreach (var trailController in _currentRig.TrailControllers)
+            trailController.Initialize(_playerRigidBody);
+
+        OnRigChanged?.Invoke(_currentRig);
     }
 
     private RocketSkinSO FindSkinById(string id)

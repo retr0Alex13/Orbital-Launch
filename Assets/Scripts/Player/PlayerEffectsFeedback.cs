@@ -1,5 +1,6 @@
 using AudioSystem;
 using UnityEngine;
+
 public class PlayerEffectsFeedback : MonoBehaviour
 {
     private ParticleSystem rocketThrustVFX;
@@ -12,6 +13,10 @@ public class PlayerEffectsFeedback : MonoBehaviour
 
     private SoundBuilder soundBuilder;
     private SoundEmitter engineSound;
+
+    private bool isThrustActive;
+    private bool areTrailsActive = true;
+    private bool isSpriteActive = true;
 
     public void Initialize(ParticleSystem rocketThrust, GameObject rocketExplosion,
         TrailRenderer[] rocketTrails, SpriteRenderer rocketSprite,
@@ -26,6 +31,17 @@ public class PlayerEffectsFeedback : MonoBehaviour
         this.rocketExplosionSound = rocketExplosionSound;
 
         soundBuilder = SoundManager.Instance.CreateSoundBuilder().WithRandomPitch();
+    }
+
+    public void UpdateVisualReferences(ParticleSystem rocketThrust, TrailRenderer[] rocketTrails, SpriteRenderer rocketSprite)
+    {
+        this.rocketThrustVFX = rocketThrust;
+        this.rocketTrails = rocketTrails;
+        this.rocketSprite = rocketSprite;
+
+        SetThrustActive(isThrustActive);
+        SetTrailsActive(areTrailsActive);
+        SetSpriteActive(isSpriteActive);
     }
 
     public void HandleLaunched()
@@ -43,6 +59,8 @@ public class PlayerEffectsFeedback : MonoBehaviour
 
     public void SetThrustActive(bool active)
     {
+        isThrustActive = active;
+
         if (active)
         {
             engineSound = soundBuilder.Play(rocketThrustSound);
@@ -62,30 +80,16 @@ public class PlayerEffectsFeedback : MonoBehaviour
 
     public void SetTrailsActive(bool active)
     {
-        foreach (TrailRenderer trail in rocketTrails)
-        {
-            if (active)
-            {
-                trail.gameObject.SetActive(true);
-            }
-            else
-            {
-                trail.gameObject.SetActive(false);
+        areTrailsActive = active;
 
-            }
-        }
+        foreach (TrailRenderer trail in rocketTrails)
+            trail.gameObject.SetActive(active);
     }
 
     public void SetSpriteActive(bool active)
     {
-        if (active)
-        {
-            rocketSprite.enabled = true;
-        }
-        else
-        {
-            rocketSprite.enabled = false;
-        }
+        isSpriteActive = active;
+        rocketSprite.enabled = active;
     }
 
     public void SpawnExplosion()

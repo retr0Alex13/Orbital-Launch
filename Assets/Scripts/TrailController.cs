@@ -4,9 +4,12 @@ public class TrailController : MonoBehaviour
 {
     [SerializeField]
     private TrailRenderer trailRenderer;
-
-    [SerializeField]
     private Rigidbody2D playerRigidBody;
+
+    public void Initialize(Rigidbody2D rigidBody)
+    {
+        playerRigidBody = rigidBody;
+    }
 
     void Update()
     {

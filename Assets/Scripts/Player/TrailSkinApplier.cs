@@ -1,8 +1,9 @@
+using System;
 using UnityEngine;
 
 public class TrailSkinApplier : MonoBehaviour
 {
-    [SerializeField] private TrailRenderer[] trails;
+    [SerializeField] private RocketSkinApplier rocketSkinApplier;
     [SerializeField] private TrailSkinSO defaultSkin;
 
     private InventoryService _inventory;
@@ -14,38 +15,43 @@ public class TrailSkinApplier : MonoBehaviour
         _database = database;
 
         _inventory.OnSkinEquipped += HandleSkinEquipped;
-        ApplyCurrentSkin();
+        rocketSkinApplier.OnRigChanged += HandleRigChanged;
+
+        // rig уже створений в RocketSkinApplier.Initialize() до нашої підписки — застосувати колір одразу
+        ApplyToRig(rocketSkinApplier.CurrentRig);
     }
 
     private void OnDestroy()
     {
         if (_inventory != null)
             _inventory.OnSkinEquipped -= HandleSkinEquipped;
+        if (rocketSkinApplier != null)
+            rocketSkinApplier.OnRigChanged -= HandleRigChanged;
     }
 
-    private void ApplyCurrentSkin()
+    private void HandleRigChanged(RocketVisualRig rig) => ApplyToRig(rig);
+
+    private void HandleSkinEquipped(SkinItemSO skin)
+    {
+        if (skin is TrailSkinSO trailSkin)
+            ApplyGradient(trailSkin, rocketSkinApplier.CurrentRig);
+    }
+
+    private void ApplyToRig(RocketVisualRig rig)
     {
         string equippedId = _inventory.GetEquippedTrailSkinId();
         var skin = FindSkinById(equippedId) ?? defaultSkin;
 
         if (skin != null)
-        {
-            foreach(var trail in trails)
-            {
-                trail.colorGradient = skin.TrailGradient;
-            }
-        }
+            ApplyGradient(skin, rig);
     }
 
-    private void HandleSkinEquipped(SkinItemSO skin)
+    private void ApplyGradient(TrailSkinSO skin, RocketVisualRig rig)
     {
-        if (skin is TrailSkinSO trailSkin)
-        {
-            foreach (var trail in trails)
-            {
-                trail.colorGradient = trailSkin.TrailGradient;
-            }
-        }
+        if (rig == null) return;
+
+        foreach (var trail in rig.Trails)
+            trail.colorGradient = skin.TrailGradient;
     }
 
     private TrailSkinSO FindSkinById(string id)
