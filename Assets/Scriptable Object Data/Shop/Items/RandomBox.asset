@@ -14,12 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RandomBoxSO
   itemId: random_box
   type: 0
-  rarity: 0
   price: 0
-  icon: {fileID: 0}
+  icon: {fileID: -3542368737131923697, guid: 703d28a99e31d8c49b66787428dbc58e, type: 3}
   isFreeEligible: 1
   possibleSkins:
   - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
   - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
-  rareWeight: 70
-  epicWeight: 30

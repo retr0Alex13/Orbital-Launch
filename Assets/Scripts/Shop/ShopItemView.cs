@@ -44,11 +44,7 @@ public class ShopItemView : MonoBehaviour
 
         actionButtonLabel.gameObject.SetActive(!showPrice);
         actionButton.interactable = !state.IsOwned;
-        actionButtonLabel.text = state.CanClaimFree ? "Free" : "Buy";
-        if (state.IsOwned)
-        {
-            actionButtonLabel.text = "Owned";
-        }
+        actionButtonLabel.text = state.IsOwned ? "Owned" : (state.CanClaimFree ? "Free" : "Buy");
     }
 
     private void BindInventoryMode(ShopItemState state)

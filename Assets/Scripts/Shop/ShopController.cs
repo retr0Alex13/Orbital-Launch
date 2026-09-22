@@ -47,7 +47,7 @@ public class ShopController : MonoBehaviour
         playerCoins.text = _shop.PlayerCoins.ToString();
         ClearViews();
 
-        foreach (var box in database.Boxes)
+        foreach (var box in database.Boxes.Where(ShouldShowBox))
             SpawnItemView(box, boxesContainer);
 
         foreach (var skin in database.RocketSkins.Where(s => !s.IsDefault))
@@ -55,6 +55,14 @@ public class ShopController : MonoBehaviour
 
         foreach (var skin in database.TrailSkins.Where(s => !s.IsDefault))
             SpawnItemView(skin, trailsContainer);
+    }
+
+    private bool ShouldShowBox(RandomBoxSO box)
+    {
+        if (box.IsFreeEligible && _inventory.HasClaimedFreeBox)
+            return false;
+
+        return true;
     }
 
     private void SpawnItemView(ShopItemSO item, Transform container)
@@ -76,7 +84,6 @@ public class ShopController : MonoBehaviour
         }
 
         _shop.Purchase(item);
-        playerCoins.text = _shop.PlayerCoins.ToString();
     }
 
     private void HandlePurchaseFailed(ShopItemSO item)
