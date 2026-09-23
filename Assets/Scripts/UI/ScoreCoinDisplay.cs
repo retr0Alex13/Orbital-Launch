@@ -18,6 +18,9 @@ public class ScoreCoinDisplay : MonoBehaviour
 
        ScoreManager.Instance.OnScoreChanged += UpdateScoreDisplay;
        playerCoinsController.OnCoinCollected += UpdateCoinDisplay;
+
+        int coins = PlayerPrefs.GetInt(Constants.PLAYER_COINS_KEY, 0);
+        UpdateCoinDisplay(coins);
     }
 
     private void OnDestroy()
