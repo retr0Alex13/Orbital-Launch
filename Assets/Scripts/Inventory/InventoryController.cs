@@ -60,7 +60,10 @@ public class InventoryController : MonoBehaviour
     private void OnItemClicked(ShopItemSO item)
     {
         if (item is SkinItemSO skin)
+        {
             _inventory.Equip(skin);
+            AudioPlayer.Instance.PlayButtonSound();
+        }
     }
 
     private void ClearViews()
