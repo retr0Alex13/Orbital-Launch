@@ -1,3 +1,4 @@
+using AudioSystem;
 using UnityEngine;
 
 public class MainMenuController : MonoBehaviour
@@ -10,6 +11,7 @@ public class MainMenuController : MonoBehaviour
     public void OpenInventory()
     {
         CloseCurentMenu();
+        AudioPlayer.Instance.PlayButtonSound();
 
         inventoryMenu.SetActive(true);
         currentMenu = inventoryMenu;
@@ -18,6 +20,7 @@ public class MainMenuController : MonoBehaviour
     public void OpenShop()
     {
         CloseCurentMenu();
+        AudioPlayer.Instance.PlayButtonSound();
 
         shopMenu.SetActive(true);
         currentMenu = shopMenu;

@@ -40,7 +40,11 @@ public class ShopController : MonoBehaviour
         _shop.OnPurchaseFailed -= HandlePurchaseFailed;
     }
 
-    private void HandlePurchaseCompleted(SkinItemSO _) => Refresh();
+    private void HandlePurchaseCompleted(SkinItemSO _)
+    {
+        AudioPlayer.Instance.PlayPurchaseSound();
+        Refresh();
+    }
 
     private void Refresh()
     {
@@ -88,6 +92,7 @@ public class ShopController : MonoBehaviour
 
     private void HandlePurchaseFailed(ShopItemSO item)
     {
+        AudioPlayer.Instance.PlayErrorSound();
         Debug.Log($"Недостатньо монет для {item.name}");
     }
 
