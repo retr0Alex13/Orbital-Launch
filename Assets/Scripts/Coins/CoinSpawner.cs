@@ -7,9 +7,9 @@ public sealed class CoinSpawner : MonoBehaviour
     [SerializeField] private CoinSpawnConfig config;
 
     private CoinPool pool;
-
     private readonly Dictionary<Planet, List<Coin>> activeCoins = new();
     private readonly List<Coin> detachedCoins = new();
+    private int generationStep = 0;
 
     private void Awake()
     {
@@ -20,6 +20,15 @@ public sealed class CoinSpawner : MonoBehaviour
     public void SpawnForPlanet(Planet planet, Planet nextPlanet, float difficulty)
     {
         DespawnForPlanet(planet);
+
+        generationStep++;
+
+        bool isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 0) == 1;
+
+        if (!isTutorialCompleted && generationStep <= 2)
+        {
+            return;
+        }
 
         if (!ShouldSpawnCoins()) return;
 
