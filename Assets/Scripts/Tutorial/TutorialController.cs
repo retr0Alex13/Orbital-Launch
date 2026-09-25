@@ -23,7 +23,7 @@ public class TutorialController : MonoBehaviour
 
     void Start()
     {
-        bool isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED, 0) == 1;
+        bool isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 0) == 1;
 
         orbitTutorialScanner.enabled = !isTutorialCompleted;
 
@@ -64,7 +64,7 @@ public class TutorialController : MonoBehaviour
             playerController.OnPlayerLaunched -= ReleaseTime;
             orbitTutorialScanner.enabled = false;
             playerController.CanLaunch = true;
-            PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED, 1);
+            PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 1);
             gameView.SetActive(true);
             return;
         }

@@ -20,7 +20,7 @@ public class GameFlowController : MonoBehaviour
 
     private void OnPlayerLaunched()
     {
-        isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED, 0) == 1;
+        isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 0) == 1;
 
         if (!isTutorialCompleted)
         { 
@@ -32,7 +32,7 @@ public class GameFlowController : MonoBehaviour
 
     private void Start()
     {
-        isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED, 0) == 1;
+        isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 0) == 1;
         player.ControlsBlocked = isTutorialCompleted;
         mainMenu.gameObject.SetActive(isTutorialCompleted);
 
