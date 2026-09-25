@@ -19,6 +19,7 @@ public class TutorialController : MonoBehaviour
 
 
     private int tutorialCounter;
+    private bool isRoundActive;
     private Vector2 idealAimDirection;
 
     void Start()
@@ -41,6 +42,10 @@ public class TutorialController : MonoBehaviour
 
     private void ReleaseTime()
     {
+        if (!isRoundActive)
+            return;
+
+        isRoundActive = false;
         tutorialPanel.gameObject.SetActive(false);
 
         if (tutorialAimLine != null)
@@ -51,6 +56,23 @@ public class TutorialController : MonoBehaviour
 
         Time.timeScale = 1f;
         tutorialCounter++;
+
+        if (tutorialCounter >= timesToRepeatTutorial)
+        {
+            CompleteTutorial();
+        }
+    }
+
+    private void CompleteTutorial()
+    {
+        orbitTutorialScanner.OnOrbitHitDetected -= StopTime;
+        playerController.OnPlayerLaunched -= ReleaseTime;
+        orbitTutorialScanner.enabled = false;
+
+        playerController.CanLaunch = true;
+
+        PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 1);
+        gameView.SetActive(true);
     }
 
     private void StopTime(Vector2 hitDirection, float hitDistance)
@@ -58,16 +80,13 @@ public class TutorialController : MonoBehaviour
         if (playerController.IsTransitioning)
             return;
 
-        if (tutorialCounter >= timesToRepeatTutorial)
-        {
-            orbitTutorialScanner.OnOrbitHitDetected -= StopTime;
-            playerController.OnPlayerLaunched -= ReleaseTime;
-            orbitTutorialScanner.enabled = false;
-            playerController.CanLaunch = true;
-            PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 1);
-            gameView.SetActive(true);
+        if (isRoundActive)
             return;
-        }
+
+        if (hitDistance <= 0.01f)
+            return;
+
+        isRoundActive = true;
 
         idealAimDirection = hitDirection;
         playerController.LaunchValidator = ValidateTutorialAim;
