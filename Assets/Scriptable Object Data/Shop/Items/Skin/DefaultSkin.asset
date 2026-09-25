@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefaultSkin
   m_EditorClassIdentifier: Assembly-CSharp::RocketSkinSO
   itemId: default_skin
+  itemName: Default
   type: 1
   price: 0
   icon: {fileID: -9195706534971850940, guid: 1b0e8e49842cdcc43af0822483159f9b, type: 3}

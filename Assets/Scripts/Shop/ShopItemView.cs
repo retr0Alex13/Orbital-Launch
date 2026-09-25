@@ -7,6 +7,7 @@ public class ShopItemView : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private TMP_Text priceText;
+    [SerializeField] private TMP_Text nameText;
     [SerializeField] private Button actionButton;
     [SerializeField] private TMP_Text actionButtonLabel;
     [SerializeField] private GameObject equippedBadge;
@@ -22,6 +23,7 @@ public class ShopItemView : MonoBehaviour
         _onClick = onClick;
 
         iconImage.sprite = data.Icon;
+        nameText.text = data.Name;
         actionButton.onClick.RemoveAllListeners();
         actionButton.onClick.AddListener(() => _onClick?.Invoke(_data));
 

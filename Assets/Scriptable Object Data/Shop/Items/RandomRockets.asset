@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 435b43c1a6b436c4295116e0738d4d78, type: 3}
-  m_Name: RandomBox
+  m_Name: RandomRockets
   m_EditorClassIdentifier: Assembly-CSharp::RandomBoxSO
-  itemId: random_box
-  itemName: Free Box
+  itemId: random_rocket_box
+  itemName: Random Rocket
   type: 0
-  price: 0
-  icon: {fileID: -3542368737131923697, guid: 703d28a99e31d8c49b66787428dbc58e, type: 3}
-  isFreeEligible: 1
+  price: 100
+  icon: {fileID: 8566386508461071070, guid: dd648da6f08b5564683ef89fa9a6c72e, type: 3}
+  isFreeEligible: 0
   possibleSkins:
   - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
-  - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}

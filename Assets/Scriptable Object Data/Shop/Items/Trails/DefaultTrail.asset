@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: DefaultTrail
   m_EditorClassIdentifier: Assembly-CSharp::TrailSkinSO
   itemId: default_trail
+  itemName: Default
   type: 2
   price: 0
   icon: {fileID: -6480865333061002315, guid: 30f60a9b03a09904b9522757a2d48e6d, type: 3}

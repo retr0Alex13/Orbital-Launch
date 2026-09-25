@@ -15,6 +15,7 @@ MonoBehaviour:
   boxes:
   - {fileID: 11400000, guid: f97d323ab62a5c344b161c9e7986dc47, type: 2}
   - {fileID: 11400000, guid: 0562e802c91007d49ab5c5ba3c9db671, type: 2}
+  - {fileID: 11400000, guid: cfd16ccad1fffad469c9af173c7a9373, type: 2}
   rocketSkins:
   - {fileID: 11400000, guid: 80dade1358dc17c4e88728860e1795d7, type: 2}
   - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}

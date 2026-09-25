@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: RainbowTrail
   m_EditorClassIdentifier: Assembly-CSharp::TrailSkinSO
   itemId: rainbow_trail
+  itemName: Rainbow
   type: 2
   price: 2
   icon: {fileID: 7237623307524088282, guid: 956ee378ba8b01d48a1bdbc284579fc3, type: 3}
