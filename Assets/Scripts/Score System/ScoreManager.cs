@@ -12,7 +12,7 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private OrbitEntryConfig orbitEntryConfig;
     [SerializeField] private ComboConfig comboConfig;
 
-    public int totalScore;
+    public int orbitCount;
     private int streakCount;
     private bool comboActive;
     private bool firstEntry = true;
@@ -20,9 +20,13 @@ public class ScoreManager : MonoBehaviour
     private float currentSpeedMultiplier;
     private OrbitEntryType? streakType;
 
+    private Vector2? previousPlanetPos;
+    private float lastOrbitDistance;
+
     public bool IsComboActive => comboActive;
     public float CurrentComboMultiplier => currentComboMultiplier;
     public float CurrentSpeedMultiplier => currentSpeedMultiplier;
+    public float LastOrbitDistance => lastOrbitDistance;
 
     private void Awake()
     {
@@ -34,7 +38,7 @@ public class ScoreManager : MonoBehaviour
 
         Instance = this;
 
-        totalScore = 0;
+        orbitCount = 0;
         currentSpeedMultiplier = comboConfig != null ? comboConfig.baseSpeedMultiplier : 1f;
     }
 
@@ -43,21 +47,26 @@ public class ScoreManager : MonoBehaviour
         if (firstEntry)
         {
             firstEntry = false;
+            previousPlanetPos = orbitEntryInfo.CapturedPlanetPos;
             return currentSpeedMultiplier;
         }
 
         OrbitEntryType entryType = Evaluate(orbitEntryInfo, orbitEntryConfig);
-        int basePoints = GetPoints(entryType, orbitEntryConfig);
-
         UpdateCombo(entryType);
+        orbitCount++;
 
-        int pointsAwarded = comboActive
-            ? Mathf.RoundToInt(basePoints * currentComboMultiplier)
-            : basePoints;
+        lastOrbitDistance = previousPlanetPos.HasValue
+            ? Vector2.Distance(previousPlanetPos.Value, orbitEntryInfo.CapturedPlanetPos)
+            : 0f;
+        previousPlanetPos = orbitEntryInfo.CapturedPlanetPos;
 
-        totalScore += pointsAwarded;
+        ScoreEventArgs scoreEventArgs = new ScoreEventArgs(
+            orbitCount,
+            lastOrbitDistance,
+            currentComboMultiplier,
+            comboActive,
+            entryType);
 
-        ScoreEventArgs scoreEventArgs = new ScoreEventArgs(totalScore, pointsAwarded, currentComboMultiplier, comboActive, entryType);
         OnScoreChanged?.Invoke(this, scoreEventArgs);
 
         return currentSpeedMultiplier;
@@ -134,14 +143,6 @@ public class ScoreManager : MonoBehaviour
         return OrbitEntryType.Perfect;
     }
 
-    public int GetPoints(OrbitEntryType entryType, OrbitEntryConfig orbitEntryConfig) => entryType switch
-    {
-        OrbitEntryType.Good => orbitEntryConfig.GoodPoints,
-        OrbitEntryType.Perfect => orbitEntryConfig.PerfectPoints,
-        OrbitEntryType.NearMiss => orbitEntryConfig.NearMissPoints,
-        _ => 0
-    };
-
     public string GetLabel(OrbitEntryType entryType) => entryType switch
     {
         OrbitEntryType.Good => "GOOD!",
@@ -153,20 +154,19 @@ public class ScoreManager : MonoBehaviour
 
 public class ScoreEventArgs : EventArgs
 {
-    public int Score { get; }
-    public int PointsAwarded { get; }
+    public int OrbitCount { get; }
+    public float DistanceTraveled { get; }
     public float CurrentComboMultiplier { get; }
     public bool ComboActive { get; }
     public OrbitEntryType OrbitEntry { get; }
 
-    public ScoreEventArgs(int score, int pointsAwarded, float comboMultiplier, bool isComboActive,
+    public ScoreEventArgs(int orbitCount, float distanceTraveled, float comboMultiplier, bool isComboActive,
         OrbitEntryType orbitEntry)
     {
-        Score = score;
-        PointsAwarded = pointsAwarded;
+        OrbitCount = orbitCount;
+        DistanceTraveled = distanceTraveled;
         CurrentComboMultiplier = comboMultiplier;
         ComboActive = isComboActive;
         OrbitEntry = orbitEntry;
     }
-
 }

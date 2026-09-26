@@ -16,8 +16,8 @@ public class ScoreCoinDisplay : MonoBehaviour
         if (ScoreManager.Instance == null)
             return;
 
-       ScoreManager.Instance.OnScoreChanged += UpdateScoreDisplay;
-       playerCoinsController.OnCoinCollected += UpdateCoinDisplay;
+        ScoreManager.Instance.OnScoreChanged += UpdateScoreDisplay;
+        playerCoinsController.OnCoinCollected += UpdateCoinDisplay;
 
         int coins = PlayerPrefs.GetInt(Constants.PLAYER_COINS_KEY, 0);
         UpdateCoinDisplay(coins);
@@ -31,8 +31,8 @@ public class ScoreCoinDisplay : MonoBehaviour
 
     private void UpdateScoreDisplay(object sender, ScoreEventArgs scoreEvent)
     {
-        scoreValue.text = scoreEvent.Score.ToString("N0");
-        popupPrefab.SetScore(scoreEvent.OrbitEntry, scoreEvent.PointsAwarded, scoreEvent.ComboActive, scoreEvent.CurrentComboMultiplier);
+        scoreValue.text = scoreEvent.OrbitCount.ToString("N0");
+        popupPrefab.SetScore(scoreEvent.OrbitEntry, scoreEvent.DistanceTraveled, scoreEvent.ComboActive, scoreEvent.CurrentComboMultiplier);
     }
 
     private void UpdateCoinDisplay(int coinsAmount)

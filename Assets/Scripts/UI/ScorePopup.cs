@@ -5,7 +5,7 @@ using PrimeTween;
 public class ScorePopup : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField]  private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI skillText;
     [SerializeField] private TextMeshProUGUI comboLabel;
     [SerializeField] private TextMeshProUGUI comboMultiplierValue;
@@ -21,7 +21,7 @@ public class ScorePopup : MonoBehaviour
         startPosition = popupTransform.anchoredPosition;
     }
 
-    public void SetScore(OrbitEntryType entryType, int pointsAwarded, bool isComboActive, float comboMultiplier)
+    public void SetScore(OrbitEntryType entryType, float distanceTraveled, bool isComboActive, float comboMultiplier)
     {
         popupTransform.anchoredPosition = startPosition;
         canvasGroup.alpha = 1;
@@ -35,7 +35,7 @@ public class ScorePopup : MonoBehaviour
             comboMultiplierValue.gameObject.SetActive(true);
         }
 
-        scoreText.text = $"+{pointsAwarded}";
+        scoreText.text = $"+{distanceTraveled:F0}m";
 
         if (!gameObject.activeInHierarchy)
         {
@@ -49,7 +49,7 @@ public class ScorePopup : MonoBehaviour
     {
         Tween.UIAnchoredPositionY(popupTransform, endValue: startPosition.y + 100f, duration: 1f, ease: Ease.InOutSine);
         Tween.Alpha(canvasGroup, startValue: 1f, endValue: 0, duration: 1f, ease: Ease.InOutSine)
-            .OnComplete(() => 
+            .OnComplete(() =>
             {
                 comboLabel.gameObject.SetActive(false);
                 comboMultiplierValue.gameObject.SetActive(false);
