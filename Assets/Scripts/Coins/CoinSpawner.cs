@@ -6,6 +6,7 @@ public sealed class CoinSpawner : MonoBehaviour
     [SerializeField] private Coin coinPrefab;
     [SerializeField] private CoinSpawnConfig config;
     [SerializeField] private int tutorialMaxCoins = 3;
+    [SerializeField] private Transform magnetTarget;
 
     private CoinPool pool;
     private readonly Dictionary<Planet, List<Coin>> activeCoins = new();
@@ -242,10 +243,13 @@ public sealed class CoinSpawner : MonoBehaviour
         CoinType type = isRare ? CoinType.Rare : CoinType.Normal;
         int value = isRare ? config.rareCoinValue : config.normalCoinValue;
 
+        float radius = config.magnetRadius * (isRare ? config.rareMagnetRadiusMultiplier : 1f);
+        var magnetSettings = new CoinMagnetSettings(magnetTarget, radius, config.magnetAcceleration, config.magnetMaxSpeed);
+
         Coin coin = pool.Get();
         coin.transform.position = position;
         coin.transform.rotation = Quaternion.identity;
-        coin.Initialize(value, type);
+        coin.Initialize(value, type, magnetSettings);
         return coin;
     }
 }

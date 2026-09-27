@@ -24,6 +24,10 @@ MonoBehaviour:
   normalCoinValue: 1
   rareCoinValue: 3
   rareCoinChance: 0.15
+  magnetRadius: 2
+  rareMagnetRadiusMultiplier: 1
+  magnetAcceleration: 25
+  magnetMaxSpeed: 12
   orbitRadiusMultiplier: 1.03
   planetMargin: 1.5
   poolSize: 24

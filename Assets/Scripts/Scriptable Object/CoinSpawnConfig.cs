@@ -38,6 +38,16 @@ public sealed class CoinSpawnConfig : ScriptableObject
     [Tooltip("Chance for any individual spawned coin to be rare instead of normal.")]
     [Range(0f, 1f)] public float rareCoinChance = 0.15f;
 
+    [Header("Magnet")]
+    [Tooltip("Distance at which a coin starts being pulled toward the player.")]
+    public float magnetRadius = 2.5f;
+
+    [Tooltip("Multiplier applied to magnetRadius for rare coins — makes them feel more valuable.")]
+    public float rareMagnetRadiusMultiplier = 1.5f;
+
+    public float magnetAcceleration = 25f;
+    public float magnetMaxSpeed = 12f;
+
     [Header("Orbit Placement")]
     [Tooltip("Multiplier applied to the planet's orbit radius to place the coin arc (mirrors AsteroidRingConfig.ringRadiusMultiplier).")]
     public float orbitRadiusMultiplier = 1f;
