@@ -18,6 +18,16 @@ public sealed class CoinSpawnConfig : ScriptableObject
     [Tooltip("Base distance between consecutive coins.")]
     public float spacing = 1.5f;
 
+    [Header("Between-Planets Zigzag Pattern")]
+    [Tooltip("Chance that coins placed between planets form a zigzag wave instead of a straight line.")]
+    [Range(0f, 1f)] public float zigzagChance = 0.3f;
+
+    [Tooltip("Perpendicular distance the zigzag wave swings away from the straight path.")]
+    public float zigzagAmplitude = 1f;
+
+    [Tooltip("Number of coins per half-wave of the zigzag (higher = wider, lazier zigzag; lower = tighter zigzag).")]
+    [Min(1)] public int zigzagPeriod = 2;
+
     [Tooltip("Random +/- variation applied to spacing, as a fraction of spacing.")]
     [Range(0f, 1f)] public float spacingJitter = 0.15f;
 

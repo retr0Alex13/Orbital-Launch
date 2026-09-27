@@ -13,10 +13,13 @@ MonoBehaviour:
   m_Name: CoinSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::CoinSpawnConfig
   spawnChance: 0.3
-  orbitPathChance: 0.5
+  orbitPathChance: 0.2
   minCoins: 3
   maxCoins: 8
   spacing: 1.5
+  zigzagChance: 0.4
+  zigzagAmplitude: 1
+  zigzagPeriod: 2
   spacingJitter: 0.15
   normalCoinValue: 1
   rareCoinValue: 3

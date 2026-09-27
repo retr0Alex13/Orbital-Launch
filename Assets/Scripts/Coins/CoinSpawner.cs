@@ -5,15 +5,12 @@ public sealed class CoinSpawner : MonoBehaviour
 {
     [SerializeField] private Coin coinPrefab;
     [SerializeField] private CoinSpawnConfig config;
+    [SerializeField] private int tutorialMaxCoins = 3;
 
     private CoinPool pool;
     private readonly Dictionary<Planet, List<Coin>> activeCoins = new();
     private readonly List<Coin> detachedCoins = new();
     private readonly List<Coin> tutorialCoins = new();
-
-    [Header("Tutorial Line Spawn")]
-    [SerializeField] private float tutorialSpacingMultiplier = 0.5f;
-    [SerializeField] private int tutorialMaxCoins = 3;
 
     private int generationStep = 0;
 
@@ -44,9 +41,18 @@ public sealed class CoinSpawner : MonoBehaviour
         float spacing = config.spacing * Random.Range(1f - config.spacingJitter, 1f + config.spacingJitter);
         bool spawnAlongOrbit = nextPlanet == null || Random.value < config.orbitPathChance;
 
-        List<Coin> coins = spawnAlongOrbit
-            ? PlaceAlongOrbit(planet, count, spacing)
-            : PlaceBetweenPlanets(planet, nextPlanet, count, spacing);
+        List<Coin> coins;
+        if (spawnAlongOrbit)
+        {
+            coins = PlaceAlongOrbit(planet, count, spacing);
+        }
+        else
+        {
+            bool useZigzag = Random.value < config.zigzagChance;
+            coins = useZigzag
+                ? PlaceZigzagBetweenPlanets(planet, nextPlanet, count, spacing)
+                : PlaceBetweenPlanets(planet, nextPlanet, count, spacing);
+        }
 
         if (coins.Count == 0) return;
 
@@ -113,7 +119,7 @@ public sealed class CoinSpawner : MonoBehaviour
         if (length <= 0f) return;
 
         direction = direction.normalized;
-        float spacing = Mathf.Max(config.spacing * tutorialSpacingMultiplier, 0.01f);
+        float spacing = Mathf.Max(config.spacing, 0.01f);
 
         int count = Mathf.FloorToInt(length / spacing) + 1;
         count = Mathf.Min(count, tutorialMaxCoins);
@@ -146,6 +152,40 @@ public sealed class CoinSpawner : MonoBehaviour
             }
         }
         tutorialCoins.Clear();
+    }
+
+    private List<Coin> PlaceZigzagBetweenPlanets(Planet from, Planet to, int count, float spacing)
+    {
+        Vector3 start = from.transform.position;
+        Vector3 end = to.transform.position;
+        float totalDistance = Vector3.Distance(start, end);
+        Vector3 direction = totalDistance > 0f ? (end - start) / totalDistance : Vector3.right;
+        Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0f);
+
+        float startMargin = from.OrbitRadius + Mathf.Max(config.planetMargin, spacing);
+        float endMargin = to.OrbitRadius + Mathf.Max(config.planetMargin, spacing);
+        float usableDistance = totalDistance - startMargin - endMargin;
+
+        var coins = new List<Coin>(count);
+        if (usableDistance <= 0f) return coins;
+
+        float trailLength = Mathf.Min(spacing * (count - 1), usableDistance);
+        float startOffset = startMargin + (usableDistance - trailLength) * 0.5f;
+
+        int period = Mathf.Max(config.zigzagPeriod, 1);
+
+        for (int i = 0; i < count; i++)
+        {
+            float distanceAlong = startOffset + spacing * i;
+            if (distanceAlong > totalDistance - endMargin) break;
+
+            float phase = (i / (float)period) * Mathf.PI;
+            float lateralOffset = Mathf.Sin(phase) * config.zigzagAmplitude;
+
+            Vector3 position = start + direction * distanceAlong + perpendicular * lateralOffset;
+            coins.Add(SpawnCoinAt(position));
+        }
+        return coins;
     }
 
     private List<Coin> PlaceAlongOrbit(Planet planet, int count, float spacing)

@@ -39,7 +39,6 @@ public class TutorialLineEmitter : MonoBehaviour
         meshRenderer.enabled = false;
     }
 
-    // Call this to display the tutorial guide line
     public void ShowLine(Vector2 origin, Vector2 direction, float length, Color color)
     {
         currentOrigin = origin;
@@ -51,7 +50,6 @@ public class TutorialLineEmitter : MonoBehaviour
         meshRenderer.enabled = true;
     }
 
-    // Call this to hide the tutorial guide line
     public void HideLine()
     {
         isVisible = false;
@@ -62,7 +60,6 @@ public class TutorialLineEmitter : MonoBehaviour
     {
         if (isVisible)
         {
-            // We rebuild the mesh every frame so the dashes animate smoothly using Time.unscaledTime
             BuildDashedMesh(currentOrigin, currentDirection, currentLength, currentColor);
         }
     }
@@ -82,7 +79,6 @@ public class TutorialLineEmitter : MonoBehaviour
         Vector2 normal = new Vector2(-direction.y, direction.x) * (lineWidth * 0.5f);
         float tile = Mathf.Max(dashLength + gapLength, 0.001f);
 
-        // Using unscaledTime ensures the dashes move even when Time.timeScale = 0
         float phase = (Time.unscaledTime * scrollSpeed) % tile;
         float traveled = phase - tile;
 
