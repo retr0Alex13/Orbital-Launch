@@ -9,6 +9,12 @@ public sealed class CoinSpawner : MonoBehaviour
     private CoinPool pool;
     private readonly Dictionary<Planet, List<Coin>> activeCoins = new();
     private readonly List<Coin> detachedCoins = new();
+    private readonly List<Coin> tutorialCoins = new();
+
+    [Header("Tutorial Line Spawn")]
+    [SerializeField] private float tutorialSpacingMultiplier = 0.5f;
+    [SerializeField] private int tutorialMaxCoins = 3;
+
     private int generationStep = 0;
 
     private void Awake()
@@ -98,6 +104,48 @@ public sealed class CoinSpawner : MonoBehaviour
                 detachedCoins.RemoveAt(i);
             }
         }
+    }
+
+    public void SpawnAlongTutorialLine(Vector2 origin, Vector2 direction, float length)
+    {
+        ClearStaleTutorialCoins();
+
+        if (length <= 0f) return;
+
+        direction = direction.normalized;
+        float spacing = Mathf.Max(config.spacing * tutorialSpacingMultiplier, 0.01f);
+
+        int count = Mathf.FloorToInt(length / spacing) + 1;
+        count = Mathf.Min(count, tutorialMaxCoins);
+        if (count <= 0) return;
+
+        float trailLength = Mathf.Min(spacing * (count - 1), length);
+        float startOffset = (length - trailLength) * 0.5f;
+
+        for (int i = 0; i < count; i++)
+        {
+            float distanceAlong = startOffset + spacing * i;
+            if (distanceAlong > length) break;
+
+            Vector3 position = origin + direction * distanceAlong;
+            Coin coin = SpawnCoinAt(position);
+
+            tutorialCoins.Add(coin);
+            detachedCoins.Add(coin);
+        }
+    }
+
+    private void ClearStaleTutorialCoins()
+    {
+        foreach (Coin coin in tutorialCoins)
+        {
+            if (coin.gameObject.activeSelf)
+            {
+                detachedCoins.Remove(coin);
+                pool.Return(coin);
+            }
+        }
+        tutorialCoins.Clear();
     }
 
     private List<Coin> PlaceAlongOrbit(Planet planet, int count, float spacing)

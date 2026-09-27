@@ -10,6 +10,7 @@ public class TutorialController : MonoBehaviour
     [SerializeField] private OrbitTutorialScanner orbitTutorialScanner;
     [SerializeField] private PlayerController playerController;
     [SerializeField] private VisitedPlanetsCounter visitedPlanets;
+    [SerializeField] private CoinSpawner coinSpawner;
     [SerializeField] private GameObject gameView;
 
     [Header("Aim Restrictions")]
@@ -48,8 +49,7 @@ public class TutorialController : MonoBehaviour
         isRoundActive = false;
         tutorialPanel.gameObject.SetActive(false);
 
-        if (tutorialAimLine != null)
-            tutorialAimLine.HideLine();
+        tutorialAimLine.HideLine();
 
         playerController.LaunchValidator = null;
         playerController.CanLaunch = false;
@@ -91,10 +91,8 @@ public class TutorialController : MonoBehaviour
         idealAimDirection = hitDirection;
         playerController.LaunchValidator = ValidateTutorialAim;
 
-        if (tutorialAimLine != null)
-        {
-            tutorialAimLine.ShowLine(playerController.transform.position, idealAimDirection, hitDistance, tutorialLineColor);
-        }
+        tutorialAimLine.ShowLine(playerController.transform.position, idealAimDirection, hitDistance, tutorialLineColor);
+        coinSpawner.SpawnAlongTutorialLine(playerController.transform.position, idealAimDirection, hitDistance);
 
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(Camera.main, playerController.transform.position);
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, screenPoint, null, out Vector2 localPoint);

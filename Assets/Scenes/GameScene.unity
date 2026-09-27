@@ -1574,7 +1574,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: -0.00024414062}
   m_SizeDelta: {x: -0.00012207031, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &565218278
@@ -2157,7 +2157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.046875, y: -48.168335}
+  m_AnchoredPosition: {x: 0.046875, y: -48.168213}
   m_SizeDelta: {x: 91.8625, y: 364.4587}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &649356399
@@ -2408,7 +2408,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -36.19995, y: -48.200073}
+  m_AnchoredPosition: {x: -36.19995, y: -48.19995}
   m_SizeDelta: {x: 344.2343, y: 76.7217}
   m_Pivot: {x: 1, y: 1}
 --- !u!1 &839367788
@@ -2787,7 +2787,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 505022148755789163, guid: a8dc9cc87b5a1e4478c211d52531aec0, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -40.999878
+      value: -40.999756
       objectReference: {fileID: 0}
     - target: {fileID: 505022148755789163, guid: a8dc9cc87b5a1e4478c211d52531aec0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3382,7 +3382,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: -0.00024414062}
   m_SizeDelta: {x: -0.00012207031, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1099600936
@@ -4292,7 +4292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00012207031}
+  m_AnchoredPosition: {x: 0, y: -0.00024414062}
   m_SizeDelta: {x: -0.00012207031, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!225 &1373492092
@@ -5730,6 +5730,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CoinSpawner
   coinPrefab: {fileID: 2293302323012868838, guid: 88c9ff260b67e444391837f6ab0d7c0b, type: 3}
   config: {fileID: 11400000, guid: 52959302dc7baf24b8338b39f7a23466, type: 2}
+  tutorialSpacingMultiplier: 1
+  tutorialMaxCoins: 4
 --- !u!1 &1833841532
 GameObject:
   m_ObjectHideFlags: 0
@@ -6752,6 +6754,7 @@ MonoBehaviour:
   orbitTutorialScanner: {fileID: 4705685997920803424}
   playerController: {fileID: 857721169}
   visitedPlanets: {fileID: 1012685855}
+  coinSpawner: {fileID: 1763274883}
   gameView: {fileID: 1451842610}
   tutorialAimLine: {fileID: 4587303932597802810}
   allowedAimAngle: 5
@@ -6930,7 +6933,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -409, y: -45.4}
+  m_AnchoredPosition: {x: -409, y: -45.399902}
   m_SizeDelta: {x: 344.2343, y: 76.7217}
   m_Pivot: {x: 1, y: 1}
 --- !u!1 &3718493416945714684
