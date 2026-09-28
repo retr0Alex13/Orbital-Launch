@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 621915d2ee4e1744eab02a16c6a507f8, type: 3}
-  m_Name: DefaultTrail
+  m_Name: RedTrail
   m_EditorClassIdentifier: Assembly-CSharp::TrailSkinSO
-  itemId: default_trail
-  itemName: Default
+  itemId: red_trail
+  itemName: Red
   type: 2
-  price: 0
-  icon: {fileID: -6480865333061002315, guid: 30f60a9b03a09904b9522757a2d48e6d, type: 3}
-  isDefault: 1
+  price: 2
+  icon: {fileID: 3912251687541118522, guid: 6de01a3c0771f0843960507bf7063870, type: 3}
+  isDefault: 0
   trailGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 1, b: 1, a: 0.5019608}
-    key1: {r: 1, g: 1, b: 1, a: 1}
+    key0: {r: 1, g: 0.01978819, b: 0, a: 0.5019608}
+    key1: {r: 1, g: 0.01978819, b: 0, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
