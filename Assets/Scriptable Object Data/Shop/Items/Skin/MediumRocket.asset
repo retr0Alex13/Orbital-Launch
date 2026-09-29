@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e39b0dc4f5aaf14429df464b12e1931f, type: 3}
-  m_Name: BigRocket
+  m_Name: MediumRocket
   m_EditorClassIdentifier: Assembly-CSharp::RocketSkinSO
-  itemId: big_rocket
-  itemName: Big Rocket
+  itemId: medium_rocket
+  itemName: Medium Rocket
   type: 1
   price: 2
-  icon: {fileID: -9191617561359625256, guid: e62b28fb29dca994b8a790fff2eb612d, type: 3}
+  icon: {fileID: -1438584111634664798, guid: 1efc88841aa4ccd41887c57ecc76c524, type: 3}
   isDefault: 0
-  rigPrefab: {fileID: 1333712745160102965, guid: f31709b97e6be8c45bf73c208f98325d, type: 3}
+  rigPrefab: {fileID: 4071901565168977257, guid: fec822333ff8a8e4c928d4e3d60c6e6b, type: 3}

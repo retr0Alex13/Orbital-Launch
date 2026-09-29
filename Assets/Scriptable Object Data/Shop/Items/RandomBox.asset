@@ -19,5 +19,10 @@ MonoBehaviour:
   icon: {fileID: -3542368737131923697, guid: 703d28a99e31d8c49b66787428dbc58e, type: 3}
   isFreeEligible: 1
   possibleSkins:
-  - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
-  - {fileID: 11400000, guid: ed30c2962a5764b489f7a092ca68ee74, type: 2}
+  - {fileID: 11400000, guid: fe119cb3447a82945b35d0aa2a98f870, type: 2}
+  - {fileID: 11400000, guid: b9e2312852bfcd34fb300f01e30da2b1, type: 2}
+  - {fileID: 11400000, guid: 877c5d4935d294149bc25facca2d5402, type: 2}
+  - {fileID: 11400000, guid: e2554cfc28de15a40a9c25cde38d3c1d, type: 2}
+  - {fileID: 11400000, guid: e4767ed467ce8ca4595fc31040fc1d00, type: 2}
+  - {fileID: 11400000, guid: c1b7eaea0b90f844fbbd49fcea903d3e, type: 2}
+  - {fileID: 11400000, guid: 878ebcf35fbb3a1459fc2ab84f651992, type: 2}

@@ -18,6 +18,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: cfd16ccad1fffad469c9af173c7a9373, type: 2}
   rocketSkins:
   - {fileID: 11400000, guid: 80dade1358dc17c4e88728860e1795d7, type: 2}
+  - {fileID: 11400000, guid: fe119cb3447a82945b35d0aa2a98f870, type: 2}
+  - {fileID: 11400000, guid: b00dbee2847a4f242b507df3ffa3ba89, type: 2}
   - {fileID: 11400000, guid: 9c644122794129044ac2582d25b3be4c, type: 2}
   trailSkins:
   - {fileID: 11400000, guid: b9e2312852bfcd34fb300f01e30da2b1, type: 2}
