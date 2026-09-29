@@ -259,7 +259,6 @@ public class PlayerController : MonoBehaviour
             return;
 
         float duration = rocketExplosion.GetComponent<ParticleSystem>().main.duration;
-        GameManager.Instance.RestartGameWithDelay(duration);
         feedback.HandleCrashEffects();
         rocketParts.SpawnParts(transform.position);
         playerCollider.enabled = false;

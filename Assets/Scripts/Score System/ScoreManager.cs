@@ -23,6 +23,9 @@ public class ScoreManager : MonoBehaviour
     private Vector2? previousPlanetPos;
     private float lastOrbitDistance;
 
+    public int BestScore { get; private set; }
+    public bool IsNewBest { get; private set; }
+
     public bool IsComboActive => comboActive;
     public float CurrentComboMultiplier => currentComboMultiplier;
     public float CurrentSpeedMultiplier => currentSpeedMultiplier;
@@ -39,7 +42,21 @@ public class ScoreManager : MonoBehaviour
         Instance = this;
 
         orbitCount = 0;
+        BestScore = PlayerPrefs.GetInt(Constants.BEST_SCORE_KEY, 0);
+        IsNewBest = false;
         currentSpeedMultiplier = comboConfig != null ? comboConfig.baseSpeedMultiplier : 1f;
+    }
+
+    public void CommitFinalScore()
+    {
+        if (orbitCount <= BestScore)
+            return;
+
+        BestScore = orbitCount;
+        IsNewBest = true;
+
+        PlayerPrefs.SetInt(Constants.BEST_SCORE_KEY, BestScore);
+        PlayerPrefs.Save();
     }
 
     public float AwardOrbitEntry(OrbitEntryInfo orbitEntryInfo)
