@@ -10,8 +10,13 @@ public class MainMenuController : MonoBehaviour
 
     public void OpenInventory()
     {
+        if (currentMenu == inventoryMenu)
+        {
+            CloseCurentMenu();
+            return;
+        }
+
         CloseCurentMenu();
-        AudioPlayer.Instance.PlayButtonSound();
 
         inventoryMenu.SetActive(true);
         currentMenu = inventoryMenu;
@@ -19,8 +24,13 @@ public class MainMenuController : MonoBehaviour
 
     public void OpenShop()
     {
+        if (currentMenu == shopMenu)
+        {
+            CloseCurentMenu();
+            return;
+        }
+
         CloseCurentMenu();
-        AudioPlayer.Instance.PlayButtonSound();
 
         shopMenu.SetActive(true);
         currentMenu = shopMenu;
@@ -31,6 +41,7 @@ public class MainMenuController : MonoBehaviour
         if (currentMenu != null)
         {
             currentMenu.SetActive(false);
+            currentMenu = null;
         }
     }
 }
