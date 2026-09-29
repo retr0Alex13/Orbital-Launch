@@ -39,9 +39,9 @@ public class PlayerEffectsFeedback : MonoBehaviour
         this.rocketTrails = rocketTrails;
         this.rocketSprite = rocketSprite;
 
-        SetThrustActive(isThrustActive);
-        SetTrailsActive(areTrailsActive);
-        SetSpriteActive(isSpriteActive);
+        //SetThrustActive(isThrustActive);
+        //SetTrailsActive(areTrailsActive);
+        //SetSpriteActive(isSpriteActive);
     }
 
     public void HandleLaunched()
