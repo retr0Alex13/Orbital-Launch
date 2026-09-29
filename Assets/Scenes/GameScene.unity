@@ -2386,6 +2386,7 @@ GameObject:
   - component: {fileID: 649356400}
   - component: {fileID: 649356399}
   - component: {fileID: 649356401}
+  - component: {fileID: 649356402}
   m_Layer: 5
   m_Name: MainMenuButtons
   m_TagString: Untagged
@@ -2479,6 +2480,25 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &649356402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649356397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5509ec726e5ab7d4b93260333108b4cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlideInFromBottom
+  items:
+  - {fileID: 649356398}
+  showDuration: 0.5
+  hideDuration: 0.3
+  stagger: 0.08
+  showEase: 27
+  hideEase: 26
 --- !u!1 &664516671
 GameObject:
   m_ObjectHideFlags: 0
@@ -3175,6 +3195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 820928536}
   - component: {fileID: 820928537}
+  - component: {fileID: 820928538}
   m_Layer: 5
   m_Name: GameOverView
   m_TagString: Untagged
@@ -3220,6 +3241,25 @@ MonoBehaviour:
   newBestBadges:
   - {fileID: 429634519}
   - {fileID: 781236552}
+--- !u!114 &820928538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 820928535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5509ec726e5ab7d4b93260333108b4cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SlideInFromBottom
+  items:
+  - {fileID: 820928536}
+  showDuration: 0.5
+  hideDuration: 0.3
+  stagger: 0.08
+  showEase: 9
+  hideEase: 26
 --- !u!1 &839367788
 GameObject:
   m_ObjectHideFlags: 0
@@ -3887,6 +3927,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowController
   player: {fileID: 857721169}
   mainMenu: {fileID: 649356397}
+  mainMenuAnimator: {fileID: 649356402}
   gameView: {fileID: 1451842610}
   gameOverView: {fileID: 820928535}
 --- !u!1 &1060752013

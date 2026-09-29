@@ -4,6 +4,7 @@ public class GameFlowController : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
     [SerializeField] private GameObject mainMenu;
+    [SerializeField] private SlideInFromBottom mainMenuAnimator;
     [SerializeField] private GameObject gameView;
     [SerializeField] private GameObject gameOverView;
 
@@ -56,7 +57,12 @@ public class GameFlowController : MonoBehaviour
 
     public void OnPlayButtonPressed()
     {
-        mainMenu.gameObject.SetActive(false);
+        mainMenuAnimator.Hide(() => mainMenu.SetActive(false));
+        StartGame();
+    }
+
+    private void StartGame()
+    {
         gameView.SetActive(true);
         player.ControlsBlocked = false;
     }
