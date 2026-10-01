@@ -19,6 +19,7 @@ public class TrajectoryLineEmitter : MonoBehaviour
     [SerializeField] private float scrollSpeed = 1f;
     [SerializeField] private Color minPowerColor = Color.white;
     [SerializeField] private Color maxPowerColor = Color.red;
+    [SerializeField] private float orbitSearchPadding = 5f;
 
     [Header("Smoothing")]
     [SerializeField, Range(1f, 60f)] private float followSharpness = 25f;
@@ -106,7 +107,8 @@ public class TrajectoryLineEmitter : MonoBehaviour
         wasVisible = true;
 
         bool hitFound = OrbitRayUtility.TryFindNearestOrbitHit(
-            smoothedOrigin, smoothedDirection, rayLength, player.CurrentPlanet, planetLayerMask, overlapBuffer, out float hitDistance);
+            smoothedOrigin, smoothedDirection, rayLength, player.CurrentPlanet, planetLayerMask,
+            overlapBuffer, out float hitDistance, orbitSearchPadding);
 
         float currentMaxLength = hitFound ? Mathf.Min(rayLength, hitDistance) : rayLength;
         float currentMinLength = currentMaxLength * minLengthScale;

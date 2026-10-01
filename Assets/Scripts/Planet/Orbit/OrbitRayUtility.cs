@@ -3,13 +3,14 @@ using UnityEngine;
 public static class OrbitRayUtility
 {
     public static bool TryFindNearestOrbitHit(
-        Vector2 origin,
-        Vector2 direction,
-        float rayLength,
-        Planet ignorePlanet,
-        LayerMask planetLayerMask,
-        Collider2D[] overlapBuffer,
-        out float hitDistance)
+    Vector2 origin,
+    Vector2 direction,
+    float rayLength,
+    Planet ignorePlanet,
+    LayerMask planetLayerMask,
+    Collider2D[] overlapBuffer,
+    out float hitDistance,
+    float searchPadding = 0f)
     {
         hitDistance = rayLength;
         bool found = false;
@@ -20,7 +21,7 @@ public static class OrbitRayUtility
             layerMask = planetLayerMask
         };
 
-        int count = Physics2D.OverlapCircle(origin, rayLength, filter, overlapBuffer);
+        int count = Physics2D.OverlapCircle(origin, rayLength + searchPadding, filter, overlapBuffer);
 
         for (int i = 0; i < count; i++)
         {
@@ -43,31 +44,24 @@ public static class OrbitRayUtility
 
     public static bool RayIntersectsCircle(Vector2 origin, Vector2 direction, Vector2 center, float radius, out float distance)
     {
-        Vector2 toCenter = center - origin;
-        float tClosest = Vector2.Dot(toCenter, direction);
+        Vector2 oc = origin - center;
+        float b = Vector2.Dot(oc, direction);
+        float c = oc.sqrMagnitude - radius * radius;
+        float disc = b * b - c;
 
-        if (tClosest < 0f)
-        {
-            distance = 0f;
+        distance = 0f;
+        if (disc < 0f)
             return false;
-        }
 
-        Vector2 closestPoint = origin + direction * tClosest;
-        float distToCenterSqr = (closestPoint - center).sqrMagnitude;
-        float radiusSqr = radius * radius;
+        float s = Mathf.Sqrt(disc);
+        float t = -b - s;          
+        if (t < 0f)
+            t = -b + s;
 
-        if (distToCenterSqr > radiusSqr)
-        {
-            distance = 0f;
+        if (t < 0f)
             return false;
-        }
 
-        float halfChord = Mathf.Sqrt(radiusSqr - distToCenterSqr);
-        distance = tClosest - halfChord;
-
-        if (distance < 0f)
-            distance = tClosest + halfChord;
-
-        return distance >= 0f;
+        distance = t;
+        return true;
     }
 }
