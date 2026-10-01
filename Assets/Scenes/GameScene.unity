@@ -1507,6 +1507,9 @@ MonoBehaviour:
   scrollSpeed: 2
   minPowerColor: {r: 1, g: 1, b: 1, a: 1}
   maxPowerColor: {r: 1, g: 1, b: 1, a: 1}
+  orbitSearchPadding: 5
+  ballRadius: 0.2
+  ballSegments: 20
   followSharpness: 25
   minTimeBeforeHitDetection: 0.4
   sortingLayerName: Default
