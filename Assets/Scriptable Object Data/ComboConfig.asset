@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e72f101e1e3bd40a63934e477e76ec, type: 3}
   m_Name: ComboConfig
   m_EditorClassIdentifier: Assembly-CSharp::ComboConfig
-  streakToActivate: 3
+  streakToActivate: 2
   initialComboMultiplier: 1.5
   multiplierIncrementPerContinue: 0.5
   maxComboMultiplier: 5

@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlanetSpawnerConfig
   minSpawnDistance: 6
   maxSpawnDistance: 9
-  minDistanceBetween: 6
-  maxDistanceBetween: 12
   maxAngle: 35
   lookaheadPlanets: 3
   minPlanetScale: 0.1
@@ -25,12 +23,11 @@ MonoBehaviour:
   scaleAnimationPercent: 0.05
   minOrbitRadius: 4.5
   maxOrbitRadius: 6
-  minOrbitSpeed: 2.5
+  minOrbitSpeed: 5
   maxOrbitSpeed: 8
-  maxExtraPlanets: 3
   speedOscillationAmplitude: 0.15
-  speedOscillationFrequency: 0.005
-  difficultyRampDistance: 1500
+  speedOscillationFrequency: 0.03
+  difficultyRampDistance: 280
   maxPlanetsToSpawn: 25
   minAsteroidScale: 0.5
   maxAsteroidScale: 0.8

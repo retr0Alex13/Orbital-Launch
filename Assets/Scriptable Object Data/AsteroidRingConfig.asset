@@ -12,21 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b025dd811578c845acfcc5af2731c9e, type: 3}
   m_Name: AsteroidRingConfig
   m_EditorClassIdentifier: Assembly-CSharp::AsteroidRingConfig
-  spawnThreshold: 0.1
-  maxCoverage: 0.85
-  coverageCurvePower: 1.5
-  minGapDegrees: 38
-  maxGapDegrees: 90
+  spawnThreshold: 0.08
+  maxCoverage: 0.8
+  coverageCurvePower: 1.1
+  minGapDegrees: 42
+  maxGapDegrees: 100
   minAsteroidScale: 1
   maxAsteroidScale: 2
   asteroidAngularFootprintDeg: 14
-  minRingSpeedDeg: 18
-  maxRingSpeedDeg: 85
+  minRingSpeedDeg: 22
+  maxRingSpeedDeg: 75
   ringRadiusMultiplier: 1.4
   radiusJitter: 0.05
-  minSpawnChance: 0.15
-  maxSpawnChance: 0.65
-  minPlanetsBetweenRings: 3
+  minSpawnChance: 0.3
+  maxSpawnChance: 0.6
+  minPlanetsBetweenRings: 2
   poolSize: 64
   asteroidSprites:
   - {fileID: 6171837545649669406, guid: 30da7201ea344ae429fc10c4f0d07575, type: 3}

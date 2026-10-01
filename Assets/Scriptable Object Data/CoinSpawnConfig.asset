@@ -23,7 +23,7 @@ MonoBehaviour:
   spacingJitter: 0.15
   normalCoinValue: 1
   rareCoinValue: 3
-  rareCoinChance: 0.15
+  rareCoinChance: 0.12
   magnetRadius: 2
   rareMagnetRadiusMultiplier: 1
   magnetAcceleration: 25

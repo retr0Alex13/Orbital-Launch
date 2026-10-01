@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4226cf8a17305f1458aeefd97096cb94, type: 3}
   m_Name: OrbitPropConfig
   m_EditorClassIdentifier: Assembly-CSharp::OrbitPropConfig
-  spawnThreshold: 0.1
+  spawnThreshold: 0.03
   minSpawnChance: 0.5
   maxSpawnChance: 1
   minPlanetsBetweenSpawns: 2
@@ -20,8 +20,8 @@ MonoBehaviour:
   maxCount: 2
   angularFootprintDeg: 25
   orbitRadiusMultiplier: 1.4
-  minSpeedDeg: 10
-  maxSpeedDeg: 60
+  minSpeedDeg: 15
+  maxSpeedDeg: 70
   reverseDirectionChance: 0.3
   placementMaxAttempts: 12
   poolSize: 10

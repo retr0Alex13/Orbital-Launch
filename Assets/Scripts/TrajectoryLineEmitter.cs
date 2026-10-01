@@ -21,6 +21,10 @@ public class TrajectoryLineEmitter : MonoBehaviour
     [SerializeField] private Color maxPowerColor = Color.red;
     [SerializeField] private float orbitSearchPadding = 5f;
 
+    [Header("Hit Ball")]
+    [SerializeField] private float ballRadius = 0.15f;
+    [SerializeField, Range(6, 48)] private int ballSegments = 20;
+
     [Header("Smoothing")]
     [SerializeField, Range(1f, 60f)] private float followSharpness = 25f;
 
@@ -37,7 +41,7 @@ public class TrajectoryLineEmitter : MonoBehaviour
     private readonly List<Vector3> vertices = new();
     private readonly List<int> triangles = new();
     private readonly List<Color> colors = new();
-    private readonly Collider2D[] overlapBuffer = new Collider2D[16];
+    private readonly Collider2D[] overlapBuffer = new Collider2D[32];
 
     private Vector2 smoothedOrigin;
     private Vector2 smoothedDirection = Vector2.up;
@@ -110,9 +114,17 @@ public class TrajectoryLineEmitter : MonoBehaviour
             smoothedOrigin, smoothedDirection, rayLength, player.CurrentPlanet, planetLayerMask,
             overlapBuffer, out float hitDistance, orbitSearchPadding);
 
-        float currentMaxLength = hitFound ? Mathf.Min(rayLength, hitDistance) : rayLength;
-        float currentMinLength = currentMaxLength * minLengthScale;
-        float length = Mathf.Lerp(currentMinLength, currentMaxLength, player.AimPower);
+        float minLength = rayLength * minLengthScale;
+        float desiredLength = Mathf.Lerp(minLength, rayLength, player.AimPower);
+
+        float length = desiredLength;
+        bool lineTouchesOrbit = false;
+
+        if (hitFound && desiredLength >= hitDistance)
+        {
+            length = hitDistance;
+            lineTouchesOrbit = true;
+        }
 
         if (hitFound)
         {
@@ -121,11 +133,14 @@ public class TrajectoryLineEmitter : MonoBehaviour
                 OnOrbitHitDetected?.Invoke();
         }
 
+        Vector2 ballPos = smoothedOrigin + smoothedDirection * hitDistance;
+
         currentLineColor = Color.Lerp(minPowerColor, maxPowerColor, Mathf.SmoothStep(0f, 1f, player.AimPower));
-        BuildDashedMesh(smoothedOrigin, smoothedDirection, length, currentLineColor);
+        BuildDashedMesh(smoothedOrigin, smoothedDirection, length, currentLineColor, lineTouchesOrbit, ballPos);
     }
 
-    private void BuildDashedMesh(Vector2 origin, Vector2 direction, float length, Color color)
+    private void BuildDashedMesh(Vector2 origin, Vector2 direction, float length, Color color,
+     bool showBall, Vector2 ballPos)
     {
         vertices.Clear();
         triangles.Clear();
@@ -177,10 +192,35 @@ public class TrajectoryLineEmitter : MonoBehaviour
             traveled += tile;
         }
 
+        if (showBall)
+            AddCircle(ballPos, ballRadius, color);
+
         mesh.Clear();
         mesh.SetVertices(vertices);
         mesh.SetTriangles(triangles, 0);
         mesh.SetColors(colors);
         mesh.RecalculateBounds();
+    }
+
+    private void AddCircle(Vector2 center, float radius, Color color)
+    {
+        int centerIndex = vertices.Count;
+
+        vertices.Add(center);
+        colors.Add(color);
+
+        for (int i = 0; i < ballSegments; i++)
+        {
+            float angle = (i / (float)ballSegments) * Mathf.PI * 2f;
+            vertices.Add(center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius);
+            colors.Add(color);
+        }
+
+        for (int i = 0; i < ballSegments; i++)
+        {
+            triangles.Add(centerIndex);
+            triangles.Add(centerIndex + 1 + i);
+            triangles.Add(centerIndex + 1 + (i + 1) % ballSegments);
+        }
     }
 }
