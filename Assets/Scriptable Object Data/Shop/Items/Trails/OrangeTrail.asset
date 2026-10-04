@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: orange_trail
   itemName: Orange
   type: 2
-  price: 2
+  price: 150
   icon: {fileID: -3667818415451100742, guid: 59d96f8848a56154e8ea9f9c367e9aea, type: 3}
   isDefault: 0
   trailGradient:

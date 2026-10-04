@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: simple_rocket
   itemName: Simple
   type: 1
-  price: 2
+  price: 300
   icon: {fileID: 843773915679079216, guid: 290beadaa7ce40248b90d0cb27bbdd9e, type: 3}
   isDefault: 0
   rigPrefab: {fileID: 7203330383863899124, guid: 8abcbd1f9b498d341a887067726b996b, type: 3}

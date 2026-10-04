@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: red_trail
   itemName: Red
   type: 2
-  price: 2
+  price: 250
   icon: {fileID: 3912251687541118522, guid: 6de01a3c0771f0843960507bf7063870, type: 3}
   isDefault: 0
   trailGradient:

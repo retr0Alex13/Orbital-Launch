@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: rainbow_trail
   itemName: Rainbow
   type: 2
-  price: 2
+  price: 1000
   icon: {fileID: 7237623307524088282, guid: 956ee378ba8b01d48a1bdbc284579fc3, type: 3}
   isDefault: 0
   trailGradient:

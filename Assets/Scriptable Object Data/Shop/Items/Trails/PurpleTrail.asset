@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: purple_trail
   itemName: Purple
   type: 2
-  price: 2
+  price: 250
   icon: {fileID: 2696248920114145289, guid: 28f1be4bdc448df4f8507270bb60bc24, type: 3}
   isDefault: 0
   trailGradient:

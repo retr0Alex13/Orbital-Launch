@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: blue_trail
   itemName: Blue
   type: 2
-  price: 2
+  price: 100
   icon: {fileID: -6174100478033251417, guid: 78113f680cc32774cbeb7403e04001e1, type: 3}
   isDefault: 0
   trailGradient:

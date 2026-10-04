@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: yellow_trail
   itemName: Yellow
   type: 2
-  price: 2
+  price: 400
   icon: {fileID: 3756867389452747792, guid: 986d02689c55b0947ab2c641837c6c3f, type: 3}
   isDefault: 0
   trailGradient:

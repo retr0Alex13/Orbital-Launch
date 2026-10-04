@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: big_rocket
   itemName: Big Rocket
   type: 1
-  price: 2
+  price: 1400
   icon: {fileID: -9191617561359625256, guid: e62b28fb29dca994b8a790fff2eb612d, type: 3}
   isDefault: 0
   rigPrefab: {fileID: 1333712745160102965, guid: f31709b97e6be8c45bf73c208f98325d, type: 3}

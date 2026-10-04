@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: pink_trail
   itemName: Pink
   type: 2
-  price: 2
+  price: 150
   icon: {fileID: 2274227319351748961, guid: 51c374586332c994b9bde19f8d59fe5a, type: 3}
   isDefault: 0
   trailGradient:
