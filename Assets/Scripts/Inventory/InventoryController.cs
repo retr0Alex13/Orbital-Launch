@@ -7,6 +7,10 @@ public class InventoryController : MonoBehaviour
     [SerializeField] private Transform rocketSkinsContainer;
     [SerializeField] private Transform trailSkinsContainer;
     [SerializeField] private ShopItemDatabase database;
+    [SerializeField] private OrientationLayoutChanger layout;
+
+    private const int SKINS_INDEX = 0;
+    private const int TRAILS_INDEX = 1;
 
     private InventoryService _inventory;
     private readonly List<ShopItemView> _spawnedViews = new();
@@ -40,10 +44,10 @@ public class InventoryController : MonoBehaviour
         ClearViews();
 
         foreach (var skin in database.RocketSkins)
-            SpawnItemView(skin, rocketSkinsContainer);
+            SpawnItemView(skin, layout.GetContainer(SKINS_INDEX));
 
         foreach (var skin in database.TrailSkins)
-            SpawnItemView(skin, trailSkinsContainer);
+            SpawnItemView(skin, layout.GetContainer(TRAILS_INDEX));
     }
 
     private void SpawnItemView(SkinItemSO skin, Transform container)

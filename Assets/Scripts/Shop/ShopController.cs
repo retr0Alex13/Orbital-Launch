@@ -11,6 +11,11 @@ public class ShopController : MonoBehaviour
     [SerializeField] private Transform trailsContainer;
     [SerializeField] private ShopItemDatabase database;
     [SerializeField] private TextMeshProUGUI playerCoins;
+    [SerializeField] private OrientationLayoutChanger layout;
+
+    private const int BOXES_INDEX = 0;
+    private const int SKINS_INDEX = 1;
+    private const int TRAILS_INDEX = 2;
 
     private ShopService _shop;
     private InventoryService _inventory;
@@ -52,13 +57,13 @@ public class ShopController : MonoBehaviour
         ClearViews();
 
         foreach (var box in database.Boxes.Where(ShouldShowBox))
-            SpawnItemView(box, boxesContainer);
+            SpawnItemView(box, layout.GetContainer(BOXES_INDEX));
 
         foreach (var skin in database.RocketSkins.Where(s => !s.IsDefault))
-            SpawnItemView(skin, skinsContainer);
+            SpawnItemView(skin, layout.GetContainer(SKINS_INDEX));
 
         foreach (var skin in database.TrailSkins.Where(s => !s.IsDefault))
-            SpawnItemView(skin, trailsContainer);
+            SpawnItemView(skin, layout.GetContainer(TRAILS_INDEX));
     }
 
     private bool ShouldShowBox(RandomBoxSO box)
