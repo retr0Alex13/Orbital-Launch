@@ -66,6 +66,7 @@ public class GameFlowController : MonoBehaviour
     {
         gameView.SetActive(true);
         player.ControlsBlocked = false;
+        PokiUnitySDK.Instance.measure("level", "game", "start");
     }
 
     private void OnPlayerDestroyed()
@@ -73,5 +74,6 @@ public class GameFlowController : MonoBehaviour
         gameView.SetActive(false);
         gameOverView.SetActive(true);
         player.ControlsBlocked = true;
+        PokiUnitySDK.Instance.measure("level", "game", "fail");
     }
 }

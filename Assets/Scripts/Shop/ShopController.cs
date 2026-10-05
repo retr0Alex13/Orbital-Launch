@@ -97,6 +97,7 @@ public class ShopController : MonoBehaviour
 
     private void HandlePurchaseFailed(ShopItemSO item)
     {
+        PokiUnitySDK.Instance.measure("shop", item.name + " " + item.Type.ToString(), "fail");
         AudioPlayer.Instance.PlayErrorSound();
         Debug.Log($"Недостатньо монет для {item.name}");
     }

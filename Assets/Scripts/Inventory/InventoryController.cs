@@ -64,6 +64,7 @@ public class InventoryController : MonoBehaviour
         if (item is SkinItemSO skin)
         {
             _inventory.Equip(skin);
+            PokiUnitySDK.Instance.measure("inventory", item.name + " " + item.Type.ToString(), "interact");
             AudioPlayer.Instance.PlayButtonSound();
         }
     }

@@ -20,6 +20,7 @@ public class MainMenuController : MonoBehaviour
 
         inventoryMenu.SetActive(true);
         currentMenu = inventoryMenu;
+        PokiUnitySDK.Instance.measure("button", "inventory", "interact");
     }
 
     public void OpenShop()
@@ -34,6 +35,7 @@ public class MainMenuController : MonoBehaviour
 
         shopMenu.SetActive(true);
         currentMenu = shopMenu;
+        PokiUnitySDK.Instance.measure("button", "shop", "interact");
     }
 
     public void CloseCurentMenu()

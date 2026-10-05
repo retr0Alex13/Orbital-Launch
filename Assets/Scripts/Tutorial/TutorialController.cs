@@ -27,6 +27,11 @@ public class TutorialController : MonoBehaviour
     {
         bool isTutorialCompleted = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 0) == 1;
 
+        if (!isTutorialCompleted)
+        {
+            PokiUnitySDK.Instance.measure("level", "tutorial", "start");
+        }
+
         orbitTutorialScanner.enabled = !isTutorialCompleted;
 
         if (tutorialAimLine != null)
@@ -72,6 +77,7 @@ public class TutorialController : MonoBehaviour
         playerController.CanLaunch = true;
 
         PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 1);
+        PokiUnitySDK.Instance.measure("level", "tutorial", "complete");
         gameView.SetActive(true);
         AudioPlayer.Instance.PlayBackgroundMusic();
     }
