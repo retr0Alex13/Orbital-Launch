@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public static bool SkipMainMenu { get; set; }
+    private static bool _isPokiInitialized = false;
 
     private void Awake()
     {
@@ -20,14 +21,26 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
 
-        bool isGameLoaded = PlayerPrefs.GetInt(Constants.IS_GAME_LOADED, 0) == 1;
 
-        if (!isGameLoaded)
-        {
-            PlayerPrefs.SetInt(Constants.IS_GAME_LOADED, 1);
-            PokiUnitySDK.Instance.gameLoadingFinished();
-            PokiUnitySDK.Instance.init();
-        }
+
+        InitializePoki();
+    }
+
+    private void InitializePoki()
+    {
+        if (_isPokiInitialized)
+            return;
+
+        _isPokiInitialized = true;
+
+        PokiUnitySDK.Instance.sdkInitializedCallback += OnPokiInitialized;
+        PokiUnitySDK.Instance.init();
+    }
+
+    private void OnPokiInitialized()
+    {
+        PokiUnitySDK.Instance.sdkInitializedCallback -= OnPokiInitialized;
+        PokiUnitySDK.Instance.gameLoadingFinished();
     }
 
     public void RestartGame()
@@ -51,9 +64,5 @@ public class GameManager : MonoBehaviour
     public void RestartGameWithoutMenuWithDelay(float delay)
     {
         Invoke(nameof(RestartGameWithoutMenu), delay);
-    }
-    private void OnApplicationQuit()
-    {
-        PlayerPrefs.SetInt(Constants.IS_GAME_LOADED, 0);
     }
 }
