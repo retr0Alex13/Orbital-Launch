@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         Invoke(nameof(RestartGameWithoutMenu), delay);
     }
-        private void OnApplicationQuit()
+    private void OnApplicationQuit()
     {
         PlayerPrefs.SetInt(Constants.IS_GAME_LOADED, 0);
     }

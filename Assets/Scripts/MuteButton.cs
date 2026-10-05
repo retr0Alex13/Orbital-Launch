@@ -21,5 +21,6 @@ public class MuteButton : MonoBehaviour
         PlayerPrefs.SetInt(Constants.SOUND_STATE_KEY, soundState ? 1 : 0);
         buttonImage.sprite = soundState ? unmutedImage : mutedImage;
         AudioListener.volume = soundState ? 1 : 0;
+        PokiUnitySDK.Instance.measure("button", "sound", "interact");
     }
 }

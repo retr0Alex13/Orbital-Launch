@@ -27,7 +27,7 @@ public class ShopService
             OnPurchaseFailed?.Invoke(item);
             return;
         }
-
+        PokiUnitySDK.Instance.measure("shop", item.name + " " + item.Type.ToString(), "interact");
         GrantItem(item);
     }
 
@@ -38,6 +38,7 @@ public class ShopService
 
         _inventory.MarkFreeBoxClaimed();
         GrantItem(box);
+        PokiUnitySDK.Instance.measure("shop", "free-box", "interact");
     }
 
     private void GrantItem(ShopItemSO item)
