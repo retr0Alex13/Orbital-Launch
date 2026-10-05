@@ -76,6 +76,7 @@ public class GameFlowController : MonoBehaviour
         gameOverView.SetActive(true);
         player.ControlsBlocked = true;
         PokiUnitySDK.Instance.measure("level", "game", "fail");
+        PokiUnitySDK.Instance.gameplayStop();
 
         if (isTutorialCompleted)
             deathReward.OnPlayerDied();
