@@ -31,7 +31,7 @@ public class GameFlowController : MonoBehaviour
             return; 
         }
 
-        gameView.SetActive(true);
+        gameView?.SetActive(true);
     }
 
     private void Start()
@@ -58,6 +58,7 @@ public class GameFlowController : MonoBehaviour
     public void OnPlayButtonPressed()
     {
         mainMenuAnimator.Hide(() => mainMenu.SetActive(false));
+        AudioPlayer.Instance.PlayBackgroundMusic();
         StartGame();
     }
 

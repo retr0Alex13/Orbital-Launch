@@ -64,12 +64,13 @@ namespace AudioSystem {
             soundEmitterPool.Release(soundEmitter);
         }
 
-        public void StopAll()
+        public void StopAll(SoundEmitter except = null)
         {
-            LinkedList<SoundEmitter> tempList = new LinkedList<SoundEmitter>(activeSoundEmitters);
+            var tempList = new List<SoundEmitter>(activeSoundEmitters);
 
             foreach (var soundEmitter in tempList)
             {
+                if (soundEmitter == except) continue;
                 soundEmitter.Stop();
             }
 

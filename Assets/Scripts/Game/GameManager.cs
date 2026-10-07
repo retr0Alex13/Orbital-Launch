@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+            return;
         }
         else
         {
@@ -23,7 +24,7 @@ public class GameManager : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        SoundManager.Instance.StopAll();
+        SoundManager.Instance.StopAll(AudioPlayer.BgmEmitter);
     }
 
     public void RestartGameWithoutMenu()
