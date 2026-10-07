@@ -183,7 +183,6 @@ public class PlanetSpawner : MonoBehaviour
 
         planet.Configure(planetSettings);
         planet.SetPlanetSprite(config.planets[randomIndex]);
-        planet.SetDifficultyTint(speedDifficulty);
 
         activePlanets.Add(planet);
         asteroidSpawner.SpawnForPlanet(planet, difficulty);

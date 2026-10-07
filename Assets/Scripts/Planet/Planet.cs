@@ -47,14 +47,12 @@ public class Planet : MonoBehaviour
     private float rotatedAnimationSpeed;
     private float scaleAnimationPercent;
     private float planetScale;
-    private Color baseColor;
     private Tween scaleTween;
     private Sequence despawnSequence;
     private Vector3 baseOrbitScale;
 
     private void Awake()
     {
-        baseColor = planetSpriteRenderer.color;
         baseOrbitScale = orbitTransform.localScale;
     }
 
@@ -88,11 +86,6 @@ public class Planet : MonoBehaviour
     public void SetPlanetSprite(Sprite sprite)
     {
         planetSpriteRenderer.sprite = sprite;
-    }
-
-    public void SetDifficultyTint(float difficulty)
-    {
-        planetSpriteRenderer.color = Color.Lerp(baseColor, Color.red, difficulty);
     }
 
     public void PlayShockWaveEffect(Vector2 position)
