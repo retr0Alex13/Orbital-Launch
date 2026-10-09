@@ -258,6 +258,11 @@ public class PlayerController : MonoBehaviour
         if (!hitAsteroid && !hitPlanet)
             return;
 
+        DestroyPlayer();
+    }
+
+    public void DestroyPlayer()
+    {
         float duration = rocketExplosion.GetComponent<ParticleSystem>().main.duration;
         feedback.HandleCrashEffects();
         rocketParts.SpawnParts(transform.position);

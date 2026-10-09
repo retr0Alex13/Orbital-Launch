@@ -7147,8 +7147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryController
   itemViewPrefab: {fileID: 8772314501881327234, guid: 6e7645157d3f16f4db51cef0a413d955, type: 3}
-  rocketSkinsContainer: {fileID: 383920}
-  trailSkinsContainer: {fileID: 9976318}
   database: {fileID: 11400000, guid: 69aa6fbbd03287942bb19b1e672b4ef7, type: 2}
   layout: {fileID: 1077673495}
 --- !u!114 &1077673495
@@ -9112,7 +9110,7 @@ MonoBehaviour:
   timerText: {fileID: 1698226658}
   canvasGroup: {fileID: 1373492092}
   player: {fileID: 857721169}
-  delayTime: 3
+  delayTime: 1.5
   openSpaceTime: 3
 --- !u!1 &1379893181
 GameObject:
@@ -14570,6 +14568,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1809871514478087347, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.16078432
+      objectReference: {fileID: 0}
     - target: {fileID: 2435837951527863998, guid: 3a0317a62378b22448f452315c7694ee, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

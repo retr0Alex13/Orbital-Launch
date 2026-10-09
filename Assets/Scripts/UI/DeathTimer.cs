@@ -77,7 +77,7 @@ public class DeathTimer : MonoBehaviour
             yield return null;
         }
 
-        GameManager.Instance.RestartGame();
+        player.DestroyPlayer();
     }
 
     private void AnimateAndHide()
