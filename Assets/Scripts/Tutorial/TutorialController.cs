@@ -73,6 +73,7 @@ public class TutorialController : MonoBehaviour
 
         PlayerPrefs.SetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 1);
         gameView.SetActive(true);
+        AudioPlayer.Instance.PlayBackgroundMusic();
     }
 
     private void StopTime(Vector2 hitDirection, float hitDistance)
