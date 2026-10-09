@@ -6778,7 +6778,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6393917356156348453, guid: 8121001839ca3864eac2a811a3a1ed53, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OpenInventory
+      value: OpenShop
       objectReference: {fileID: 0}
     - target: {fileID: 6393917356156348453, guid: 8121001839ca3864eac2a811a3a1ed53, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
