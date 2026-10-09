@@ -34,9 +34,9 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
         List<Asteroid> asteroids = PlaceAsteroids(planet, p, gapCenter);
 
         float ringRadius = planet.OrbitRadius * config.ringRadiusMultiplier;
-        var ring = new AsteroidRing(planet, asteroids, gapCenter, p.GapDeg, p.SpeedDeg, ringRadius);
+        var ring = new AsteroidRing(planet, asteroids, gapCenter, p.GapDeg, p.SpeedDeg,
+                                    ringRadius, p.GapCount);
         activeRings[planet] = ring;
-
         planetsSinceLastRing = 0;
     }
 
@@ -128,67 +128,85 @@ public sealed class AsteroidRingSpawner : MonoBehaviour
         pool.Return(asteroid);
     }
 
+    private int GetGapCount(float t)
+    {
+        if (t >= config.fourGapsFromT) return 4;
+        if (t >= config.twoGapsFromT) return 2;
+        return 1;
+    }
+
     private bool TryComputeParameters(Planet planet, float difficulty, out RingParameters result)
     {
         float t = Mathf.InverseLerp(config.spawnThreshold, 1f, difficulty);
 
+        int gapCount = GetGapCount(t);
+        float sectorArc = 360f / gapCount;
+
+        float gapDeg = Mathf.Lerp(config.maxGapDegrees, config.minGapDegrees, t);
+        gapDeg = Mathf.Min(gapDeg, sectorArc - config.asteroidAngularFootprintDeg);
+
+        float asteroidArc = sectorArc - gapDeg;
         float coverage = Mathf.Lerp(0f, config.maxCoverage,
                                     Mathf.Pow(t, config.coverageCurvePower));
 
-        float gapDeg = Mathf.Lerp(config.maxGapDegrees, config.minGapDegrees, t);
+        int perSector = Mathf.FloorToInt(coverage * asteroidArc
+                                         / config.asteroidAngularFootprintDeg);
 
-        float usableArc = 360f - gapDeg;
-        int count = Mathf.FloorToInt(coverage * usableArc
-                                           / config.asteroidAngularFootprintDeg);
+        if (gapCount > 1) perSector = Mathf.Max(perSector, 1);
+        if (perSector <= 0) { result = default; return false; }
 
-        if (count <= 0) { result = default; return false; }
-
-        float baseSpeed = Mathf.Lerp(config.minRingSpeedDeg, config.maxRingSpeedDeg, t);
+        float baseSpeed = Mathf.Lerp(config.minRingSpeedDeg, config.maxRingSpeedDeg,
+                                     Mathf.Pow(t, config.speedCurvePower));
         float jitter = Random.Range(0.85f, 1.15f);
         float speedDeg = planet.OrbitSpeed >= 0f
             ? baseSpeed * jitter
             : -baseSpeed * jitter;
 
-        result = new RingParameters(count, gapDeg, speedDeg);
+        result = new RingParameters(gapCount, perSector, gapDeg, speedDeg);
         return true;
     }
 
     private List<Asteroid> PlaceAsteroids(Planet planet, RingParameters p, float gapCenterDeg)
     {
-        float halfGap = p.GapDeg * 0.5f;
-        float usableArc = 360f - p.GapDeg;
-        float angleStep = usableArc / p.Count;
-        float startAngle = gapCenterDeg + halfGap;
-
+        float sectorArc = 360f / p.GapCount;
+        float step = (sectorArc - p.GapDeg) / p.PerSector;
         float ringRadius = planet.OrbitRadius * config.ringRadiusMultiplier;
 
-        var asteroids = new List<Asteroid>(p.Count);
-        for (int i = 0; i < p.Count; i++)
+        var asteroids = new List<Asteroid>(p.GapCount * p.PerSector);
+
+        for (int s = 0; s < p.GapCount; s++)
         {
-            float angle = startAngle + angleStep * i;
-            float scale = Random.Range(config.minAsteroidScale, config.maxAsteroidScale);
-            float radius = ringRadius * Random.Range(1f - config.radiusJitter, 1f + config.radiusJitter);
+            float sectorStart = gapCenterDeg + s * sectorArc + p.GapDeg * 0.5f;
 
-            int randomIndex = Random.Range(0, config.asteroidSprites.Length);
+            for (int i = 0; i < p.PerSector; i++)
+            {
+                float angle = sectorStart + step * (i + 0.5f);
+                float scale = Random.Range(config.minAsteroidScale, config.maxAsteroidScale);
+                float radius = ringRadius * Random.Range(1f - config.radiusJitter,
+                                                          1f + config.radiusJitter);
+                int randomIndex = Random.Range(0, config.asteroidSprites.Length);
 
-            Asteroid asteroid = pool.Get();
-            asteroid.Activate(planet.transform, angle, p.SpeedDeg, scale, radius);
-            asteroid.SetAsteroidSprite(config.asteroidSprites[randomIndex]);
-            SubscribeAsteroid(asteroid, planet);
-            asteroids.Add(asteroid);
+                Asteroid asteroid = pool.Get();
+                asteroid.Activate(planet.transform, angle, p.SpeedDeg, scale, radius);
+                asteroid.SetAsteroidSprite(config.asteroidSprites[randomIndex]);
+                SubscribeAsteroid(asteroid, planet);
+                asteroids.Add(asteroid);
+            }
         }
         return asteroids;
     }
 
     private readonly struct RingParameters
     {
-        public readonly int Count;
+        public readonly int GapCount;
+        public readonly int PerSector;
         public readonly float GapDeg;
         public readonly float SpeedDeg;
 
-        public RingParameters(int count, float gapDeg, float speedDeg)
+        public RingParameters(int gapCount, int perSector, float gapDeg, float speedDeg)
         {
-            Count = count;
+            GapCount = gapCount;
+            PerSector = perSector;
             GapDeg = gapDeg;
             SpeedDeg = speedDeg;
         }

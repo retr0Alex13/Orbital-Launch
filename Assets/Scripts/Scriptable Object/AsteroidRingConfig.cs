@@ -49,6 +49,15 @@ public sealed class AsteroidRingConfig : ScriptableObject
     [Tooltip("Minimum number of planets between two consecutive rings, to avoid rings back-to-back.")]
     public int minPlanetsBetweenRings = 2;
 
+    [Header("Gap Pattern")]
+    [Tooltip("Ring difficulty (t) from which the ring has 2 gaps on opposite sides.")]
+    [Range(0f, 1f)] public float twoGapsFromT = 0.35f;
+    [Tooltip("Ring difficulty (t) from which the ring has 4 gaps (top, bottom, left, right).")]
+    [Range(0f, 1f)] public float fourGapsFromT = 0.65f;
+
+    [Tooltip("Power curve on t for ring speed. >1 = slow early, fast late.")]
+    public float speedCurvePower = 1.2f;
+
     [Header("Object Pools")]
     public int poolSize = 64;
 
