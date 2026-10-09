@@ -11,7 +11,7 @@ public class PlanetSpawner : MonoBehaviour
     [SerializeField] private AsteroidRingSpawner asteroidSpawner;
     [SerializeField] private CoinSpawner coinSpawner;
     [SerializeField] private OrbitPropSpawner orbitPropSpawner;
-
+    [SerializeField] private int tutorialSafePlanets = 2;
     [SerializeField] private PlayerController player;
 
     private Planet[] pool;
@@ -23,9 +23,13 @@ public class PlanetSpawner : MonoBehaviour
 
     private float traveledDistance;
     private int previousSpriteIndex;
+    private int spawnedPlanetCount;
+    private bool isTutorial;
 
     private void Start()
     {
+        isTutorial = PlayerPrefs.GetInt(Constants.IS_TUTORIAL_COMPLETED_KEY, 0) != 1;
+
         player.OnPlayerCaptured += AdvanceMainPathTo;
         player.OnPlanetLeft += HandlePlanetLeft;
 
@@ -185,8 +189,15 @@ public class PlanetSpawner : MonoBehaviour
         planet.SetPlanetSprite(config.planets[randomIndex]);
 
         activePlanets.Add(planet);
-        asteroidSpawner.SpawnForPlanet(planet, difficulty);
-        orbitPropSpawner.SpawnForPlanet(planet, difficulty);
+
+        bool skipHazards = isTutorial && spawnedPlanetCount < tutorialSafePlanets;
+        spawnedPlanetCount++;
+
+        if (!skipHazards)
+        {
+            asteroidSpawner.SpawnForPlanet(planet, difficulty);
+            orbitPropSpawner.SpawnForPlanet(planet, difficulty);
+        }
 
         return planet;
     }
