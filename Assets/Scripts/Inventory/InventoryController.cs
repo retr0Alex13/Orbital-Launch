@@ -4,8 +4,6 @@ using UnityEngine;
 public class InventoryController : MonoBehaviour
 {
     [SerializeField] private ShopItemView itemViewPrefab;
-    [SerializeField] private Transform rocketSkinsContainer;
-    [SerializeField] private Transform trailSkinsContainer;
     [SerializeField] private ShopItemDatabase database;
     [SerializeField] private OrientationLayoutChanger layout;
 
