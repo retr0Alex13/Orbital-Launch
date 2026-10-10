@@ -12,6 +12,7 @@ public class ShopController : MonoBehaviour
     [SerializeField] private ShopItemDatabase database;
     [SerializeField] private TextMeshProUGUI playerCoins;
     [SerializeField] private OrientationLayoutChanger layout;
+    [SerializeField] private RewardPopup rewardPopup;
 
     private const int BOXES_INDEX = 0;
     private const int SKINS_INDEX = 1;
@@ -28,6 +29,7 @@ public class ShopController : MonoBehaviour
 
         _shop.OnPurchaseCompleted += HandlePurchaseCompleted;
         _shop.OnPurchaseFailed += HandlePurchaseFailed;
+        _shop.OnDuplicateReceived += HandleDuplicateReceived;
 
         Refresh();
     }
@@ -43,12 +45,20 @@ public class ShopController : MonoBehaviour
         if (_shop == null) return;
         _shop.OnPurchaseCompleted -= HandlePurchaseCompleted;
         _shop.OnPurchaseFailed -= HandlePurchaseFailed;
+        _shop.OnDuplicateReceived -= HandleDuplicateReceived;
     }
 
-    private void HandlePurchaseCompleted(SkinItemSO _)
+    private void HandlePurchaseCompleted(SkinItemSO skin)
     {
         AudioPlayer.Instance.PlayPurchaseSound();
-        Refresh();
+
+        var data = new RewardPopupData(
+            skin.Icon,
+            "New skin unlocked!",
+            skin.Name,
+            "Awesome!");
+
+        rewardPopup.Show(data, Refresh);
     }
 
     private void Refresh()
@@ -99,6 +109,17 @@ public class ShopController : MonoBehaviour
     {
         AudioPlayer.Instance.PlayErrorSound();
         Debug.Log($"Недостатньо монет для {item.name}");
+    }
+
+    private void HandleDuplicateReceived(SkinItemSO skin)
+    {
+        var data = new RewardPopupData(
+            skin.Icon,
+            "Duplicate! Coins refunded",
+            $"+{skin.Price / 2}",
+            "OK");
+
+        rewardPopup.Show(data, Refresh);
     }
 
     private void ClearViews()
