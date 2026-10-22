@@ -10,6 +10,7 @@ public class GameServicesBootstrapper : MonoBehaviour
     [SerializeField] private ShopItemDatabase database;
     [SerializeField] private ShopController shopController;
     [SerializeField] private InventoryController inventoryController;
+    [SerializeField] private DeathRewardController deathRewardController;
 
     private void Awake()
     {
@@ -21,5 +22,6 @@ public class GameServicesBootstrapper : MonoBehaviour
 
         shopController.Initialize(Shop, Inventory);
         inventoryController.Initialize(Inventory);
+        deathRewardController.Initialize(Inventory, playerCoins);
     }
 }

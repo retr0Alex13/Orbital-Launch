@@ -5,4 +5,5 @@ public static class Constants
     public const string INVENTORY_SAVE_KEY = nameof(INVENTORY_SAVE_KEY);
     public const string SOUND_STATE_KEY = nameof(SOUND_STATE_KEY);
     public const string BEST_SCORE_KEY = nameof(BEST_SCORE_KEY);
+    public const string DEATH_COUNT_KEY = nameof(DEATH_COUNT_KEY);
 }

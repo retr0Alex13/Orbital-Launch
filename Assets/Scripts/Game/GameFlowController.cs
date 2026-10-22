@@ -3,6 +3,7 @@ using UnityEngine;
 public class GameFlowController : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
+    [SerializeField] private DeathRewardController deathReward;
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private SlideInFromBottom mainMenuAnimator;
     [SerializeField] private GameObject gameView;
@@ -73,5 +74,8 @@ public class GameFlowController : MonoBehaviour
         gameView.SetActive(false);
         gameOverView.SetActive(true);
         player.ControlsBlocked = true;
+
+        if (isTutorialCompleted)
+            deathReward.OnPlayerDied();
     }
 }

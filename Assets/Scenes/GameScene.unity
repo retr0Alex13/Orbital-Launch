@@ -7162,6 +7162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameFlowController
   player: {fileID: 857721169}
+  deathReward: {fileID: 1157969995}
   mainMenu: {fileID: 649356397}
   mainMenuAnimator: {fileID: 649356402}
   gameView: {fileID: 1451842610}
@@ -8008,6 +8009,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1155210433}
   m_CullTransparentMesh: 1
+--- !u!1 &1157969993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1157969994}
+  - component: {fileID: 1157969995}
+  m_Layer: 0
+  m_Name: DeathRewardController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1157969994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157969993}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1157969995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157969993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: accb4c57d61119a419ff373128358241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeathRewardController
+  database: {fileID: 11400000, guid: 69aa6fbbd03287942bb19b1e672b4ef7, type: 2}
+  rewardPopup: {fileID: 724243986}
+  coinIcon: {fileID: 486038512444524558, guid: a3b683ec7ef0dbd478e51c774a97101a, type: 3}
+  rewardEveryNDeaths: 2
+  itemChance: 0.5
+  coinsRange: {x: 20, y: 50}
 --- !u!1 &1160668489
 GameObject:
   m_ObjectHideFlags: 0
@@ -12791,6 +12842,7 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: 69aa6fbbd03287942bb19b1e672b4ef7, type: 2}
   shopController: {fileID: 1148435971}
   inventoryController: {fileID: 1077673494}
+  deathRewardController: {fileID: 1157969995}
 --- !u!1 &1875338422
 GameObject:
   m_ObjectHideFlags: 0
@@ -15483,3 +15535,4 @@ SceneRoots:
   - {fileID: 674623159}
   - {fileID: 553170116}
   - {fileID: 568448706}
+  - {fileID: 1157969994}
