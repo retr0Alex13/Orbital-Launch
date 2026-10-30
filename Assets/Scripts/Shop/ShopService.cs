@@ -52,6 +52,7 @@ public class ShopService
         }
 
         _inventory.GrantSkin(granted);
+        _inventory.Equip(granted);
         OnPurchaseCompleted?.Invoke(granted);
     }
 }
