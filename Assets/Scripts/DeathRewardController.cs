@@ -47,12 +47,12 @@ public class DeathRewardController : MonoBehaviour
             _inventory.GrantSkin(skin);
             AudioPlayer.Instance.PlayPurchaseSound();
 
-            rewardPopup.Show(new RewardPopupData(
-                skin.Icon, "New skin unlocked!", skin.Name, "Awesome!"));
+            rewardPopup.Show(
+                new RewardPopupData(skin.Icon, "New skin unlocked!", skin.Name, "Awesome!"),
+                () => _inventory.Equip(skin));
         }
         else
         {
-            // Або випав шанс на монети, або всі предмети вже зібрані
             int amount = Random.Range(coinsRange.x, coinsRange.y + 1);
             _coins.AddCoins(amount);
 

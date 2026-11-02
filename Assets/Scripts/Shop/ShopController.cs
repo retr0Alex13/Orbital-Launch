@@ -56,7 +56,7 @@ public class ShopController : MonoBehaviour
             skin.Icon,
             "New skin unlocked!",
             skin.Name,
-            "Awesome!");
+            "Claim!");
 
         rewardPopup.Show(data, Refresh);
     }
@@ -113,11 +113,13 @@ public class ShopController : MonoBehaviour
 
     private void HandleDuplicateReceived(SkinItemSO skin)
     {
+        AudioPlayer.Instance.PlayPurchaseSound();
+
         var data = new RewardPopupData(
             skin.Icon,
-            "Duplicate! Coins refunded",
-            $"+{skin.Price / 2}",
-            "OK");
+            "Duplicate!\nCoins refunded",
+            $"+{skin.Price / 2} coins",
+            "Claim!");
 
         rewardPopup.Show(data, Refresh);
     }
