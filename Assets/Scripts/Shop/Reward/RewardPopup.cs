@@ -11,6 +11,7 @@ public class RewardPopup : MonoBehaviour
     [SerializeField] private TMP_Text itemNameText;
     [SerializeField] private Button closeButton;
     [SerializeField] private TMP_Text closeButtonLabel;
+    [SerializeField] private Rotator radialShine;
 
     private Action _onClose;
 
@@ -28,6 +29,7 @@ public class RewardPopup : MonoBehaviour
         titleText.text = data.Title;
         itemNameText.text = data.ItemName;
         closeButtonLabel.text = data.ButtonText;
+        radialShine.StartRotation();
 
         SetVisible(true);
     }
@@ -37,6 +39,7 @@ public class RewardPopup : MonoBehaviour
         SetVisible(false);
         var callback = _onClose;
         _onClose = null;
+        radialShine.StopRotation();
         callback?.Invoke();
     }
 
